@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package scala_app.messages;
+
+message Exchange {
+  oneof payload {
+    AddNumber add_number = 1;
+    AddString add_string = 2;
+  }
+}
+
+message AddNumber {
+  oneof payload {
+    Request request = 1;
+    Response response = 2;
+  }
+
+  message Request { int32 amount = 1; }
+  message Response {}
+}
+
+message AddString {
+  oneof payload {
+    Request request = 1;
+    Response response = 2;
+  }
+  message Request { string value = 1; }
+  message Response {}
+}

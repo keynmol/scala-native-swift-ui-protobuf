@@ -1,0 +1,4 @@
+module ScalaKit {
+    umbrella header "binary_interface.h"
+    export *
+}

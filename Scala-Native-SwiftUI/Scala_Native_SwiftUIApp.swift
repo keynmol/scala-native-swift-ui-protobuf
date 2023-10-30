@@ -9,6 +9,7 @@ import SwiftUI
 
 @main
 struct Scala_Native_SwiftUIApp: App {
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
