@@ -17,6 +17,7 @@
 		82A5F9D02AEEAB14007EC213 /* protoc-gen-swift in Frameworks */ = {isa = PBXBuildFile; productRef = 82A5F9CF2AEEAB14007EC213 /* protoc-gen-swift */; };
 		82A5F9D42AEEABF8007EC213 /* protocol.proto in Sources */ = {isa = PBXBuildFile; fileRef = 82A5F9D32AEEABF8007EC213 /* protocol.proto */; };
 		82A5F9D82AEEB0AB007EC213 /* protocol.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A5F9D72AEEB0AB007EC213 /* protocol.pb.swift */; };
+		82A5F9DA2AF57950007EC213 /* Interop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A5F9D92AF57950007EC213 /* Interop.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 		82A5F9C82AEE9E3D007EC213 /* Scala.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = Scala.xcframework; sourceTree = "<group>"; };
 		82A5F9D32AEEABF8007EC213 /* protocol.proto */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.protobuf; path = protocol.proto; sourceTree = "<group>"; };
 		82A5F9D72AEEB0AB007EC213 /* protocol.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = protocol.pb.swift; sourceTree = "<group>"; };
+		82A5F9D92AF57950007EC213 /* Interop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interop.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +71,7 @@
 				82A5F9C82AEE9E3D007EC213 /* Scala.xcframework */,
 				82A5F9B62AEE93FD007EC213 /* Scala_Native_SwiftUIApp.swift */,
 				82A5F9B82AEE93FD007EC213 /* ContentView.swift */,
+				82A5F9D92AF57950007EC213 /* Interop.swift */,
 				82A5F9BA2AEE93FE007EC213 /* Assets.xcassets */,
 				82A5F9BF2AEE93FE007EC213 /* Scala_Native_SwiftUI.entitlements */,
 				82A5F9BC2AEE93FE007EC213 /* Preview Content */,
@@ -165,6 +168,7 @@
 			files = (
 				82A5F9D42AEEABF8007EC213 /* protocol.proto in Sources */,
 				82A5F9B92AEE93FD007EC213 /* ContentView.swift in Sources */,
+				82A5F9DA2AF57950007EC213 /* Interop.swift in Sources */,
 				82A5F9D82AEEB0AB007EC213 /* protocol.pb.swift in Sources */,
 				82A5F9B72AEE93FD007EC213 /* Scala_Native_SwiftUIApp.swift in Sources */,
 			);

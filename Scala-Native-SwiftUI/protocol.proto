@@ -1,29 +1,44 @@
 syntax = "proto3";
 
-package scala_app.messages;
-
-message Exchange {
+message Request {
   oneof payload {
-    AddNumber add_number = 1;
-    AddString add_string = 2;
+    AddNumber.Request add_number = 1;
+    AddString.Request add_string = 2;
+    GetState.Request get_state = 3;
+  }
+}
+
+message Response {
+  oneof payload {
+    AddNumber.Response add_number = 1;
+    AddString.Response add_string = 2;
+    GetState.Response get_state = 4;
+  }
+  bool state_changed = 3;
+}
+
+message GetState {
+  message Request {}
+  message Response {
+    State state = 1;
   }
 }
 
 message AddNumber {
-  oneof payload {
-    Request request = 1;
-    Response response = 2;
-  }
-
   message Request { int32 amount = 1; }
   message Response {}
 }
 
 message AddString {
-  oneof payload {
-    Request request = 1;
-    Response response = 2;
-  }
   message Request { string value = 1; }
   message Response {}
+}
+
+message Error {
+  string message = 1;
+}
+
+message State {
+  int32 sum = 1;
+  string result = 2;
 }
