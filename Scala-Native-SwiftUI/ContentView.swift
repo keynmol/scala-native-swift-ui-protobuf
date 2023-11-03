@@ -22,27 +22,35 @@ struct ContentView: View {
                 .foregroundColor(.accentColor)
             
             
-            TextField("Your name:", text: $username)
-            Text(greet(username: username))
+            TextField("number to add", text: $username)
+            Text(greet(number: Int32($username.wrappedValue)))
         }
         .padding()
     }
     
-    func greet(username: String) -> String {
-        let req = Request.with {
+    func greet(number: Int32?) -> String {
+        if let num = number {
+            let req = Request.with {
+                $0.payload = Request.OneOf_Payload.addNumber(
+                    AddNumber.Request.with {
+                        $0.amount = num
+                    }
+                )
+            }
             
-            $0.payload = Request.OneOf_Payload.addNumber(
-                AddNumber.Request.with {
-                    $0.amount = -25
+            if let resp = writeToWire(msg: req, context: self.context!) {
+                if case .Left(let error) = resp {
+                    return "ERROR: \(error)"
+                } else {
+                    return "Great"
                 }
-            )
+                
+            } else {
+                return "Great!"
+            }
+        } else {
+            return "Not a valid number"
         }
-        
-        
-        
-        print(writeToWire(msg: req, context: self.context!))
-
-        return "yo"
     }
 }
 
@@ -50,7 +58,7 @@ struct ContentView: View {
 
 
 
-func writeToWire<T: SwiftProtobuf.Message>(msg: T, context: Context) -> Either<String, SwiftProtobuf.Message> {
+func writeToWire<T: SwiftProtobuf.Message>(msg: T, context: Context) -> Either<String, SwiftProtobuf.Message>? {
     do {
         let contents = try msg.serializedData()
         var response: SwiftProtobuf.Message? = nil
@@ -65,7 +73,17 @@ func writeToWire<T: SwiftProtobuf.Message>(msg: T, context: Context) -> Either<S
                     if let err = getError(result: result) {
                         returnErr = err
                     } else {
+                        let messageBytes = result!.pointee.message.pointee.bytes
+                        let messageSize = result!.pointee.message.pointee.size
+                        let buffer = UnsafeBufferPointer(start: messageBytes, count: Int(messageSize))
                         
+                        do {
+                            let resp = try Response(serializedData: Data(buffer: buffer))
+                            response = resp
+                        } catch {
+                            
+                            returnErr = error.localizedDescription
+                        }
                     }
 
                 })
