@@ -24,29 +24,38 @@ struct ContentView: View {
         .padding()
     }
     
-    func greet(number: Int32?) -> String {
+    func greet(number: Int32?) -> AttributedString {
+        var str = AttributedString()
         if let num = number {
             let req = Request.OneOf_Payload.addNumber(
                 AddNumber.Request.with {
                     $0.amount = num
                 }
             )
-            do {
-                let resp = try sendRequest(request: req)
-                return "OK"
-            } catch ProtocolError.failure(let str) {
-                return "Failure: \(str)"
-            } catch ProtocolError.parsing(let str) {
-                return "Fatal error: \(str)"
+            switch sendRequest(request: req) {
+            case .Ok: do {
+                var str = AttributedString("OK")
+                str.foregroundColor = .green
+                return str
             }
-            catch {
-                return "Unknown Error: \(error.localizedDescription)"
+            case .Err(let err): do {
+                var str = AttributedString(err.msg())
+                str.foregroundColor = .red
+                return str
             }
-            
+            }
         } else {
-            return "Not a valid number"
+            //return "Not a valid number"
+            var str = AttributedString("Not a valid number")
+            str.foregroundColor = .red
+            return str
         }
     }
+}
+
+enum Res {
+    case Ok(Response.OneOf_Payload)
+    case Err(ProtocolError)
 }
 
 enum ProtocolError: Swift.Error {
@@ -54,13 +63,43 @@ enum ProtocolError: Swift.Error {
     case parsing(String)
 }
 
+extension ProtocolError {
+    func msg() -> String {
+        let str = if case .failure(let string) = self {
+            string
+        } else if case .parsing(let string) = self {
+             string
+        } else {
+             ""
+        }
+        
+        return str
+    }
+}
 
-func sendRequest(request: Request.OneOf_Payload) throws -> Response.OneOf_Payload? {
+
+func sendRequest(request: Request.OneOf_Payload) -> Res {
     let req = Request.with{
         $0.payload = request
     }
-    let x: Response? = try writeToWire(msg: req)
-    return x.flatMap({r in r.payload})
+    
+    do {
+        let x: Response? = try writeToWire(msg: req)
+        if let resp = x {
+            if let payload = resp.payload {
+                return Res.Ok(payload)
+            } else {
+                return Res.Err(ProtocolError.parsing("response payload cannot be empty"))
+            }
+            
+        } else {
+            return Res.Err(ProtocolError.parsing("empty response"))
+        }
+    } catch let e as ProtocolError {
+        return Res.Err(e)
+    } catch {
+        return Res.Err(ProtocolError.failure("Unknown error: \(error.localizedDescription)"))
+    }
 }
 
 
@@ -137,5 +176,9 @@ func initApp(options: Options) throws {
     }
 }
 
+#Preview {
 
+    ContentView()
+
+}
 
