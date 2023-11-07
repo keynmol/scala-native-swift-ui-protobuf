@@ -83,7 +83,10 @@ object DangerZone:
         scribe.debug(
           s"Deallocating id ${tok}, contains ${chain.ar.length} pointers (total size: ${chain.sz} bytes)"
         )
+        scribe.debug(
+        )
         chains.remove(tok)
+        scribe.debug(s"Allocated chains: ${chains.size}")
         chain.close()
         true
       else false

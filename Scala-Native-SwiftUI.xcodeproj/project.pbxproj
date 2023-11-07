@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		82A5F9B72AEE93FD007EC213 /* Scala_Native_SwiftUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A5F9B62AEE93FD007EC213 /* Scala_Native_SwiftUIApp.swift */; };
-		82A5F9B92AEE93FD007EC213 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A5F9B82AEE93FD007EC213 /* ContentView.swift */; };
+		82A5F9B92AEE93FD007EC213 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A5F9B82AEE93FD007EC213 /* LoginView.swift */; };
 		82A5F9BB2AEE93FE007EC213 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 82A5F9BA2AEE93FE007EC213 /* Assets.xcassets */; };
 		82A5F9BE2AEE93FE007EC213 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 82A5F9BD2AEE93FE007EC213 /* Preview Assets.xcassets */; };
 		82A5F9C92AEE9E3D007EC213 /* Scala.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82A5F9C82AEE9E3D007EC213 /* Scala.xcframework */; };
@@ -18,12 +18,14 @@
 		82A5F9D42AEEABF8007EC213 /* protocol.proto in Sources */ = {isa = PBXBuildFile; fileRef = 82A5F9D32AEEABF8007EC213 /* protocol.proto */; };
 		82A5F9D82AEEB0AB007EC213 /* protocol.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A5F9D72AEEB0AB007EC213 /* protocol.pb.swift */; };
 		82A5F9DA2AF57950007EC213 /* Interop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A5F9D92AF57950007EC213 /* Interop.swift */; };
+		82B4A6252AFA4632001689E2 /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82B4A6242AFA4632001689E2 /* TimelineView.swift */; };
+		82B4A6272AFA48E2001689E2 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82B4A6262AFA48E2001689E2 /* ViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		82A5F9B32AEE93FD007EC213 /* Scala-Native-SwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Scala-Native-SwiftUI.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		82A5F9B62AEE93FD007EC213 /* Scala_Native_SwiftUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scala_Native_SwiftUIApp.swift; sourceTree = "<group>"; };
-		82A5F9B82AEE93FD007EC213 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		82A5F9B82AEE93FD007EC213 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		82A5F9BA2AEE93FE007EC213 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		82A5F9BD2AEE93FE007EC213 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		82A5F9BF2AEE93FE007EC213 /* Scala_Native_SwiftUI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Scala_Native_SwiftUI.entitlements; sourceTree = "<group>"; };
@@ -31,6 +33,8 @@
 		82A5F9D32AEEABF8007EC213 /* protocol.proto */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.protobuf; path = protocol.proto; sourceTree = "<group>"; };
 		82A5F9D72AEEB0AB007EC213 /* protocol.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = protocol.pb.swift; sourceTree = "<group>"; };
 		82A5F9D92AF57950007EC213 /* Interop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interop.swift; sourceTree = "<group>"; };
+		82B4A6242AFA4632001689E2 /* TimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
+		82B4A6262AFA48E2001689E2 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,12 +74,14 @@
 				82A5F9D72AEEB0AB007EC213 /* protocol.pb.swift */,
 				82A5F9C82AEE9E3D007EC213 /* Scala.xcframework */,
 				82A5F9B62AEE93FD007EC213 /* Scala_Native_SwiftUIApp.swift */,
-				82A5F9B82AEE93FD007EC213 /* ContentView.swift */,
+				82A5F9B82AEE93FD007EC213 /* LoginView.swift */,
 				82A5F9D92AF57950007EC213 /* Interop.swift */,
 				82A5F9BA2AEE93FE007EC213 /* Assets.xcassets */,
 				82A5F9BF2AEE93FE007EC213 /* Scala_Native_SwiftUI.entitlements */,
 				82A5F9BC2AEE93FE007EC213 /* Preview Content */,
 				82A5F9D32AEEABF8007EC213 /* protocol.proto */,
+				82B4A6242AFA4632001689E2 /* TimelineView.swift */,
+				82B4A6262AFA48E2001689E2 /* ViewModel.swift */,
 			);
 			path = "Scala-Native-SwiftUI";
 			sourceTree = "<group>";
@@ -167,10 +173,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				82A5F9D42AEEABF8007EC213 /* protocol.proto in Sources */,
-				82A5F9B92AEE93FD007EC213 /* ContentView.swift in Sources */,
+				82B4A6252AFA4632001689E2 /* TimelineView.swift in Sources */,
+				82A5F9B92AEE93FD007EC213 /* LoginView.swift in Sources */,
 				82A5F9DA2AF57950007EC213 /* Interop.swift in Sources */,
 				82A5F9D82AEEB0AB007EC213 /* protocol.pb.swift in Sources */,
 				82A5F9B72AEE93FD007EC213 /* Scala_Native_SwiftUIApp.swift in Sources */,
+				82B4A6272AFA48E2001689E2 /* ViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

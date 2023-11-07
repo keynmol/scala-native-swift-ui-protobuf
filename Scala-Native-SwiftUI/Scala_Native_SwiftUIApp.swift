@@ -10,9 +10,10 @@ import ScalaKit
 
 @main
 struct Scala_Native_SwiftUIApp: App {
+    @ObservedObject var vm = ViewModel()
     init() {
         do {
-            try initApp(options: Options.with {
+            try Interop.initApp(options: Options.with {
                 $0.debugLogging = true
             })
         } catch {
@@ -22,9 +23,21 @@ struct Scala_Native_SwiftUIApp: App {
         
     }
     
+    func setView(state: ViewModel.State) {
+        vm.state = state
+    }
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            switch vm.state {
+            case .logIn:
+                LoginView(switchView: setView)
+            case .timeline:
+                TimelineView()
+            case .showProfile(let string):
+                LoginView(switchView: setView)
+            }
+            
         }
     }
 }
