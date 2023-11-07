@@ -31,7 +31,15 @@ def buildLibrary(
     library: os.Path
 ) =
   run(
+    // "cs", "launch",
+    // "com.indoorvivants.vcpkg:sn-vcpkg_3:dev",
+    // "--",
     "scala-cli",
+    // "-v",
+    // "--rename",
+    // "curl=libcurl",
+    // "curl",
+    // "--",
     "package",
     ".",
     "-f",
@@ -39,7 +47,9 @@ def buildLibrary(
     library.toString,
     "--native",
     "--native-target",
-    "static"
+    "static",
+    "--native-linking",
+    "-lcurl"
   ).call(cwd = scalaCode)
 
 def generateProtobuf(protoFile: os.Path, swiftOut: os.Path, scalaOut: os.Path) = 

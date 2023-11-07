@@ -20,6 +20,8 @@
 		82A5F9DA2AF57950007EC213 /* Interop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A5F9D92AF57950007EC213 /* Interop.swift */; };
 		82B4A6252AFA4632001689E2 /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82B4A6242AFA4632001689E2 /* TimelineView.swift */; };
 		82B4A6272AFA48E2001689E2 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82B4A6262AFA48E2001689E2 /* ViewModel.swift */; };
+		82B4A62B2AFA9213001689E2 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82B4A62A2AFA9213001689E2 /* Security.framework */; };
+		82B4A62D2AFA921D001689E2 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82B4A62C2AFA921D001689E2 /* SystemConfiguration.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +37,8 @@
 		82A5F9D92AF57950007EC213 /* Interop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interop.swift; sourceTree = "<group>"; };
 		82B4A6242AFA4632001689E2 /* TimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
 		82B4A6262AFA48E2001689E2 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
+		82B4A62A2AFA9213001689E2 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		82B4A62C2AFA921D001689E2 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,8 +47,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				82A5F9D02AEEAB14007EC213 /* protoc-gen-swift in Frameworks */,
+				82B4A62B2AFA9213001689E2 /* Security.framework in Frameworks */,
 				82A5F9CE2AEEAB14007EC213 /* SwiftProtobufPluginLibrary in Frameworks */,
 				82A5F9C92AEE9E3D007EC213 /* Scala.xcframework in Frameworks */,
+				82B4A62D2AFA921D001689E2 /* SystemConfiguration.framework in Frameworks */,
 				82A5F9CC2AEEAB14007EC213 /* SwiftProtobuf in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -55,8 +61,10 @@
 		82A5F9AA2AEE93FD007EC213 = {
 			isa = PBXGroup;
 			children = (
+				82B4A6282AFA91FD001689E2 /* New Group */,
 				82A5F9B52AEE93FD007EC213 /* Scala-Native-SwiftUI */,
 				82A5F9B42AEE93FD007EC213 /* Products */,
+				82B4A6292AFA9213001689E2 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -92,6 +100,22 @@
 				82A5F9BD2AEE93FE007EC213 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		82B4A6282AFA91FD001689E2 /* New Group */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "New Group";
+			sourceTree = "<group>";
+		};
+		82B4A6292AFA9213001689E2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				82B4A62C2AFA921D001689E2 /* SystemConfiguration.framework */,
+				82B4A62A2AFA9213001689E2 /* Security.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -324,6 +348,17 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-L/Users/velvetbaldmime/Library/Caches/sbt-vcpkg/vcpkg-install/arm64-osx/lib/pkgconfig/../../lib",
+					"-lc++",
+					"-lidn2",
+					"-liconv",
+					"-lunistring",
+					"-lcurl",
+					"-lz",
+				);
+				PRELINK_LIBS = curl;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.indoorvivants.Scala-Native-SwiftUI";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -349,6 +384,17 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-L/Users/velvetbaldmime/Library/Caches/sbt-vcpkg/vcpkg-install/arm64-osx/lib/pkgconfig/../../lib",
+					"-lc++",
+					"-lidn2",
+					"-liconv",
+					"-lunistring",
+					"-lcurl",
+					"-lz",
+				);
+				PRELINK_LIBS = curl;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.indoorvivants.Scala-Native-SwiftUI";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

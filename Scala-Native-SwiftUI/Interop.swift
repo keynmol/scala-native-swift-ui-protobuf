@@ -14,14 +14,14 @@ struct Interop {
         case Ok(Response.OneOf_Payload)
         case Err(ProtocolError)
     }
-
+    
     enum ProtocolError: Swift.Error {
         case failure(String)
         case parsing(String)
     }
-
-
-
+    
+    
+    
     static func sendRequest(request: Request.OneOf_Payload) -> Res {
         let req = Request.with{
             $0.payload = request
@@ -45,8 +45,8 @@ struct Interop {
             return Res.Err(ProtocolError.failure("Unknown error: \(error.localizedDescription)"))
         }
     }
-
-
+    
+    
     static func writeToWire<T: SwiftProtobuf.Message, R: SwiftProtobuf.Message>(msg: T) throws -> R? {
         let contents = try msg.serializedData()
         
@@ -80,7 +80,7 @@ struct Interop {
         }
         
     }
-
+    
     static func getError(result: UnsafeMutablePointer<Result>?) -> String? {
         if(!ScalaKit.scala_app_result_ok(result)) {
             let errorBytes = result?.pointee.message.pointee.bytes
@@ -95,7 +95,7 @@ struct Interop {
         }
         else {return nil}
     }
-
+    
     static func initApp(options: Options) throws {
         ScalaKit.ScalaNativeInit()
         
@@ -119,7 +119,7 @@ struct Interop {
             })
         }
     }
-
+    
 }
 
 extension Interop.ProtocolError {
@@ -127,9 +127,9 @@ extension Interop.ProtocolError {
         let str = if case .failure(let string) = self {
             string
         } else if case .parsing(let string) = self {
-             string
+            string
         } else {
-             ""
+            ""
         }
         
         return str

@@ -5,12 +5,15 @@ import protocol.*
 import Request.Payload as Req
 import Response.Payload as Res
 import scalapb.GeneratedMessage
+import twotm8.*
 
 enum Answer:
   case Error(msg: String)
   case Ok[T <: GeneratedMessage](value: T)
 
 class StateManager(private var st: State):
+
+  val client = twotm8.client.Client.create("https://twotm8.com")
 
   def respond[T <: Response.Payload](msg: T) =
     Answer.Ok(Response(payload = msg))
@@ -19,7 +22,7 @@ class StateManager(private var st: State):
     st.synchronized:
       st = change(st)
       st
-    Answer.Ok(Response(payload = msg, stateChanged = true))
+    Answer.Ok(Response(payload = msg))
 
   def get: State = st
 end StateManager
@@ -28,20 +31,27 @@ def handleRequest(state: StateManager, req: Request): Answer =
   if req.payload.isDefined then scribe.info(s"Handling request: ${req.payload}")
   req.payload match
     case Req.Empty => Answer.Error("payload was empty")
-    case Req.AddNumber(value) =>
-      if value.amount < 0 then Answer.Error("number can't be negative!")
+    case Req.Login(value) =>
+      val login = value.login.trim
+      if login.isEmpty then Answer.Error("empty login!")
+      else if value.password.isEmpty then Answer.Error("empty password!")
       else
-        state.stateChange(
-          Res.AddNumber(AddNumber.Response()),
-          state => state.copy(sum = state.sum + value.amount)
+
+        val token =
+          state.client.login(Nickname(login), Password(value.password))
+
+        state.respond(
+          Res.Login(
+            Login.Response(Login.Response.Payload.Token(token.jwt.raw))
+          )
         )
 
-    case Req.AddString(value) =>
-      state.stateChange(
-        Res.AddString(AddString.Response()),
-        state => state.copy(result = state.result + value.value)
-      )
+      end if
+
     case Req.GetState(value) =>
       state.respond(Res.GetState(GetState.Response(state = Some(state.get))))
   end match
 end handleRequest
+
+@main def hello =
+  handleRequest(StateManager(State()), Request.of(Request.Payload.Login(Login.Request("anton", "bla"))))

@@ -2,47 +2,42 @@ syntax = "proto3";
 
 message Request {
   oneof payload {
-    AddNumber.Request add_number = 1;
-    AddString.Request add_string = 2;
-    GetState.Request get_state = 3;
+    Login.Request login = 1;
+    GetState.Request get_state = 2;
   }
 }
 
 message Response {
   oneof payload {
-    AddNumber.Response add_number = 1;
-    AddString.Response add_string = 2;
-    GetState.Response get_state = 4;
+    Login.Response login = 1;
+    GetState.Response get_state = 2;
   }
-  bool state_changed = 3;
+}
+
+message Login {
+  message Request {
+    string login = 1;
+    string password = 2;
+  }
+
+  enum AUTH_ERROR {
+    INVALID_CREDENTIALS = 0;
+  }
+  message Response {
+    oneof payload {
+      string token = 1;
+      AUTH_ERROR err = 2;
+    }
+  }
 }
 
 message GetState {
   message Request {}
-  message Response {
-    State state = 1;
-  }
+  message Response { State state = 1; }
 }
 
-message AddNumber {
-  message Request { int32 amount = 1; }
-  message Response {}
-}
+message Error { string message = 1; }
 
-message AddString {
-  message Request { string value = 1; }
-  message Response {}
-}
+message State {}
 
-message Error {
-  string message = 1;
-}
-
-message State {
-  int32 sum = 1;
-  string result = 2;
-}
-
-message Options {
-  bool debug_logging = 1;
-}
+message Options { bool debug_logging = 1; }

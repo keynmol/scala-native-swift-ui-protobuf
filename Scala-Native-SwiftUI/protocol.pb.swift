@@ -27,20 +27,12 @@ struct Request {
 
   var payload: Request.OneOf_Payload? = nil
 
-  var addNumber: AddNumber.Request {
+  var login: Login.Request {
     get {
-      if case .addNumber(let v)? = payload {return v}
-      return AddNumber.Request()
+      if case .login(let v)? = payload {return v}
+      return Login.Request()
     }
-    set {payload = .addNumber(newValue)}
-  }
-
-  var addString: AddString.Request {
-    get {
-      if case .addString(let v)? = payload {return v}
-      return AddString.Request()
-    }
-    set {payload = .addString(newValue)}
+    set {payload = .login(newValue)}
   }
 
   var getState: GetState.Request {
@@ -54,8 +46,7 @@ struct Request {
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   enum OneOf_Payload: Equatable {
-    case addNumber(AddNumber.Request)
-    case addString(AddString.Request)
+    case login(Login.Request)
     case getState(GetState.Request)
 
   #if !swift(>=4.1)
@@ -64,12 +55,8 @@ struct Request {
       // allocates stack space for every case branch when no optimizations are
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch (lhs, rhs) {
-      case (.addNumber, .addNumber): return {
-        guard case .addNumber(let l) = lhs, case .addNumber(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.addString, .addString): return {
-        guard case .addString(let l) = lhs, case .addString(let r) = rhs else { preconditionFailure() }
+      case (.login, .login): return {
+        guard case .login(let l) = lhs, case .login(let r) = rhs else { preconditionFailure() }
         return l == r
       }()
       case (.getState, .getState): return {
@@ -92,20 +79,12 @@ struct Response {
 
   var payload: Response.OneOf_Payload? = nil
 
-  var addNumber: AddNumber.Response {
+  var login: Login.Response {
     get {
-      if case .addNumber(let v)? = payload {return v}
-      return AddNumber.Response()
+      if case .login(let v)? = payload {return v}
+      return Login.Response()
     }
-    set {payload = .addNumber(newValue)}
-  }
-
-  var addString: AddString.Response {
-    get {
-      if case .addString(let v)? = payload {return v}
-      return AddString.Response()
-    }
-    set {payload = .addString(newValue)}
+    set {payload = .login(newValue)}
   }
 
   var getState: GetState.Response {
@@ -116,13 +95,10 @@ struct Response {
     set {payload = .getState(newValue)}
   }
 
-  var stateChanged: Bool = false
-
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   enum OneOf_Payload: Equatable {
-    case addNumber(AddNumber.Response)
-    case addString(AddString.Response)
+    case login(Login.Response)
     case getState(GetState.Response)
 
   #if !swift(>=4.1)
@@ -131,12 +107,8 @@ struct Response {
       // allocates stack space for every case branch when no optimizations are
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch (lhs, rhs) {
-      case (.addNumber, .addNumber): return {
-        guard case .addNumber(let l) = lhs, case .addNumber(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.addString, .addString): return {
-        guard case .addString(let l) = lhs, case .addString(let r) = rhs else { preconditionFailure() }
+      case (.login, .login): return {
+        guard case .login(let l) = lhs, case .login(let r) = rhs else { preconditionFailure() }
         return l == r
       }()
       case (.getState, .getState): return {
@@ -151,6 +123,118 @@ struct Response {
 
   init() {}
 }
+
+struct Login {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  enum AUTH_ERROR: SwiftProtobuf.Enum {
+    typealias RawValue = Int
+    case invalidCredentials // = 0
+    case UNRECOGNIZED(Int)
+
+    init() {
+      self = .invalidCredentials
+    }
+
+    init?(rawValue: Int) {
+      switch rawValue {
+      case 0: self = .invalidCredentials
+      default: self = .UNRECOGNIZED(rawValue)
+      }
+    }
+
+    var rawValue: Int {
+      switch self {
+      case .invalidCredentials: return 0
+      case .UNRECOGNIZED(let i): return i
+      }
+    }
+
+  }
+
+  struct Request {
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
+
+    var login: String = String()
+
+    var password: String = String()
+
+    var unknownFields = SwiftProtobuf.UnknownStorage()
+
+    init() {}
+  }
+
+  struct Response {
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
+
+    var payload: Login.Response.OneOf_Payload? = nil
+
+    var token: String {
+      get {
+        if case .token(let v)? = payload {return v}
+        return String()
+      }
+      set {payload = .token(newValue)}
+    }
+
+    var err: Login.AUTH_ERROR {
+      get {
+        if case .err(let v)? = payload {return v}
+        return .invalidCredentials
+      }
+      set {payload = .err(newValue)}
+    }
+
+    var unknownFields = SwiftProtobuf.UnknownStorage()
+
+    enum OneOf_Payload: Equatable {
+      case token(String)
+      case err(Login.AUTH_ERROR)
+
+    #if !swift(>=4.1)
+      static func ==(lhs: Login.Response.OneOf_Payload, rhs: Login.Response.OneOf_Payload) -> Bool {
+        // The use of inline closures is to circumvent an issue where the compiler
+        // allocates stack space for every case branch when no optimizations are
+        // enabled. https://github.com/apple/swift-protobuf/issues/1034
+        switch (lhs, rhs) {
+        case (.token, .token): return {
+          guard case .token(let l) = lhs, case .token(let r) = rhs else { preconditionFailure() }
+          return l == r
+        }()
+        case (.err, .err): return {
+          guard case .err(let l) = lhs, case .err(let r) = rhs else { preconditionFailure() }
+          return l == r
+        }()
+        default: return false
+        }
+      }
+    #endif
+    }
+
+    init() {}
+  }
+
+  init() {}
+}
+
+#if swift(>=4.2)
+
+extension Login.AUTH_ERROR: CaseIterable {
+  // The compiler won't synthesize support with the UNRECOGNIZED case.
+  static let allCases: [Login.AUTH_ERROR] = [
+    .invalidCredentials,
+  ]
+}
+
+#endif  // swift(>=4.2)
 
 struct GetState {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
@@ -193,70 +277,6 @@ struct GetState {
   init() {}
 }
 
-struct AddNumber {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
-
-  var unknownFields = SwiftProtobuf.UnknownStorage()
-
-  struct Request {
-    // SwiftProtobuf.Message conformance is added in an extension below. See the
-    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-    // methods supported on all messages.
-
-    var amount: Int32 = 0
-
-    var unknownFields = SwiftProtobuf.UnknownStorage()
-
-    init() {}
-  }
-
-  struct Response {
-    // SwiftProtobuf.Message conformance is added in an extension below. See the
-    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-    // methods supported on all messages.
-
-    var unknownFields = SwiftProtobuf.UnknownStorage()
-
-    init() {}
-  }
-
-  init() {}
-}
-
-struct AddString {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
-
-  var unknownFields = SwiftProtobuf.UnknownStorage()
-
-  struct Request {
-    // SwiftProtobuf.Message conformance is added in an extension below. See the
-    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-    // methods supported on all messages.
-
-    var value: String = String()
-
-    var unknownFields = SwiftProtobuf.UnknownStorage()
-
-    init() {}
-  }
-
-  struct Response {
-    // SwiftProtobuf.Message conformance is added in an extension below. See the
-    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-    // methods supported on all messages.
-
-    var unknownFields = SwiftProtobuf.UnknownStorage()
-
-    init() {}
-  }
-
-  init() {}
-}
-
 struct Error {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
@@ -273,10 +293,6 @@ struct State {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
-
-  var sum: Int32 = 0
-
-  var result: String = String()
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -300,15 +316,14 @@ extension Request: @unchecked Sendable {}
 extension Request.OneOf_Payload: @unchecked Sendable {}
 extension Response: @unchecked Sendable {}
 extension Response.OneOf_Payload: @unchecked Sendable {}
+extension Login: @unchecked Sendable {}
+extension Login.AUTH_ERROR: @unchecked Sendable {}
+extension Login.Request: @unchecked Sendable {}
+extension Login.Response: @unchecked Sendable {}
+extension Login.Response.OneOf_Payload: @unchecked Sendable {}
 extension GetState: @unchecked Sendable {}
 extension GetState.Request: @unchecked Sendable {}
 extension GetState.Response: @unchecked Sendable {}
-extension AddNumber: @unchecked Sendable {}
-extension AddNumber.Request: @unchecked Sendable {}
-extension AddNumber.Response: @unchecked Sendable {}
-extension AddString: @unchecked Sendable {}
-extension AddString.Request: @unchecked Sendable {}
-extension AddString.Response: @unchecked Sendable {}
 extension Error: @unchecked Sendable {}
 extension State: @unchecked Sendable {}
 extension Options: @unchecked Sendable {}
@@ -319,9 +334,8 @@ extension Options: @unchecked Sendable {}
 extension Request: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = "Request"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .standard(proto: "add_number"),
-    2: .standard(proto: "add_string"),
-    3: .standard(proto: "get_state"),
+    1: .same(proto: "login"),
+    2: .standard(proto: "get_state"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -331,32 +345,19 @@ extension Request: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
       case 1: try {
-        var v: AddNumber.Request?
+        var v: Login.Request?
         var hadOneofValue = false
         if let current = self.payload {
           hadOneofValue = true
-          if case .addNumber(let m) = current {v = m}
+          if case .login(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
         if let v = v {
           if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.payload = .addNumber(v)
+          self.payload = .login(v)
         }
       }()
       case 2: try {
-        var v: AddString.Request?
-        var hadOneofValue = false
-        if let current = self.payload {
-          hadOneofValue = true
-          if case .addString(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.payload = .addString(v)
-        }
-      }()
-      case 3: try {
         var v: GetState.Request?
         var hadOneofValue = false
         if let current = self.payload {
@@ -380,17 +381,13 @@ extension Request: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
     // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
     // https://github.com/apple/swift-protobuf/issues/1182
     switch self.payload {
-    case .addNumber?: try {
-      guard case .addNumber(let v)? = self.payload else { preconditionFailure() }
+    case .login?: try {
+      guard case .login(let v)? = self.payload else { preconditionFailure() }
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }()
-    case .addString?: try {
-      guard case .addString(let v)? = self.payload else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
     }()
     case .getState?: try {
       guard case .getState(let v)? = self.payload else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
     }()
     case nil: break
     }
@@ -407,10 +404,8 @@ extension Request: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
 extension Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = "Response"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .standard(proto: "add_number"),
-    2: .standard(proto: "add_string"),
-    4: .standard(proto: "get_state"),
-    3: .standard(proto: "state_changed"),
+    1: .same(proto: "login"),
+    2: .standard(proto: "get_state"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -420,33 +415,19 @@ extension Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
       case 1: try {
-        var v: AddNumber.Response?
+        var v: Login.Response?
         var hadOneofValue = false
         if let current = self.payload {
           hadOneofValue = true
-          if case .addNumber(let m) = current {v = m}
+          if case .login(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
         if let v = v {
           if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.payload = .addNumber(v)
+          self.payload = .login(v)
         }
       }()
       case 2: try {
-        var v: AddString.Response?
-        var hadOneofValue = false
-        if let current = self.payload {
-          hadOneofValue = true
-          if case .addString(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.payload = .addString(v)
-        }
-      }()
-      case 3: try { try decoder.decodeSingularBoolField(value: &self.stateChanged) }()
-      case 4: try {
         var v: GetState.Response?
         var hadOneofValue = false
         if let current = self.payload {
@@ -470,28 +451,144 @@ extension Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
     // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
     // https://github.com/apple/swift-protobuf/issues/1182
     switch self.payload {
-    case .addNumber?: try {
-      guard case .addNumber(let v)? = self.payload else { preconditionFailure() }
+    case .login?: try {
+      guard case .login(let v)? = self.payload else { preconditionFailure() }
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
     }()
-    case .addString?: try {
-      guard case .addString(let v)? = self.payload else { preconditionFailure() }
+    case .getState?: try {
+      guard case .getState(let v)? = self.payload else { preconditionFailure() }
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
     }()
-    default: break
+    case nil: break
     }
-    if self.stateChanged != false {
-      try visitor.visitSingularBoolField(value: self.stateChanged, fieldNumber: 3)
-    }
-    try { if case .getState(let v)? = self.payload {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
-    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
   static func ==(lhs: Response, rhs: Response) -> Bool {
     if lhs.payload != rhs.payload {return false}
-    if lhs.stateChanged != rhs.stateChanged {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Login: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = "Login"
+  static let _protobuf_nameMap = SwiftProtobuf._NameMap()
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let _ = try decoder.nextFieldNumber() {
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Login, rhs: Login) -> Bool {
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Login.AUTH_ERROR: SwiftProtobuf._ProtoNameProviding {
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    0: .same(proto: "INVALID_CREDENTIALS"),
+  ]
+}
+
+extension Login.Request: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = Login.protoMessageName + ".Request"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "login"),
+    2: .same(proto: "password"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.login) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.password) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.login.isEmpty {
+      try visitor.visitSingularStringField(value: self.login, fieldNumber: 1)
+    }
+    if !self.password.isEmpty {
+      try visitor.visitSingularStringField(value: self.password, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Login.Request, rhs: Login.Request) -> Bool {
+    if lhs.login != rhs.login {return false}
+    if lhs.password != rhs.password {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Login.Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = Login.protoMessageName + ".Response"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "token"),
+    2: .same(proto: "err"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try {
+        var v: String?
+        try decoder.decodeSingularStringField(value: &v)
+        if let v = v {
+          if self.payload != nil {try decoder.handleConflictingOneOf()}
+          self.payload = .token(v)
+        }
+      }()
+      case 2: try {
+        var v: Login.AUTH_ERROR?
+        try decoder.decodeSingularEnumField(value: &v)
+        if let v = v {
+          if self.payload != nil {try decoder.handleConflictingOneOf()}
+          self.payload = .err(v)
+        }
+      }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    switch self.payload {
+    case .token?: try {
+      guard case .token(let v)? = self.payload else { preconditionFailure() }
+      try visitor.visitSingularStringField(value: v, fieldNumber: 1)
+    }()
+    case .err?: try {
+      guard case .err(let v)? = self.payload else { preconditionFailure() }
+      try visitor.visitSingularEnumField(value: v, fieldNumber: 2)
+    }()
+    case nil: break
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Login.Response, rhs: Login.Response) -> Bool {
+    if lhs.payload != rhs.payload {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -571,146 +668,6 @@ extension GetState.Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
   }
 }
 
-extension AddNumber: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = "AddNumber"
-  static let _protobuf_nameMap = SwiftProtobuf._NameMap()
-
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let _ = try decoder.nextFieldNumber() {
-    }
-  }
-
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    try unknownFields.traverse(visitor: &visitor)
-  }
-
-  static func ==(lhs: AddNumber, rhs: AddNumber) -> Bool {
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
-}
-
-extension AddNumber.Request: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = AddNumber.protoMessageName + ".Request"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "amount"),
-  ]
-
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularInt32Field(value: &self.amount) }()
-      default: break
-      }
-    }
-  }
-
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if self.amount != 0 {
-      try visitor.visitSingularInt32Field(value: self.amount, fieldNumber: 1)
-    }
-    try unknownFields.traverse(visitor: &visitor)
-  }
-
-  static func ==(lhs: AddNumber.Request, rhs: AddNumber.Request) -> Bool {
-    if lhs.amount != rhs.amount {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
-}
-
-extension AddNumber.Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = AddNumber.protoMessageName + ".Response"
-  static let _protobuf_nameMap = SwiftProtobuf._NameMap()
-
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let _ = try decoder.nextFieldNumber() {
-    }
-  }
-
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    try unknownFields.traverse(visitor: &visitor)
-  }
-
-  static func ==(lhs: AddNumber.Response, rhs: AddNumber.Response) -> Bool {
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
-}
-
-extension AddString: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = "AddString"
-  static let _protobuf_nameMap = SwiftProtobuf._NameMap()
-
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let _ = try decoder.nextFieldNumber() {
-    }
-  }
-
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    try unknownFields.traverse(visitor: &visitor)
-  }
-
-  static func ==(lhs: AddString, rhs: AddString) -> Bool {
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
-}
-
-extension AddString.Request: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = AddString.protoMessageName + ".Request"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "value"),
-  ]
-
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularStringField(value: &self.value) }()
-      default: break
-      }
-    }
-  }
-
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if !self.value.isEmpty {
-      try visitor.visitSingularStringField(value: self.value, fieldNumber: 1)
-    }
-    try unknownFields.traverse(visitor: &visitor)
-  }
-
-  static func ==(lhs: AddString.Request, rhs: AddString.Request) -> Bool {
-    if lhs.value != rhs.value {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
-}
-
-extension AddString.Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = AddString.protoMessageName + ".Response"
-  static let _protobuf_nameMap = SwiftProtobuf._NameMap()
-
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let _ = try decoder.nextFieldNumber() {
-    }
-  }
-
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    try unknownFields.traverse(visitor: &visitor)
-  }
-
-  static func ==(lhs: AddString.Response, rhs: AddString.Response) -> Bool {
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
-}
-
 extension Error: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = "Error"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
@@ -745,37 +702,18 @@ extension Error: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
 
 extension State: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = "State"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "sum"),
-    2: .same(proto: "result"),
-  ]
+  static let _protobuf_nameMap = SwiftProtobuf._NameMap()
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularInt32Field(value: &self.sum) }()
-      case 2: try { try decoder.decodeSingularStringField(value: &self.result) }()
-      default: break
-      }
+    while let _ = try decoder.nextFieldNumber() {
     }
   }
 
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if self.sum != 0 {
-      try visitor.visitSingularInt32Field(value: self.sum, fieldNumber: 1)
-    }
-    if !self.result.isEmpty {
-      try visitor.visitSingularStringField(value: self.result, fieldNumber: 2)
-    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   static func ==(lhs: State, rhs: State) -> Bool {
-    if lhs.sum != rhs.sum {return false}
-    if lhs.result != rhs.result {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

@@ -8,31 +8,19 @@ package protocol
 @SerialVersionUID(0L)
 final case class Response(
     payload: protocol.Response.Payload = protocol.Response.Payload.Empty,
-    stateChanged: _root_.scala.Boolean = false,
     unknownFields: _root_.scalapb.UnknownFieldSet = _root_.scalapb.UnknownFieldSet.empty
     ) extends scalapb.GeneratedMessage with scalapb.lenses.Updatable[Response] {
     @transient
     private[this] var __serializedSizeMemoized: _root_.scala.Int = 0
     private[this] def __computeSerializedSize(): _root_.scala.Int = {
       var __size = 0
-      if (payload.addNumber.isDefined) {
-        val __value = payload.addNumber.get
-        __size += 1 + _root_.com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(__value.serializedSize) + __value.serializedSize
-      };
-      if (payload.addString.isDefined) {
-        val __value = payload.addString.get
+      if (payload.login.isDefined) {
+        val __value = payload.login.get
         __size += 1 + _root_.com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(__value.serializedSize) + __value.serializedSize
       };
       if (payload.getState.isDefined) {
         val __value = payload.getState.get
         __size += 1 + _root_.com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(__value.serializedSize) + __value.serializedSize
-      };
-      
-      {
-        val __value = stateChanged
-        if (__value != false) {
-          __size += _root_.com.google.protobuf.CodedOutputStream.computeBoolSize(3, __value)
-        }
       };
       __size += unknownFields.serializedSize
       __size
@@ -47,61 +35,39 @@ final case class Response(
       
     }
     def writeTo(`_output__`: _root_.com.google.protobuf.CodedOutputStream): _root_.scala.Unit = {
-      payload.addNumber.foreach { __v =>
+      payload.login.foreach { __v =>
         val __m = __v
         _output__.writeTag(1, 2)
         _output__.writeUInt32NoTag(__m.serializedSize)
         __m.writeTo(_output__)
       };
-      payload.addString.foreach { __v =>
+      payload.getState.foreach { __v =>
         val __m = __v
         _output__.writeTag(2, 2)
         _output__.writeUInt32NoTag(__m.serializedSize)
         __m.writeTo(_output__)
       };
-      {
-        val __v = stateChanged
-        if (__v != false) {
-          _output__.writeBool(3, __v)
-        }
-      };
-      payload.getState.foreach { __v =>
-        val __m = __v
-        _output__.writeTag(4, 2)
-        _output__.writeUInt32NoTag(__m.serializedSize)
-        __m.writeTo(_output__)
-      };
       unknownFields.writeTo(_output__)
     }
-    def getAddNumber: protocol.AddNumber.Response = payload.addNumber.getOrElse(protocol.AddNumber.Response.defaultInstance)
-    def withAddNumber(__v: protocol.AddNumber.Response): Response = copy(payload = protocol.Response.Payload.AddNumber(__v))
-    def getAddString: protocol.AddString.Response = payload.addString.getOrElse(protocol.AddString.Response.defaultInstance)
-    def withAddString(__v: protocol.AddString.Response): Response = copy(payload = protocol.Response.Payload.AddString(__v))
+    def getLogin: protocol.Login.Response = payload.login.getOrElse(protocol.Login.Response.defaultInstance)
+    def withLogin(__v: protocol.Login.Response): Response = copy(payload = protocol.Response.Payload.Login(__v))
     def getGetState: protocol.GetState.Response = payload.getState.getOrElse(protocol.GetState.Response.defaultInstance)
     def withGetState(__v: protocol.GetState.Response): Response = copy(payload = protocol.Response.Payload.GetState(__v))
-    def withStateChanged(__v: _root_.scala.Boolean): Response = copy(stateChanged = __v)
     def clearPayload: Response = copy(payload = protocol.Response.Payload.Empty)
     def withPayload(__v: protocol.Response.Payload): Response = copy(payload = __v)
     def withUnknownFields(__v: _root_.scalapb.UnknownFieldSet) = copy(unknownFields = __v)
     def discardUnknownFields = copy(unknownFields = _root_.scalapb.UnknownFieldSet.empty)
     def getFieldByNumber(__fieldNumber: _root_.scala.Int): _root_.scala.Any = {
       (__fieldNumber: @_root_.scala.unchecked) match {
-        case 1 => payload.addNumber.orNull
-        case 2 => payload.addString.orNull
-        case 4 => payload.getState.orNull
-        case 3 => {
-          val __t = stateChanged
-          if (__t != false) __t else null
-        }
+        case 1 => payload.login.orNull
+        case 2 => payload.getState.orNull
       }
     }
     def getField(__field: _root_.scalapb.descriptors.FieldDescriptor): _root_.scalapb.descriptors.PValue = {
       _root_.scala.Predef.require(__field.containingMessage eq companion.scalaDescriptor)
       (__field.number: @_root_.scala.unchecked) match {
-        case 1 => payload.addNumber.map(_.toPMessage).getOrElse(_root_.scalapb.descriptors.PEmpty)
-        case 2 => payload.addString.map(_.toPMessage).getOrElse(_root_.scalapb.descriptors.PEmpty)
-        case 4 => payload.getState.map(_.toPMessage).getOrElse(_root_.scalapb.descriptors.PEmpty)
-        case 3 => _root_.scalapb.descriptors.PBoolean(stateChanged)
+        case 1 => payload.login.map(_.toPMessage).getOrElse(_root_.scalapb.descriptors.PEmpty)
+        case 2 => payload.getState.map(_.toPMessage).getOrElse(_root_.scalapb.descriptors.PEmpty)
       }
     }
     def toProtoString: _root_.scala.Predef.String = _root_.scalapb.TextFormat.printToUnicodeString(this)
@@ -112,7 +78,6 @@ final case class Response(
 object Response extends scalapb.GeneratedMessageCompanion[protocol.Response] {
   implicit def messageCompanion: scalapb.GeneratedMessageCompanion[protocol.Response] = this
   def parseFrom(`_input__`: _root_.com.google.protobuf.CodedInputStream): protocol.Response = {
-    var __stateChanged: _root_.scala.Boolean = false
     var __payload: protocol.Response.Payload = protocol.Response.Payload.Empty
     var `_unknownFields__`: _root_.scalapb.UnknownFieldSet.Builder = null
     var _done__ = false
@@ -121,13 +86,9 @@ object Response extends scalapb.GeneratedMessageCompanion[protocol.Response] {
       _tag__ match {
         case 0 => _done__ = true
         case 10 =>
-          __payload = protocol.Response.Payload.AddNumber(__payload.addNumber.fold(_root_.scalapb.LiteParser.readMessage[protocol.AddNumber.Response](_input__))(_root_.scalapb.LiteParser.readMessage(_input__, _)))
+          __payload = protocol.Response.Payload.Login(__payload.login.fold(_root_.scalapb.LiteParser.readMessage[protocol.Login.Response](_input__))(_root_.scalapb.LiteParser.readMessage(_input__, _)))
         case 18 =>
-          __payload = protocol.Response.Payload.AddString(__payload.addString.fold(_root_.scalapb.LiteParser.readMessage[protocol.AddString.Response](_input__))(_root_.scalapb.LiteParser.readMessage(_input__, _)))
-        case 34 =>
           __payload = protocol.Response.Payload.GetState(__payload.getState.fold(_root_.scalapb.LiteParser.readMessage[protocol.GetState.Response](_input__))(_root_.scalapb.LiteParser.readMessage(_input__, _)))
-        case 24 =>
-          __stateChanged = _input__.readBool()
         case tag =>
           if (_unknownFields__ == null) {
             _unknownFields__ = new _root_.scalapb.UnknownFieldSet.Builder()
@@ -136,7 +97,6 @@ object Response extends scalapb.GeneratedMessageCompanion[protocol.Response] {
       }
     }
     protocol.Response(
-        stateChanged = __stateChanged,
         payload = __payload,
         unknownFields = if (_unknownFields__ == null) _root_.scalapb.UnknownFieldSet.empty else _unknownFields__.result()
     )
@@ -145,10 +105,8 @@ object Response extends scalapb.GeneratedMessageCompanion[protocol.Response] {
     case _root_.scalapb.descriptors.PMessage(__fieldsMap) =>
       _root_.scala.Predef.require(__fieldsMap.keys.forall(_.containingMessage eq scalaDescriptor), "FieldDescriptor does not match message type.")
       protocol.Response(
-        stateChanged = __fieldsMap.get(scalaDescriptor.findFieldByNumber(3).get).map(_.as[_root_.scala.Boolean]).getOrElse(false),
-        payload = __fieldsMap.get(scalaDescriptor.findFieldByNumber(1).get).flatMap(_.as[_root_.scala.Option[protocol.AddNumber.Response]]).map(protocol.Response.Payload.AddNumber(_))
-            .orElse[protocol.Response.Payload](__fieldsMap.get(scalaDescriptor.findFieldByNumber(2).get).flatMap(_.as[_root_.scala.Option[protocol.AddString.Response]]).map(protocol.Response.Payload.AddString(_)))
-            .orElse[protocol.Response.Payload](__fieldsMap.get(scalaDescriptor.findFieldByNumber(4).get).flatMap(_.as[_root_.scala.Option[protocol.GetState.Response]]).map(protocol.Response.Payload.GetState(_)))
+        payload = __fieldsMap.get(scalaDescriptor.findFieldByNumber(1).get).flatMap(_.as[_root_.scala.Option[protocol.Login.Response]]).map(protocol.Response.Payload.Login(_))
+            .orElse[protocol.Response.Payload](__fieldsMap.get(scalaDescriptor.findFieldByNumber(2).get).flatMap(_.as[_root_.scala.Option[protocol.GetState.Response]]).map(protocol.Response.Payload.GetState(_)))
             .getOrElse(protocol.Response.Payload.Empty)
       )
     case _ => throw new RuntimeException("Expected PMessage")
@@ -158,26 +116,22 @@ object Response extends scalapb.GeneratedMessageCompanion[protocol.Response] {
   def messageCompanionForFieldNumber(__number: _root_.scala.Int): _root_.scalapb.GeneratedMessageCompanion[_] = {
     var __out: _root_.scalapb.GeneratedMessageCompanion[_] = null
     (__number: @_root_.scala.unchecked) match {
-      case 1 => __out = protocol.AddNumber.Response
-      case 2 => __out = protocol.AddString.Response
-      case 4 => __out = protocol.GetState.Response
+      case 1 => __out = protocol.Login.Response
+      case 2 => __out = protocol.GetState.Response
     }
     __out
   }
   lazy val nestedMessagesCompanions: Seq[_root_.scalapb.GeneratedMessageCompanion[_ <: _root_.scalapb.GeneratedMessage]] = Seq.empty
   def enumCompanionForFieldNumber(__fieldNumber: _root_.scala.Int): _root_.scalapb.GeneratedEnumCompanion[_] = throw new MatchError(__fieldNumber)
   lazy val defaultInstance = protocol.Response(
-    stateChanged = false,
     payload = protocol.Response.Payload.Empty
   )
   sealed trait Payload extends _root_.scalapb.GeneratedOneof {
     def isEmpty: _root_.scala.Boolean = false
     def isDefined: _root_.scala.Boolean = true
-    def isAddNumber: _root_.scala.Boolean = false
-    def isAddString: _root_.scala.Boolean = false
+    def isLogin: _root_.scala.Boolean = false
     def isGetState: _root_.scala.Boolean = false
-    def addNumber: _root_.scala.Option[protocol.AddNumber.Response] = _root_.scala.None
-    def addString: _root_.scala.Option[protocol.AddString.Response] = _root_.scala.None
+    def login: _root_.scala.Option[protocol.Login.Response] = _root_.scala.None
     def getState: _root_.scala.Option[protocol.GetState.Response] = _root_.scala.None
   }
   object Payload {
@@ -191,44 +145,31 @@ object Response extends scalapb.GeneratedMessageCompanion[protocol.Response] {
     }
   
     @SerialVersionUID(0L)
-    final case class AddNumber(value: protocol.AddNumber.Response) extends protocol.Response.Payload {
-      type ValueType = protocol.AddNumber.Response
-      override def isAddNumber: _root_.scala.Boolean = true
-      override def addNumber: _root_.scala.Option[protocol.AddNumber.Response] = Some(value)
+    final case class Login(value: protocol.Login.Response) extends protocol.Response.Payload {
+      type ValueType = protocol.Login.Response
+      override def isLogin: _root_.scala.Boolean = true
+      override def login: _root_.scala.Option[protocol.Login.Response] = Some(value)
       override def number: _root_.scala.Int = 1
-    }
-    @SerialVersionUID(0L)
-    final case class AddString(value: protocol.AddString.Response) extends protocol.Response.Payload {
-      type ValueType = protocol.AddString.Response
-      override def isAddString: _root_.scala.Boolean = true
-      override def addString: _root_.scala.Option[protocol.AddString.Response] = Some(value)
-      override def number: _root_.scala.Int = 2
     }
     @SerialVersionUID(0L)
     final case class GetState(value: protocol.GetState.Response) extends protocol.Response.Payload {
       type ValueType = protocol.GetState.Response
       override def isGetState: _root_.scala.Boolean = true
       override def getState: _root_.scala.Option[protocol.GetState.Response] = Some(value)
-      override def number: _root_.scala.Int = 4
+      override def number: _root_.scala.Int = 2
     }
   }
   implicit class ResponseLens[UpperPB](_l: _root_.scalapb.lenses.Lens[UpperPB, protocol.Response]) extends _root_.scalapb.lenses.ObjectLens[UpperPB, protocol.Response](_l) {
-    def addNumber: _root_.scalapb.lenses.Lens[UpperPB, protocol.AddNumber.Response] = field(_.getAddNumber)((c_, f_) => c_.copy(payload = protocol.Response.Payload.AddNumber(f_)))
-    def addString: _root_.scalapb.lenses.Lens[UpperPB, protocol.AddString.Response] = field(_.getAddString)((c_, f_) => c_.copy(payload = protocol.Response.Payload.AddString(f_)))
+    def login: _root_.scalapb.lenses.Lens[UpperPB, protocol.Login.Response] = field(_.getLogin)((c_, f_) => c_.copy(payload = protocol.Response.Payload.Login(f_)))
     def getState: _root_.scalapb.lenses.Lens[UpperPB, protocol.GetState.Response] = field(_.getGetState)((c_, f_) => c_.copy(payload = protocol.Response.Payload.GetState(f_)))
-    def stateChanged: _root_.scalapb.lenses.Lens[UpperPB, _root_.scala.Boolean] = field(_.stateChanged)((c_, f_) => c_.copy(stateChanged = f_))
     def payload: _root_.scalapb.lenses.Lens[UpperPB, protocol.Response.Payload] = field(_.payload)((c_, f_) => c_.copy(payload = f_))
   }
-  final val ADD_NUMBER_FIELD_NUMBER = 1
-  final val ADD_STRING_FIELD_NUMBER = 2
-  final val GET_STATE_FIELD_NUMBER = 4
-  final val STATE_CHANGED_FIELD_NUMBER = 3
+  final val LOGIN_FIELD_NUMBER = 1
+  final val GET_STATE_FIELD_NUMBER = 2
   def of(
-    payload: protocol.Response.Payload,
-    stateChanged: _root_.scala.Boolean
+    payload: protocol.Response.Payload
   ): _root_.protocol.Response = _root_.protocol.Response(
-    payload,
-    stateChanged
+    payload
   )
   // @@protoc_insertion_point(GeneratedMessageCompanion[Response])
 }

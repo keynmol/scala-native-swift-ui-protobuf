@@ -11,6 +11,7 @@ import ScalaKit
 struct LoginView: View {
     @SwiftUI.State private var username: String = ""
     @SwiftUI.State private var password: String = ""
+    @SwiftUI.State private var error: String? = nil
     
     private var switchView: (ViewModel.State) -> ();
     
@@ -21,6 +22,16 @@ struct LoginView: View {
     var body: some View {
         VStack {
             Spacer()
+            if let errMsg = error {
+                Label(errMsg, systemImage: "cloud.rain").bold().foregroundColor(.white).frame(height: 20)
+                    .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
+                    .cornerRadius(20)
+                    .background(Color(hex:"#8f011b"))
+            } else {
+                Spacer(minLength: 40)
+            }
+            
+            
             Text("Twotm8").font(.system(size: 50))
                 .fontWeight(.bold).shadow(color: .black, radius: 10).foregroundColor(.white)
             
@@ -41,7 +52,17 @@ struct LoginView: View {
     }
     
     func logIn() {
-        switchView(.timeline)
+        let resp = Interop.sendRequest(request: .login(Login.Request.with {
+            $0.login = username
+            $0.password = password
+        }))
+        
+        switch resp {
+        case .Ok(let oneOf_Payload):
+            print(oneOf_Payload)
+        case .Err(let protocolError):
+            error = protocolError.msg()
+        }
     }
 }
 
@@ -59,5 +80,6 @@ extension Color {
 
 #Preview {
     LoginView(switchView: {(v: ViewModel.State) in ()})
+    
 }
 
