@@ -15,7 +15,8 @@ object ProtocolProto extends _root_.scalapb.GeneratedFileObject {
       protocol.AddNumber,
       protocol.AddString,
       protocol.Error,
-      protocol.State
+      protocol.State,
+      protocol.Options
     )
   private lazy val ProtoBytes: _root_.scala.Array[Byte] =
       scalapb.Encoding.fromBase64(scala.collection.immutable.Seq(
@@ -30,7 +31,8 @@ object ProtocolProto extends _root_.scalapb.GeneratedFileObject {
   VIFc3RhdGUiRwoJQWRkTnVtYmVyGi4KB1JlcXVlc3QSIwoGYW1vdW50GAEgASgFQgviPwgSBmFtb3VudFIGYW1vdW50GgoKCFJlc
   3BvbnNlIkQKCUFkZFN0cmluZxorCgdSZXF1ZXN0EiAKBXZhbHVlGAEgASgJQgriPwcSBXZhbHVlUgV2YWx1ZRoKCghSZXNwb25zZ
   SIvCgVFcnJvchImCgdtZXNzYWdlGAEgASgJQgziPwkSB21lc3NhZ2VSB21lc3NhZ2UiSAoFU3RhdGUSGgoDc3VtGAEgASgFQgjiP
-  wUSA3N1bVIDc3VtEiMKBnJlc3VsdBgCIAEoCUIL4j8IEgZyZXN1bHRSBnJlc3VsdGIGcHJvdG8z"""
+  wUSA3N1bVIDc3VtEiMKBnJlc3VsdBgCIAEoCUIL4j8IEgZyZXN1bHRSBnJlc3VsdCJBCgdPcHRpb25zEjYKDWRlYnVnX2xvZ2dpb
+  mcYASABKAhCEeI/DhIMZGVidWdMb2dnaW5nUgxkZWJ1Z0xvZ2dpbmdiBnByb3RvMw=="""
       ).mkString)
   lazy val scalaDescriptor: _root_.scalapb.descriptors.FileDescriptor = {
     val scalaProto = com.google.protobuf.descriptor.FileDescriptorProto.parseFrom(ProtoBytes)

@@ -42,3 +42,7 @@ message State {
   int32 sum = 1;
   string result = 2;
 }
+
+message Options {
+  bool debug_logging = 1;
+}

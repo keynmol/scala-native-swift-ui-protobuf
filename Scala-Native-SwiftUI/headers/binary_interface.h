@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <stddef.h>
+
 typedef struct ByteArray {
   const int size;
   const char *bytes;
@@ -10,17 +11,13 @@ typedef struct ByteArray {
 
 typedef struct Result {
   const ByteArray *message;
-  const ByteArray *error;
+  const int id;
+  const bool isError;
 } Result;
 
-typedef void *(*Allocator)(size_t size);
-
-typedef struct Context {
-  const Allocator allocator;
-} Context;
-
-Result *scala_app_request(const ByteArray *message, const Context *context);
-Result *scala_app_init(const ByteArray *start_state, const Context *context);
+Result *scala_app_request(const ByteArray *message);
+Result *scala_app_init(const ByteArray *start_state, const ByteArray* options);
+bool scala_app_free_result(const Result* result);
 
 bool scala_app_result_ok(const Result *result);
 

@@ -5,29 +5,7 @@ import _root_.scala.scalanative.unsigned.*
 import _root_.scala.scalanative.libc.*
 import _root_.scala.scalanative.*
 
-object aliases:
-  import _root_.scala_app.binarybridge.aliases.*
-  import _root_.scala_app.binarybridge.structs.*
-
-  /**
-   * [bindgen] header: /Users/velvetbaldmime/projects/Scala-Native-SwiftUI/Scala-Native-SwiftUI/headers/binary_interface.h
-  */
-  opaque type Allocator = CFuncPtr1[size_t, Ptr[Byte]]
-  object Allocator: 
-    given _tag: Tag[Allocator] = Tag.materializeCFuncPtr1[size_t, Ptr[Byte]]
-    inline def apply(inline o: CFuncPtr1[size_t, Ptr[Byte]]): Allocator = o
-    extension (v: Allocator)
-      inline def value: CFuncPtr1[size_t, Ptr[Byte]] = v
-
-  type size_t = libc.stddef.size_t
-  object size_t: 
-    val _tag: Tag[size_t] = summon[Tag[libc.stddef.size_t]]
-    inline def apply(inline o: libc.stddef.size_t): size_t = o
-    extension (v: size_t)
-      inline def value: libc.stddef.size_t = v
-
 object structs:
-  import _root_.scala_app.binarybridge.aliases.*
   import _root_.scala_app.binarybridge.structs.*
 
   /**
@@ -51,49 +29,41 @@ object structs:
   /**
    * [bindgen] header: /Users/velvetbaldmime/projects/Scala-Native-SwiftUI/Scala-Native-SwiftUI/headers/binary_interface.h
   */
-  opaque type Context = CStruct1[Allocator]
-  object Context:
-    given _tag: Tag[Context] = Tag.materializeCStruct1Tag[Allocator]
-    def apply()(using Zone): Ptr[Context] = scala.scalanative.unsafe.alloc[Context](1)
-    def apply(allocator : Allocator)(using Zone): Ptr[Context] = 
-      val ____ptr = apply()
-      (!____ptr).allocator = allocator
-      ____ptr
-    extension (struct: Context)
-      def allocator : Allocator = struct._1
-      def allocator_=(value: Allocator): Unit = !struct.at1 = value
-
-  /**
-   * [bindgen] header: /Users/velvetbaldmime/projects/Scala-Native-SwiftUI/Scala-Native-SwiftUI/headers/binary_interface.h
-  */
-  opaque type Result = CStruct2[Ptr[ByteArray], Ptr[ByteArray]]
+  opaque type Result = CStruct3[Ptr[ByteArray], CInt, Boolean]
   object Result:
-    given _tag: Tag[Result] = Tag.materializeCStruct2Tag[Ptr[ByteArray], Ptr[ByteArray]]
+    given _tag: Tag[Result] = Tag.materializeCStruct3Tag[Ptr[ByteArray], CInt, Boolean]
     def apply()(using Zone): Ptr[Result] = scala.scalanative.unsafe.alloc[Result](1)
-    def apply(message : Ptr[ByteArray], error : Ptr[ByteArray])(using Zone): Ptr[Result] = 
+    def apply(message : Ptr[ByteArray], id : CInt, isError : Boolean)(using Zone): Ptr[Result] = 
       val ____ptr = apply()
       (!____ptr).message = message
-      (!____ptr).error = error
+      (!____ptr).id = id
+      (!____ptr).isError = isError
       ____ptr
     extension (struct: Result)
       def message : Ptr[ByteArray] = struct._1
       def message_=(value: Ptr[ByteArray]): Unit = !struct.at1 = value
-      def error : Ptr[ByteArray] = struct._2
-      def error_=(value: Ptr[ByteArray]): Unit = !struct.at2 = value
+      def id : CInt = struct._2
+      def id_=(value: CInt): Unit = !struct.at2 = value
+      def isError : Boolean = struct._3
+      def isError_=(value: Boolean): Unit = !struct.at3 = value
 
 trait ExportedFunctions:
-  import _root_.scala_app.binarybridge.aliases.*
   import _root_.scala_app.binarybridge.structs.*
 
   /**
    * [bindgen] header: /Users/velvetbaldmime/projects/Scala-Native-SwiftUI/Scala-Native-SwiftUI/headers/binary_interface.h
   */
-  def scala_app_init(start_state : Ptr[ByteArray], context : Ptr[Context]): Ptr[Result]
+  def scala_app_free_result(result : Ptr[Result]): Boolean
 
   /**
    * [bindgen] header: /Users/velvetbaldmime/projects/Scala-Native-SwiftUI/Scala-Native-SwiftUI/headers/binary_interface.h
   */
-  def scala_app_request(message : Ptr[ByteArray], context : Ptr[Context]): Ptr[Result]
+  def scala_app_init(start_state : Ptr[ByteArray], options : Ptr[ByteArray]): Ptr[Result]
+
+  /**
+   * [bindgen] header: /Users/velvetbaldmime/projects/Scala-Native-SwiftUI/Scala-Native-SwiftUI/headers/binary_interface.h
+  */
+  def scala_app_request(message : Ptr[ByteArray]): Ptr[Result]
 
   /**
    * [bindgen] header: /Users/velvetbaldmime/projects/Scala-Native-SwiftUI/Scala-Native-SwiftUI/headers/binary_interface.h
@@ -102,20 +72,25 @@ trait ExportedFunctions:
 
 
 object functions extends ExportedFunctions:
-  import _root_.scala_app.binarybridge.aliases.*
   import _root_.scala_app.binarybridge.structs.*
 
   /**
    * [bindgen] header: /Users/velvetbaldmime/projects/Scala-Native-SwiftUI/Scala-Native-SwiftUI/headers/binary_interface.h
   */
   @exported
-  override def scala_app_init(start_state : Ptr[ByteArray], context : Ptr[Context]): Ptr[Result] = scala_app.binarybridge.impl.Implementations.scala_app_init(start_state, context)
+  override def scala_app_free_result(result : Ptr[Result]): Boolean = scala_app.binarybridge.impl.Implementations.scala_app_free_result(result)
 
   /**
    * [bindgen] header: /Users/velvetbaldmime/projects/Scala-Native-SwiftUI/Scala-Native-SwiftUI/headers/binary_interface.h
   */
   @exported
-  override def scala_app_request(message : Ptr[ByteArray], context : Ptr[Context]): Ptr[Result] = scala_app.binarybridge.impl.Implementations.scala_app_request(message, context)
+  override def scala_app_init(start_state : Ptr[ByteArray], options : Ptr[ByteArray]): Ptr[Result] = scala_app.binarybridge.impl.Implementations.scala_app_init(start_state, options)
+
+  /**
+   * [bindgen] header: /Users/velvetbaldmime/projects/Scala-Native-SwiftUI/Scala-Native-SwiftUI/headers/binary_interface.h
+  */
+  @exported
+  override def scala_app_request(message : Ptr[ByteArray]): Ptr[Result] = scala_app.binarybridge.impl.Implementations.scala_app_request(message)
 
   /**
    * [bindgen] header: /Users/velvetbaldmime/projects/Scala-Native-SwiftUI/Scala-Native-SwiftUI/headers/binary_interface.h
@@ -125,11 +100,7 @@ object functions extends ExportedFunctions:
 
 object types:
   export _root_.scala_app.binarybridge.structs.*
-  export _root_.scala_app.binarybridge.aliases.*
 
 object all:
-  export _root_.scala_app.binarybridge.aliases.Allocator
-  export _root_.scala_app.binarybridge.aliases.size_t
   export _root_.scala_app.binarybridge.structs.ByteArray
-  export _root_.scala_app.binarybridge.structs.Context
   export _root_.scala_app.binarybridge.structs.Result

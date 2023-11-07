@@ -10,20 +10,21 @@ import ScalaKit
 
 @main
 struct Scala_Native_SwiftUIApp: App {
-    
-    private var context: Context? = nil
-    
     init() {
-        let context = ScalaKit.Context(allocator: {size in
-            UnsafeMutableRawPointer(mutating: UnsafeRawPointer(UnsafeMutablePointer<CChar>.allocate(capacity: size)))})
-        initApp(context: context)
+        do {
+            try initApp(options: Options.with {
+                $0.debugLogging = true
+            })
+        } catch {
+            
+        }
         
-        self.context = context
+        
     }
     
     var body: some Scene {
         WindowGroup {
-            ContentView(context: self.context!)
+            ContentView()
         }
     }
 }

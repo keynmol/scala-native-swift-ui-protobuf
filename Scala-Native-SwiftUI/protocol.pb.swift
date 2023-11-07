@@ -283,6 +283,18 @@ struct State {
   init() {}
 }
 
+struct Options {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var debugLogging: Bool = false
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+}
+
 #if swift(>=5.5) && canImport(_Concurrency)
 extension Request: @unchecked Sendable {}
 extension Request.OneOf_Payload: @unchecked Sendable {}
@@ -299,6 +311,7 @@ extension AddString.Request: @unchecked Sendable {}
 extension AddString.Response: @unchecked Sendable {}
 extension Error: @unchecked Sendable {}
 extension State: @unchecked Sendable {}
+extension Options: @unchecked Sendable {}
 #endif  // swift(>=5.5) && canImport(_Concurrency)
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
@@ -763,6 +776,38 @@ extension State: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
   static func ==(lhs: State, rhs: State) -> Bool {
     if lhs.sum != rhs.sum {return false}
     if lhs.result != rhs.result {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Options: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = "Options"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "debug_logging"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularBoolField(value: &self.debugLogging) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if self.debugLogging != false {
+      try visitor.visitSingularBoolField(value: self.debugLogging, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Options, rhs: Options) -> Bool {
+    if lhs.debugLogging != rhs.debugLogging {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

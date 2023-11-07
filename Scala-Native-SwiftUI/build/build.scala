@@ -16,9 +16,9 @@
 
   os.makeDir.all(xcFrameworkLocation)
   generateBindings(header, bindings)
-  createXCFramework(library, headers, xcFrameworkLocation)
   generateProtobuf(protoFile, dest, protoScalabindings)
   buildLibrary(scalaCode, library)
+  createXCFramework(library, headers, xcFrameworkLocation)
 
 
 def run(args: String*) = 

@@ -16,7 +16,7 @@ class StateManager(private var st: State):
     Answer.Ok(Response(payload = msg))
 
   def stateChange[T <: Response.Payload](msg: T, change: State => State) =
-    val newState = st.synchronized:
+    st.synchronized:
       st = change(st)
       st
     Answer.Ok(Response(payload = msg, stateChanged = true))
@@ -25,6 +25,7 @@ class StateManager(private var st: State):
 end StateManager
 
 def handleRequest(state: StateManager, req: Request): Answer =
+  if req.payload.isDefined then scribe.info(s"Handling request: ${req.payload}")
   req.payload match
     case Req.Empty => Answer.Error("payload was empty")
     case Req.AddNumber(value) =>
@@ -42,3 +43,5 @@ def handleRequest(state: StateManager, req: Request): Answer =
       )
     case Req.GetState(value) =>
       state.respond(Res.GetState(GetState.Response(state = Some(state.get))))
+  end match
+end handleRequest

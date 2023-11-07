@@ -11,10 +11,6 @@ import SwiftProtobuf
 
 struct ContentView: View {
     @SwiftUI.State private var username: String = ""
-    private var context: Context? = nil
-    init(context: Context) {
-        self.context = context
-    }
     var body: some View {
         VStack {
             Image(systemName: "globe")
@@ -30,91 +26,82 @@ struct ContentView: View {
     
     func greet(number: Int32?) -> String {
         if let num = number {
-            let req = Request.with {
-                $0.payload = Request.OneOf_Payload.addNumber(
-                    AddNumber.Request.with {
-                        $0.amount = num
-                    }
-                )
+            let req = Request.OneOf_Payload.addNumber(
+                AddNumber.Request.with {
+                    $0.amount = num
+                }
+            )
+            do {
+                let resp = try sendRequest(request: req)
+                return "OK"
+            } catch ProtocolError.failure(let str) {
+                return "Failure: \(str)"
+            } catch ProtocolError.parsing(let str) {
+                return "Fatal error: \(str)"
+            }
+            catch {
+                return "Unknown Error: \(error.localizedDescription)"
             }
             
-            if let resp = writeToWire(msg: req, context: self.context!) {
-                if case .Left(let error) = resp {
-                    return "ERROR: \(error)"
-                } else {
-                    return "Great"
-                }
-                
-            } else {
-                return "Great!"
-            }
         } else {
             return "Not a valid number"
         }
     }
 }
 
+enum ProtocolError: Swift.Error {
+    case failure(String)
+    case parsing(String)
+}
 
 
-
-
-func writeToWire<T: SwiftProtobuf.Message>(msg: T, context: Context) -> Either<String, SwiftProtobuf.Message>? {
-    do {
-        let contents = try msg.serializedData()
-        var response: SwiftProtobuf.Message? = nil
-        var returnErr: String? = nil
-        
-        try contents.withUnsafeBytes { (bytes: UnsafePointer<CChar>) in
-            let ba = ByteArray(size: Int32(contents.count), bytes: bytes);
-             withUnsafePointer(to: ba, { bap in
-                withUnsafePointer(to: context, {contextPtr in
-                    
-                    let result = ScalaKit.scala_app_request(bap, contextPtr)
-                    if let err = getError(result: result) {
-                        returnErr = err
-                    } else {
-                        let messageBytes = result!.pointee.message.pointee.bytes
-                        let messageSize = result!.pointee.message.pointee.size
-                        let buffer = UnsafeBufferPointer(start: messageBytes, count: Int(messageSize))
-                        
-                        do {
-                            let resp = try Response(serializedData: Data(buffer: buffer))
-                            response = resp
-                        } catch {
-                            
-                            returnErr = error.localizedDescription
-                        }
-                    }
-
-                })
-            })
-        }
-        
-        
-        if let err = returnErr {
-            return Either.Left(err)
-        } else {
-            
-            return Either.Right(msg)
-        }
-        
-        
-        
-    } catch {
-        return Either.Left(error.localizedDescription)
+func sendRequest(request: Request.OneOf_Payload) throws -> Response.OneOf_Payload? {
+    let req = Request.with{
+        $0.payload = request
     }
- 
+    let x: Response? = try writeToWire(msg: req)
+    return x.flatMap({r in r.payload})
 }
 
-enum Either<L, R> {
-    case Left(L), Right(R)
-}
 
+func writeToWire<T: SwiftProtobuf.Message, R: SwiftProtobuf.Message>(msg: T) throws -> R? {
+    let contents = try msg.serializedData()
+    
+    return   try contents.withUnsafeBytes { (bytes: UnsafePointer<CChar>) in
+        let ba = ByteArray(size: Int32(contents.count), bytes: bytes);
+        return try withUnsafePointer(to: ba, { bap in
+            
+            let result = ScalaKit.scala_app_request(bap)
+            
+            defer {
+                ScalaKit.scala_app_free_result(result)
+            }
+            
+            if let err = getError(result: result) {
+                throw ProtocolError.failure(err)
+            } else {
+                let messageBytes = result!.pointee.message.pointee.bytes
+                let messageSize = result!.pointee.message.pointee.size
+                let buffer = UnsafeBufferPointer(start: messageBytes, count: Int(messageSize))
+                
+                do {
+                    let resp = try R(serializedData: Data(buffer: buffer))
+                    
+                    return resp
+                } catch {
+                    throw ProtocolError.parsing(error.localizedDescription)
+                }
+            }
+            
+        })
+    }
+    
+}
 
 func getError(result: UnsafeMutablePointer<Result>?) -> String? {
     if(!ScalaKit.scala_app_result_ok(result)) {
-        let errorBytes = result?.pointee.error.pointee.bytes
-        let errorSize = result?.pointee.error.pointee.size
+        let errorBytes = result?.pointee.message.pointee.bytes
+        let errorSize = result?.pointee.message.pointee.size
         let buffer = UnsafeBufferPointer(start: errorBytes, count: Int(errorSize!))
         do {
             let err = try Error(serializedData: Data(buffer: buffer))
@@ -124,15 +111,30 @@ func getError(result: UnsafeMutablePointer<Result>?) -> String? {
         }
     }
     else {return nil}
-
 }
 
-func initApp(context: Context) {
+func initApp(options: Options) throws {
     ScalaKit.ScalaNativeInit()
     
-    let result = withUnsafePointer(to: context, {contextPtr in ScalaKit.scala_app_init(nil, contextPtr)})
+    let contents = try options.serializedData()
     
-    print(getError(result: result))
+    try contents.withUnsafeBytes { (bytes: UnsafePointer<CChar>) in
+        let ba = ByteArray(size: Int32(contents.count), bytes: bytes);
+        
+        try withUnsafePointer(to: ba, { bap in
+            
+            
+            let result = ScalaKit.scala_app_init(nil, bap)
+            
+            defer {
+                ScalaKit.scala_app_free_result(result)
+            }
+            
+            if let err = getError(result: result) {
+                throw ProtocolError.failure(err)
+            }
+        })
+    }
 }
 
 
