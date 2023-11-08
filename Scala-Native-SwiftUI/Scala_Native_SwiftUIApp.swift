@@ -12,14 +12,6 @@ import ScalaKit
 struct Scala_Native_SwiftUIApp: App {
     @ObservedObject var vm = ViewModel()
     init() {
-        do {
-            try Interop.initApp(options: Options.with {
-                $0.debugLogging = true
-            })
-        } catch {
-            
-        }
-        
         
     }
     
@@ -31,11 +23,11 @@ struct Scala_Native_SwiftUIApp: App {
         WindowGroup {
             switch vm.state {
             case .logIn:
-                LoginView(switchView: setView)
+                LoginView(vm: self.vm)
             case .timeline:
-                TimelineView()
+                TimelineView(vm: self.vm)
             case .showProfile(let string):
-                LoginView(switchView: setView)
+                LoginView(vm: self.vm)
             }
             
         }

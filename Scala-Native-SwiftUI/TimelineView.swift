@@ -9,25 +9,81 @@ import SwiftUI
 
 struct TimelineView: View {
     @SwiftUI.State private var text: String = ""
+    @SwiftUI.State private var errorMessage: String = "";
+    
+    @SwiftUI.State private var twots: [Twot] = [];
+    
+    private let vm: ViewModel;
+    init(vm: ViewModel) {
+        self.vm = vm
+    }
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
+            UserHeaderView(vm: vm)
+            
             HStack{
                 TextField("text", text: $text).font(.system(size: 40))
                 Button(action: sendTwot) {
-                    Text("RAGE")
-                    
-                }.font(.system(size: 20))
-            }.padding()
+                    Text("RAGE").bold()
+                }.disabled(text.isEmpty)
+                
+            }.padding().background(Color.purpleVomit())
             
-            Spacer()
-        }
-        .background(Color(hex:"#9ba0dc"))
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+            HStack {
+                ErrorView(errMsg: $errorMessage).background(Color.purpleVomit())
+            }.frame(maxWidth: .infinity).background(Color.purpleVomit())
+            
+            List {
+                Section {
+                    ForEach(twots) {
+                        TwotView(twot: $0)
+                    }.listRowBackground(Color.purpleVomit())
+                }.background(Color.purpleVomit())
+                
+            }.frame(maxWidth: .infinity, maxHeight: .infinity)
+                .task {
+                    getTwots()
+                }
+                .border(.red)
+                .listStyle(.plain)
+        }.frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     
+    
     func sendTwot() {}
+    
+    
+    func getTwots() {
+        if let token = vm.getToken() {
+            let twots = Interop.sendRequest(request: .getWall(GetWall.Request.with {
+                $0.token = token
+            }))
+            if case .Ok(.getWall(let wall)) = twots {
+                
+                switch wall.payload {
+                case .wall(let wall):
+                    self.twots = wall.twots
+                case .err(let eRROR_CODE):
+                    self.errorMessage = "error fetching twots \(eRROR_CODE)"
+                case .none:
+                    self.errorMessage = "error fetching twots: no response"
+                }
+                
+            }
+        }
+    }
 }
 
 #Preview {
-    TimelineView()
+    TimelineView(vm: ViewModel())
+}
+
+extension Twot: Identifiable {
+    
+}
+
+extension Color {
+    static func purpleVomit() -> Color {
+        return Color(hex: "#9ba0dc")
+    }
 }

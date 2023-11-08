@@ -18,8 +18,16 @@ final case class Request(
         val __value = payload.login.get
         __size += 1 + _root_.com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(__value.serializedSize) + __value.serializedSize
       };
+      if (payload.getWall.isDefined) {
+        val __value = payload.getWall.get
+        __size += 1 + _root_.com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(__value.serializedSize) + __value.serializedSize
+      };
       if (payload.getState.isDefined) {
         val __value = payload.getState.get
+        __size += 1 + _root_.com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(__value.serializedSize) + __value.serializedSize
+      };
+      if (payload.getMe.isDefined) {
+        val __value = payload.getMe.get
         __size += 1 + _root_.com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(__value.serializedSize) + __value.serializedSize
       };
       __size += unknownFields.serializedSize
@@ -41,9 +49,21 @@ final case class Request(
         _output__.writeUInt32NoTag(__m.serializedSize)
         __m.writeTo(_output__)
       };
-      payload.getState.foreach { __v =>
+      payload.getWall.foreach { __v =>
         val __m = __v
         _output__.writeTag(2, 2)
+        _output__.writeUInt32NoTag(__m.serializedSize)
+        __m.writeTo(_output__)
+      };
+      payload.getState.foreach { __v =>
+        val __m = __v
+        _output__.writeTag(3, 2)
+        _output__.writeUInt32NoTag(__m.serializedSize)
+        __m.writeTo(_output__)
+      };
+      payload.getMe.foreach { __v =>
+        val __m = __v
+        _output__.writeTag(4, 2)
         _output__.writeUInt32NoTag(__m.serializedSize)
         __m.writeTo(_output__)
       };
@@ -51,8 +71,12 @@ final case class Request(
     }
     def getLogin: protocol.Login.Request = payload.login.getOrElse(protocol.Login.Request.defaultInstance)
     def withLogin(__v: protocol.Login.Request): Request = copy(payload = protocol.Request.Payload.Login(__v))
+    def getGetWall: protocol.GetWall.Request = payload.getWall.getOrElse(protocol.GetWall.Request.defaultInstance)
+    def withGetWall(__v: protocol.GetWall.Request): Request = copy(payload = protocol.Request.Payload.GetWall(__v))
     def getGetState: protocol.GetState.Request = payload.getState.getOrElse(protocol.GetState.Request.defaultInstance)
     def withGetState(__v: protocol.GetState.Request): Request = copy(payload = protocol.Request.Payload.GetState(__v))
+    def getGetMe: protocol.GetMe.Request = payload.getMe.getOrElse(protocol.GetMe.Request.defaultInstance)
+    def withGetMe(__v: protocol.GetMe.Request): Request = copy(payload = protocol.Request.Payload.GetMe(__v))
     def clearPayload: Request = copy(payload = protocol.Request.Payload.Empty)
     def withPayload(__v: protocol.Request.Payload): Request = copy(payload = __v)
     def withUnknownFields(__v: _root_.scalapb.UnknownFieldSet) = copy(unknownFields = __v)
@@ -60,14 +84,18 @@ final case class Request(
     def getFieldByNumber(__fieldNumber: _root_.scala.Int): _root_.scala.Any = {
       (__fieldNumber: @_root_.scala.unchecked) match {
         case 1 => payload.login.orNull
-        case 2 => payload.getState.orNull
+        case 2 => payload.getWall.orNull
+        case 3 => payload.getState.orNull
+        case 4 => payload.getMe.orNull
       }
     }
     def getField(__field: _root_.scalapb.descriptors.FieldDescriptor): _root_.scalapb.descriptors.PValue = {
       _root_.scala.Predef.require(__field.containingMessage eq companion.scalaDescriptor)
       (__field.number: @_root_.scala.unchecked) match {
         case 1 => payload.login.map(_.toPMessage).getOrElse(_root_.scalapb.descriptors.PEmpty)
-        case 2 => payload.getState.map(_.toPMessage).getOrElse(_root_.scalapb.descriptors.PEmpty)
+        case 2 => payload.getWall.map(_.toPMessage).getOrElse(_root_.scalapb.descriptors.PEmpty)
+        case 3 => payload.getState.map(_.toPMessage).getOrElse(_root_.scalapb.descriptors.PEmpty)
+        case 4 => payload.getMe.map(_.toPMessage).getOrElse(_root_.scalapb.descriptors.PEmpty)
       }
     }
     def toProtoString: _root_.scala.Predef.String = _root_.scalapb.TextFormat.printToUnicodeString(this)
@@ -88,7 +116,11 @@ object Request extends scalapb.GeneratedMessageCompanion[protocol.Request] {
         case 10 =>
           __payload = protocol.Request.Payload.Login(__payload.login.fold(_root_.scalapb.LiteParser.readMessage[protocol.Login.Request](_input__))(_root_.scalapb.LiteParser.readMessage(_input__, _)))
         case 18 =>
+          __payload = protocol.Request.Payload.GetWall(__payload.getWall.fold(_root_.scalapb.LiteParser.readMessage[protocol.GetWall.Request](_input__))(_root_.scalapb.LiteParser.readMessage(_input__, _)))
+        case 26 =>
           __payload = protocol.Request.Payload.GetState(__payload.getState.fold(_root_.scalapb.LiteParser.readMessage[protocol.GetState.Request](_input__))(_root_.scalapb.LiteParser.readMessage(_input__, _)))
+        case 34 =>
+          __payload = protocol.Request.Payload.GetMe(__payload.getMe.fold(_root_.scalapb.LiteParser.readMessage[protocol.GetMe.Request](_input__))(_root_.scalapb.LiteParser.readMessage(_input__, _)))
         case tag =>
           if (_unknownFields__ == null) {
             _unknownFields__ = new _root_.scalapb.UnknownFieldSet.Builder()
@@ -106,7 +138,9 @@ object Request extends scalapb.GeneratedMessageCompanion[protocol.Request] {
       _root_.scala.Predef.require(__fieldsMap.keys.forall(_.containingMessage eq scalaDescriptor), "FieldDescriptor does not match message type.")
       protocol.Request(
         payload = __fieldsMap.get(scalaDescriptor.findFieldByNumber(1).get).flatMap(_.as[_root_.scala.Option[protocol.Login.Request]]).map(protocol.Request.Payload.Login(_))
-            .orElse[protocol.Request.Payload](__fieldsMap.get(scalaDescriptor.findFieldByNumber(2).get).flatMap(_.as[_root_.scala.Option[protocol.GetState.Request]]).map(protocol.Request.Payload.GetState(_)))
+            .orElse[protocol.Request.Payload](__fieldsMap.get(scalaDescriptor.findFieldByNumber(2).get).flatMap(_.as[_root_.scala.Option[protocol.GetWall.Request]]).map(protocol.Request.Payload.GetWall(_)))
+            .orElse[protocol.Request.Payload](__fieldsMap.get(scalaDescriptor.findFieldByNumber(3).get).flatMap(_.as[_root_.scala.Option[protocol.GetState.Request]]).map(protocol.Request.Payload.GetState(_)))
+            .orElse[protocol.Request.Payload](__fieldsMap.get(scalaDescriptor.findFieldByNumber(4).get).flatMap(_.as[_root_.scala.Option[protocol.GetMe.Request]]).map(protocol.Request.Payload.GetMe(_)))
             .getOrElse(protocol.Request.Payload.Empty)
       )
     case _ => throw new RuntimeException("Expected PMessage")
@@ -117,7 +151,9 @@ object Request extends scalapb.GeneratedMessageCompanion[protocol.Request] {
     var __out: _root_.scalapb.GeneratedMessageCompanion[_] = null
     (__number: @_root_.scala.unchecked) match {
       case 1 => __out = protocol.Login.Request
-      case 2 => __out = protocol.GetState.Request
+      case 2 => __out = protocol.GetWall.Request
+      case 3 => __out = protocol.GetState.Request
+      case 4 => __out = protocol.GetMe.Request
     }
     __out
   }
@@ -130,9 +166,13 @@ object Request extends scalapb.GeneratedMessageCompanion[protocol.Request] {
     def isEmpty: _root_.scala.Boolean = false
     def isDefined: _root_.scala.Boolean = true
     def isLogin: _root_.scala.Boolean = false
+    def isGetWall: _root_.scala.Boolean = false
     def isGetState: _root_.scala.Boolean = false
+    def isGetMe: _root_.scala.Boolean = false
     def login: _root_.scala.Option[protocol.Login.Request] = _root_.scala.None
+    def getWall: _root_.scala.Option[protocol.GetWall.Request] = _root_.scala.None
     def getState: _root_.scala.Option[protocol.GetState.Request] = _root_.scala.None
+    def getMe: _root_.scala.Option[protocol.GetMe.Request] = _root_.scala.None
   }
   object Payload {
     @SerialVersionUID(0L)
@@ -152,20 +192,38 @@ object Request extends scalapb.GeneratedMessageCompanion[protocol.Request] {
       override def number: _root_.scala.Int = 1
     }
     @SerialVersionUID(0L)
+    final case class GetWall(value: protocol.GetWall.Request) extends protocol.Request.Payload {
+      type ValueType = protocol.GetWall.Request
+      override def isGetWall: _root_.scala.Boolean = true
+      override def getWall: _root_.scala.Option[protocol.GetWall.Request] = Some(value)
+      override def number: _root_.scala.Int = 2
+    }
+    @SerialVersionUID(0L)
     final case class GetState(value: protocol.GetState.Request) extends protocol.Request.Payload {
       type ValueType = protocol.GetState.Request
       override def isGetState: _root_.scala.Boolean = true
       override def getState: _root_.scala.Option[protocol.GetState.Request] = Some(value)
-      override def number: _root_.scala.Int = 2
+      override def number: _root_.scala.Int = 3
+    }
+    @SerialVersionUID(0L)
+    final case class GetMe(value: protocol.GetMe.Request) extends protocol.Request.Payload {
+      type ValueType = protocol.GetMe.Request
+      override def isGetMe: _root_.scala.Boolean = true
+      override def getMe: _root_.scala.Option[protocol.GetMe.Request] = Some(value)
+      override def number: _root_.scala.Int = 4
     }
   }
   implicit class RequestLens[UpperPB](_l: _root_.scalapb.lenses.Lens[UpperPB, protocol.Request]) extends _root_.scalapb.lenses.ObjectLens[UpperPB, protocol.Request](_l) {
     def login: _root_.scalapb.lenses.Lens[UpperPB, protocol.Login.Request] = field(_.getLogin)((c_, f_) => c_.copy(payload = protocol.Request.Payload.Login(f_)))
+    def getWall: _root_.scalapb.lenses.Lens[UpperPB, protocol.GetWall.Request] = field(_.getGetWall)((c_, f_) => c_.copy(payload = protocol.Request.Payload.GetWall(f_)))
     def getState: _root_.scalapb.lenses.Lens[UpperPB, protocol.GetState.Request] = field(_.getGetState)((c_, f_) => c_.copy(payload = protocol.Request.Payload.GetState(f_)))
+    def getMe: _root_.scalapb.lenses.Lens[UpperPB, protocol.GetMe.Request] = field(_.getGetMe)((c_, f_) => c_.copy(payload = protocol.Request.Payload.GetMe(f_)))
     def payload: _root_.scalapb.lenses.Lens[UpperPB, protocol.Request.Payload] = field(_.payload)((c_, f_) => c_.copy(payload = f_))
   }
   final val LOGIN_FIELD_NUMBER = 1
-  final val GET_STATE_FIELD_NUMBER = 2
+  final val GET_WALL_FIELD_NUMBER = 2
+  final val GET_STATE_FIELD_NUMBER = 3
+  final val GET_ME_FIELD_NUMBER = 4
   def of(
     payload: protocol.Request.Payload
   ): _root_.protocol.Request = _root_.protocol.Request(

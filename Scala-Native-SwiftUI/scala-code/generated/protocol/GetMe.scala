@@ -6,9 +6,9 @@
 package protocol
 
 @SerialVersionUID(0L)
-final case class Login(
+final case class GetMe(
     unknownFields: _root_.scalapb.UnknownFieldSet = _root_.scalapb.UnknownFieldSet.empty
-    ) extends scalapb.GeneratedMessage with scalapb.lenses.Updatable[Login] {
+    ) extends scalapb.GeneratedMessage with scalapb.lenses.Updatable[GetMe] {
     @transient
     private[this] var __serializedSizeMemoized: _root_.scala.Int = 0
     private[this] def __computeSerializedSize(): _root_.scala.Int = {
@@ -33,13 +33,13 @@ final case class Login(
     def getFieldByNumber(__fieldNumber: _root_.scala.Int): _root_.scala.Any = throw new MatchError(__fieldNumber)
     def getField(__field: _root_.scalapb.descriptors.FieldDescriptor): _root_.scalapb.descriptors.PValue = throw new MatchError(__field)
     def toProtoString: _root_.scala.Predef.String = _root_.scalapb.TextFormat.printToUnicodeString(this)
-    def companion: protocol.Login.type = protocol.Login
-    // @@protoc_insertion_point(GeneratedMessage[Login])
+    def companion: protocol.GetMe.type = protocol.GetMe
+    // @@protoc_insertion_point(GeneratedMessage[GetMe])
 }
 
-object Login extends scalapb.GeneratedMessageCompanion[protocol.Login] {
-  implicit def messageCompanion: scalapb.GeneratedMessageCompanion[protocol.Login] = this
-  def parseFrom(`_input__`: _root_.com.google.protobuf.CodedInputStream): protocol.Login = {
+object GetMe extends scalapb.GeneratedMessageCompanion[protocol.GetMe] {
+  implicit def messageCompanion: scalapb.GeneratedMessageCompanion[protocol.GetMe] = this
+  def parseFrom(`_input__`: _root_.com.google.protobuf.CodedInputStream): protocol.GetMe = {
     var `_unknownFields__`: _root_.scalapb.UnknownFieldSet.Builder = null
     var _done__ = false
     while (!_done__) {
@@ -53,34 +53,34 @@ object Login extends scalapb.GeneratedMessageCompanion[protocol.Login] {
           _unknownFields__.parseField(tag, _input__)
       }
     }
-    protocol.Login(
+    protocol.GetMe(
         unknownFields = if (_unknownFields__ == null) _root_.scalapb.UnknownFieldSet.empty else _unknownFields__.result()
     )
   }
-  implicit def messageReads: _root_.scalapb.descriptors.Reads[protocol.Login] = _root_.scalapb.descriptors.Reads{
+  implicit def messageReads: _root_.scalapb.descriptors.Reads[protocol.GetMe] = _root_.scalapb.descriptors.Reads{
     case _root_.scalapb.descriptors.PMessage(__fieldsMap) =>
       _root_.scala.Predef.require(__fieldsMap.keys.forall(_.containingMessage eq scalaDescriptor), "FieldDescriptor does not match message type.")
-      protocol.Login(
+      protocol.GetMe(
       )
     case _ => throw new RuntimeException("Expected PMessage")
   }
-  def javaDescriptor: _root_.com.google.protobuf.Descriptors.Descriptor = ProtocolProto.javaDescriptor.getMessageTypes().get(4)
-  def scalaDescriptor: _root_.scalapb.descriptors.Descriptor = ProtocolProto.scalaDescriptor.messages(4)
+  def javaDescriptor: _root_.com.google.protobuf.Descriptors.Descriptor = ProtocolProto.javaDescriptor.getMessageTypes().get(2)
+  def scalaDescriptor: _root_.scalapb.descriptors.Descriptor = ProtocolProto.scalaDescriptor.messages(2)
   def messageCompanionForFieldNumber(__number: _root_.scala.Int): _root_.scalapb.GeneratedMessageCompanion[_] = throw new MatchError(__number)
   lazy val nestedMessagesCompanions: Seq[_root_.scalapb.GeneratedMessageCompanion[_ <: _root_.scalapb.GeneratedMessage]] =
     Seq[_root_.scalapb.GeneratedMessageCompanion[_ <: _root_.scalapb.GeneratedMessage]](
-      _root_.protocol.Login.Request,
-      _root_.protocol.Login.Response
+      _root_.protocol.GetMe.Request,
+      _root_.protocol.GetMe.Response
     )
   def enumCompanionForFieldNumber(__fieldNumber: _root_.scala.Int): _root_.scalapb.GeneratedEnumCompanion[_] = throw new MatchError(__fieldNumber)
-  lazy val defaultInstance = protocol.Login(
+  lazy val defaultInstance = protocol.GetMe(
   )
   sealed abstract class ERROR_CODE(val value: _root_.scala.Int) extends _root_.scalapb.GeneratedEnum {
-    type EnumType = protocol.Login.ERROR_CODE
-    type RecognizedType = protocol.Login.ERROR_CODE.Recognized
-    def isInvalidCredentials: _root_.scala.Boolean = false
-    def companion: _root_.scalapb.GeneratedEnumCompanion[ERROR_CODE] = protocol.Login.ERROR_CODE
-    final def asRecognized: _root_.scala.Option[protocol.Login.ERROR_CODE.Recognized] = if (isUnrecognized) _root_.scala.None else _root_.scala.Some(this.asInstanceOf[protocol.Login.ERROR_CODE.Recognized])
+    type EnumType = protocol.GetMe.ERROR_CODE
+    type RecognizedType = protocol.GetMe.ERROR_CODE.Recognized
+    def isUnauthorized: _root_.scala.Boolean = false
+    def companion: _root_.scalapb.GeneratedEnumCompanion[ERROR_CODE] = protocol.GetMe.ERROR_CODE
+    final def asRecognized: _root_.scala.Option[protocol.GetMe.ERROR_CODE.Recognized] = if (isUnrecognized) _root_.scala.None else _root_.scala.Some(this.asInstanceOf[protocol.GetMe.ERROR_CODE.Recognized])
   }
   
   object ERROR_CODE extends _root_.scalapb.GeneratedEnumCompanion[ERROR_CODE] {
@@ -88,26 +88,25 @@ object Login extends scalapb.GeneratedMessageCompanion[protocol.Login] {
     implicit def enumCompanion: _root_.scalapb.GeneratedEnumCompanion[ERROR_CODE] = this
     
     @SerialVersionUID(0L)
-    case object INVALID_CREDENTIALS extends ERROR_CODE(0) with ERROR_CODE.Recognized {
+    case object UNAUTHORIZED extends ERROR_CODE(0) with ERROR_CODE.Recognized {
       val index = 0
-      val name = "INVALID_CREDENTIALS"
-      override def isInvalidCredentials: _root_.scala.Boolean = true
+      val name = "UNAUTHORIZED"
+      override def isUnauthorized: _root_.scala.Boolean = true
     }
     
     @SerialVersionUID(0L)
     final case class Unrecognized(unrecognizedValue: _root_.scala.Int) extends ERROR_CODE(unrecognizedValue) with _root_.scalapb.UnrecognizedEnum
-    lazy val values: scala.collection.immutable.Seq[ValueType] = scala.collection.immutable.Seq(INVALID_CREDENTIALS)
+    lazy val values: scala.collection.immutable.Seq[ValueType] = scala.collection.immutable.Seq(UNAUTHORIZED)
     def fromValue(__value: _root_.scala.Int): ERROR_CODE = __value match {
-      case 0 => INVALID_CREDENTIALS
+      case 0 => UNAUTHORIZED
       case __other => Unrecognized(__other)
     }
-    def javaDescriptor: _root_.com.google.protobuf.Descriptors.EnumDescriptor = protocol.Login.javaDescriptor.getEnumTypes().get(0)
-    def scalaDescriptor: _root_.scalapb.descriptors.EnumDescriptor = protocol.Login.scalaDescriptor.enums(0)
+    def javaDescriptor: _root_.com.google.protobuf.Descriptors.EnumDescriptor = protocol.GetMe.javaDescriptor.getEnumTypes().get(0)
+    def scalaDescriptor: _root_.scalapb.descriptors.EnumDescriptor = protocol.GetMe.scalaDescriptor.enums(0)
   }
   @SerialVersionUID(0L)
   final case class Request(
-      login: _root_.scala.Predef.String = "",
-      password: _root_.scala.Predef.String = "",
+      token: _root_.scala.Predef.String = "",
       unknownFields: _root_.scalapb.UnknownFieldSet = _root_.scalapb.UnknownFieldSet.empty
       ) extends scalapb.GeneratedMessage with scalapb.lenses.Updatable[Request] {
       @transient
@@ -116,16 +115,9 @@ object Login extends scalapb.GeneratedMessageCompanion[protocol.Login] {
         var __size = 0
         
         {
-          val __value = login
+          val __value = token
           if (!__value.isEmpty) {
             __size += _root_.com.google.protobuf.CodedOutputStream.computeStringSize(1, __value)
-          }
-        };
-        
-        {
-          val __value = password
-          if (!__value.isEmpty) {
-            __size += _root_.com.google.protobuf.CodedOutputStream.computeStringSize(2, __value)
           }
         };
         __size += unknownFields.serializedSize
@@ -142,31 +134,20 @@ object Login extends scalapb.GeneratedMessageCompanion[protocol.Login] {
       }
       def writeTo(`_output__`: _root_.com.google.protobuf.CodedOutputStream): _root_.scala.Unit = {
         {
-          val __v = login
+          val __v = token
           if (!__v.isEmpty) {
             _output__.writeString(1, __v)
           }
         };
-        {
-          val __v = password
-          if (!__v.isEmpty) {
-            _output__.writeString(2, __v)
-          }
-        };
         unknownFields.writeTo(_output__)
       }
-      def withLogin(__v: _root_.scala.Predef.String): Request = copy(login = __v)
-      def withPassword(__v: _root_.scala.Predef.String): Request = copy(password = __v)
+      def withToken(__v: _root_.scala.Predef.String): Request = copy(token = __v)
       def withUnknownFields(__v: _root_.scalapb.UnknownFieldSet) = copy(unknownFields = __v)
       def discardUnknownFields = copy(unknownFields = _root_.scalapb.UnknownFieldSet.empty)
       def getFieldByNumber(__fieldNumber: _root_.scala.Int): _root_.scala.Any = {
         (__fieldNumber: @_root_.scala.unchecked) match {
           case 1 => {
-            val __t = login
-            if (__t != "") __t else null
-          }
-          case 2 => {
-            val __t = password
+            val __t = token
             if (__t != "") __t else null
           }
         }
@@ -174,20 +155,18 @@ object Login extends scalapb.GeneratedMessageCompanion[protocol.Login] {
       def getField(__field: _root_.scalapb.descriptors.FieldDescriptor): _root_.scalapb.descriptors.PValue = {
         _root_.scala.Predef.require(__field.containingMessage eq companion.scalaDescriptor)
         (__field.number: @_root_.scala.unchecked) match {
-          case 1 => _root_.scalapb.descriptors.PString(login)
-          case 2 => _root_.scalapb.descriptors.PString(password)
+          case 1 => _root_.scalapb.descriptors.PString(token)
         }
       }
       def toProtoString: _root_.scala.Predef.String = _root_.scalapb.TextFormat.printToUnicodeString(this)
-      def companion: protocol.Login.Request.type = protocol.Login.Request
-      // @@protoc_insertion_point(GeneratedMessage[Login.Request])
+      def companion: protocol.GetMe.Request.type = protocol.GetMe.Request
+      // @@protoc_insertion_point(GeneratedMessage[GetMe.Request])
   }
   
-  object Request extends scalapb.GeneratedMessageCompanion[protocol.Login.Request] {
-    implicit def messageCompanion: scalapb.GeneratedMessageCompanion[protocol.Login.Request] = this
-    def parseFrom(`_input__`: _root_.com.google.protobuf.CodedInputStream): protocol.Login.Request = {
-      var __login: _root_.scala.Predef.String = ""
-      var __password: _root_.scala.Predef.String = ""
+  object Request extends scalapb.GeneratedMessageCompanion[protocol.GetMe.Request] {
+    implicit def messageCompanion: scalapb.GeneratedMessageCompanion[protocol.GetMe.Request] = this
+    def parseFrom(`_input__`: _root_.com.google.protobuf.CodedInputStream): protocol.GetMe.Request = {
+      var __token: _root_.scala.Predef.String = ""
       var `_unknownFields__`: _root_.scalapb.UnknownFieldSet.Builder = null
       var _done__ = false
       while (!_done__) {
@@ -195,9 +174,7 @@ object Login extends scalapb.GeneratedMessageCompanion[protocol.Login] {
         _tag__ match {
           case 0 => _done__ = true
           case 10 =>
-            __login = _input__.readStringRequireUtf8()
-          case 18 =>
-            __password = _input__.readStringRequireUtf8()
+            __token = _input__.readStringRequireUtf8()
           case tag =>
             if (_unknownFields__ == null) {
               _unknownFields__ = new _root_.scalapb.UnknownFieldSet.Builder()
@@ -205,58 +182,51 @@ object Login extends scalapb.GeneratedMessageCompanion[protocol.Login] {
             _unknownFields__.parseField(tag, _input__)
         }
       }
-      protocol.Login.Request(
-          login = __login,
-          password = __password,
+      protocol.GetMe.Request(
+          token = __token,
           unknownFields = if (_unknownFields__ == null) _root_.scalapb.UnknownFieldSet.empty else _unknownFields__.result()
       )
     }
-    implicit def messageReads: _root_.scalapb.descriptors.Reads[protocol.Login.Request] = _root_.scalapb.descriptors.Reads{
+    implicit def messageReads: _root_.scalapb.descriptors.Reads[protocol.GetMe.Request] = _root_.scalapb.descriptors.Reads{
       case _root_.scalapb.descriptors.PMessage(__fieldsMap) =>
         _root_.scala.Predef.require(__fieldsMap.keys.forall(_.containingMessage eq scalaDescriptor), "FieldDescriptor does not match message type.")
-        protocol.Login.Request(
-          login = __fieldsMap.get(scalaDescriptor.findFieldByNumber(1).get).map(_.as[_root_.scala.Predef.String]).getOrElse(""),
-          password = __fieldsMap.get(scalaDescriptor.findFieldByNumber(2).get).map(_.as[_root_.scala.Predef.String]).getOrElse("")
+        protocol.GetMe.Request(
+          token = __fieldsMap.get(scalaDescriptor.findFieldByNumber(1).get).map(_.as[_root_.scala.Predef.String]).getOrElse("")
         )
       case _ => throw new RuntimeException("Expected PMessage")
     }
-    def javaDescriptor: _root_.com.google.protobuf.Descriptors.Descriptor = protocol.Login.javaDescriptor.getNestedTypes().get(0)
-    def scalaDescriptor: _root_.scalapb.descriptors.Descriptor = protocol.Login.scalaDescriptor.nestedMessages(0)
+    def javaDescriptor: _root_.com.google.protobuf.Descriptors.Descriptor = protocol.GetMe.javaDescriptor.getNestedTypes().get(0)
+    def scalaDescriptor: _root_.scalapb.descriptors.Descriptor = protocol.GetMe.scalaDescriptor.nestedMessages(0)
     def messageCompanionForFieldNumber(__number: _root_.scala.Int): _root_.scalapb.GeneratedMessageCompanion[_] = throw new MatchError(__number)
     lazy val nestedMessagesCompanions: Seq[_root_.scalapb.GeneratedMessageCompanion[_ <: _root_.scalapb.GeneratedMessage]] = Seq.empty
     def enumCompanionForFieldNumber(__fieldNumber: _root_.scala.Int): _root_.scalapb.GeneratedEnumCompanion[_] = throw new MatchError(__fieldNumber)
-    lazy val defaultInstance = protocol.Login.Request(
-      login = "",
-      password = ""
+    lazy val defaultInstance = protocol.GetMe.Request(
+      token = ""
     )
-    implicit class RequestLens[UpperPB](_l: _root_.scalapb.lenses.Lens[UpperPB, protocol.Login.Request]) extends _root_.scalapb.lenses.ObjectLens[UpperPB, protocol.Login.Request](_l) {
-      def login: _root_.scalapb.lenses.Lens[UpperPB, _root_.scala.Predef.String] = field(_.login)((c_, f_) => c_.copy(login = f_))
-      def password: _root_.scalapb.lenses.Lens[UpperPB, _root_.scala.Predef.String] = field(_.password)((c_, f_) => c_.copy(password = f_))
+    implicit class RequestLens[UpperPB](_l: _root_.scalapb.lenses.Lens[UpperPB, protocol.GetMe.Request]) extends _root_.scalapb.lenses.ObjectLens[UpperPB, protocol.GetMe.Request](_l) {
+      def token: _root_.scalapb.lenses.Lens[UpperPB, _root_.scala.Predef.String] = field(_.token)((c_, f_) => c_.copy(token = f_))
     }
-    final val LOGIN_FIELD_NUMBER = 1
-    final val PASSWORD_FIELD_NUMBER = 2
+    final val TOKEN_FIELD_NUMBER = 1
     def of(
-      login: _root_.scala.Predef.String,
-      password: _root_.scala.Predef.String
-    ): _root_.protocol.Login.Request = _root_.protocol.Login.Request(
-      login,
-      password
+      token: _root_.scala.Predef.String
+    ): _root_.protocol.GetMe.Request = _root_.protocol.GetMe.Request(
+      token
     )
-    // @@protoc_insertion_point(GeneratedMessageCompanion[Login.Request])
+    // @@protoc_insertion_point(GeneratedMessageCompanion[GetMe.Request])
   }
   
   @SerialVersionUID(0L)
   final case class Response(
-      payload: protocol.Login.Response.Payload = protocol.Login.Response.Payload.Empty,
+      payload: protocol.GetMe.Response.Payload = protocol.GetMe.Response.Payload.Empty,
       unknownFields: _root_.scalapb.UnknownFieldSet = _root_.scalapb.UnknownFieldSet.empty
       ) extends scalapb.GeneratedMessage with scalapb.lenses.Updatable[Response] {
       @transient
       private[this] var __serializedSizeMemoized: _root_.scala.Int = 0
       private[this] def __computeSerializedSize(): _root_.scala.Int = {
         var __size = 0
-        if (payload.token.isDefined) {
-          val __value = payload.token.get
-          __size += _root_.com.google.protobuf.CodedOutputStream.computeStringSize(1, __value)
+        if (payload.me.isDefined) {
+          val __value = payload.me.get
+          __size += 1 + _root_.com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(__value.serializedSize) + __value.serializedSize
         };
         if (payload.err.isDefined) {
           val __value = payload.err.get.value
@@ -275,9 +245,11 @@ object Login extends scalapb.GeneratedMessageCompanion[protocol.Login] {
         
       }
       def writeTo(`_output__`: _root_.com.google.protobuf.CodedOutputStream): _root_.scala.Unit = {
-        payload.token.foreach { __v =>
+        payload.me.foreach { __v =>
           val __m = __v
-          _output__.writeString(1, __m)
+          _output__.writeTag(1, 2)
+          _output__.writeUInt32NoTag(__m.serializedSize)
+          __m.writeTo(_output__)
         };
         payload.err.foreach { __v =>
           val __m = __v.value
@@ -285,36 +257,36 @@ object Login extends scalapb.GeneratedMessageCompanion[protocol.Login] {
         };
         unknownFields.writeTo(_output__)
       }
-      def getToken: _root_.scala.Predef.String = payload.token.getOrElse("")
-      def withToken(__v: _root_.scala.Predef.String): Response = copy(payload = protocol.Login.Response.Payload.Token(__v))
-      def getErr: protocol.Login.ERROR_CODE = payload.err.getOrElse(protocol.Login.ERROR_CODE.INVALID_CREDENTIALS)
-      def withErr(__v: protocol.Login.ERROR_CODE): Response = copy(payload = protocol.Login.Response.Payload.Err(__v))
-      def clearPayload: Response = copy(payload = protocol.Login.Response.Payload.Empty)
-      def withPayload(__v: protocol.Login.Response.Payload): Response = copy(payload = __v)
+      def getMe: protocol.Me = payload.me.getOrElse(protocol.Me.defaultInstance)
+      def withMe(__v: protocol.Me): Response = copy(payload = protocol.GetMe.Response.Payload.Me(__v))
+      def getErr: protocol.GetMe.ERROR_CODE = payload.err.getOrElse(protocol.GetMe.ERROR_CODE.UNAUTHORIZED)
+      def withErr(__v: protocol.GetMe.ERROR_CODE): Response = copy(payload = protocol.GetMe.Response.Payload.Err(__v))
+      def clearPayload: Response = copy(payload = protocol.GetMe.Response.Payload.Empty)
+      def withPayload(__v: protocol.GetMe.Response.Payload): Response = copy(payload = __v)
       def withUnknownFields(__v: _root_.scalapb.UnknownFieldSet) = copy(unknownFields = __v)
       def discardUnknownFields = copy(unknownFields = _root_.scalapb.UnknownFieldSet.empty)
       def getFieldByNumber(__fieldNumber: _root_.scala.Int): _root_.scala.Any = {
         (__fieldNumber: @_root_.scala.unchecked) match {
-          case 1 => payload.token.orNull
+          case 1 => payload.me.orNull
           case 2 => payload.err.map(_.javaValueDescriptor).orNull
         }
       }
       def getField(__field: _root_.scalapb.descriptors.FieldDescriptor): _root_.scalapb.descriptors.PValue = {
         _root_.scala.Predef.require(__field.containingMessage eq companion.scalaDescriptor)
         (__field.number: @_root_.scala.unchecked) match {
-          case 1 => payload.token.map(_root_.scalapb.descriptors.PString(_)).getOrElse(_root_.scalapb.descriptors.PEmpty)
+          case 1 => payload.me.map(_.toPMessage).getOrElse(_root_.scalapb.descriptors.PEmpty)
           case 2 => payload.err.map(__e => _root_.scalapb.descriptors.PEnum(__e.scalaValueDescriptor)).getOrElse(_root_.scalapb.descriptors.PEmpty)
         }
       }
       def toProtoString: _root_.scala.Predef.String = _root_.scalapb.TextFormat.printToUnicodeString(this)
-      def companion: protocol.Login.Response.type = protocol.Login.Response
-      // @@protoc_insertion_point(GeneratedMessage[Login.Response])
+      def companion: protocol.GetMe.Response.type = protocol.GetMe.Response
+      // @@protoc_insertion_point(GeneratedMessage[GetMe.Response])
   }
   
-  object Response extends scalapb.GeneratedMessageCompanion[protocol.Login.Response] {
-    implicit def messageCompanion: scalapb.GeneratedMessageCompanion[protocol.Login.Response] = this
-    def parseFrom(`_input__`: _root_.com.google.protobuf.CodedInputStream): protocol.Login.Response = {
-      var __payload: protocol.Login.Response.Payload = protocol.Login.Response.Payload.Empty
+  object Response extends scalapb.GeneratedMessageCompanion[protocol.GetMe.Response] {
+    implicit def messageCompanion: scalapb.GeneratedMessageCompanion[protocol.GetMe.Response] = this
+    def parseFrom(`_input__`: _root_.com.google.protobuf.CodedInputStream): protocol.GetMe.Response = {
+      var __payload: protocol.GetMe.Response.Payload = protocol.GetMe.Response.Payload.Empty
       var `_unknownFields__`: _root_.scalapb.UnknownFieldSet.Builder = null
       var _done__ = false
       while (!_done__) {
@@ -322,9 +294,9 @@ object Login extends scalapb.GeneratedMessageCompanion[protocol.Login] {
         _tag__ match {
           case 0 => _done__ = true
           case 10 =>
-            __payload = protocol.Login.Response.Payload.Token(_input__.readStringRequireUtf8())
+            __payload = protocol.GetMe.Response.Payload.Me(__payload.me.fold(_root_.scalapb.LiteParser.readMessage[protocol.Me](_input__))(_root_.scalapb.LiteParser.readMessage(_input__, _)))
           case 16 =>
-            __payload = protocol.Login.Response.Payload.Err(protocol.Login.ERROR_CODE.fromValue(_input__.readEnum()))
+            __payload = protocol.GetMe.Response.Payload.Err(protocol.GetMe.ERROR_CODE.fromValue(_input__.readEnum()))
           case tag =>
             if (_unknownFields__ == null) {
               _unknownFields__ = new _root_.scalapb.UnknownFieldSet.Builder()
@@ -332,44 +304,50 @@ object Login extends scalapb.GeneratedMessageCompanion[protocol.Login] {
             _unknownFields__.parseField(tag, _input__)
         }
       }
-      protocol.Login.Response(
+      protocol.GetMe.Response(
           payload = __payload,
           unknownFields = if (_unknownFields__ == null) _root_.scalapb.UnknownFieldSet.empty else _unknownFields__.result()
       )
     }
-    implicit def messageReads: _root_.scalapb.descriptors.Reads[protocol.Login.Response] = _root_.scalapb.descriptors.Reads{
+    implicit def messageReads: _root_.scalapb.descriptors.Reads[protocol.GetMe.Response] = _root_.scalapb.descriptors.Reads{
       case _root_.scalapb.descriptors.PMessage(__fieldsMap) =>
         _root_.scala.Predef.require(__fieldsMap.keys.forall(_.containingMessage eq scalaDescriptor), "FieldDescriptor does not match message type.")
-        protocol.Login.Response(
-          payload = __fieldsMap.get(scalaDescriptor.findFieldByNumber(1).get).flatMap(_.as[_root_.scala.Option[_root_.scala.Predef.String]]).map(protocol.Login.Response.Payload.Token(_))
-              .orElse[protocol.Login.Response.Payload](__fieldsMap.get(scalaDescriptor.findFieldByNumber(2).get).flatMap(_.as[_root_.scala.Option[_root_.scalapb.descriptors.EnumValueDescriptor]]).map(__e => protocol.Login.Response.Payload.Err(protocol.Login.ERROR_CODE.fromValue(__e.number))))
-              .getOrElse(protocol.Login.Response.Payload.Empty)
+        protocol.GetMe.Response(
+          payload = __fieldsMap.get(scalaDescriptor.findFieldByNumber(1).get).flatMap(_.as[_root_.scala.Option[protocol.Me]]).map(protocol.GetMe.Response.Payload.Me(_))
+              .orElse[protocol.GetMe.Response.Payload](__fieldsMap.get(scalaDescriptor.findFieldByNumber(2).get).flatMap(_.as[_root_.scala.Option[_root_.scalapb.descriptors.EnumValueDescriptor]]).map(__e => protocol.GetMe.Response.Payload.Err(protocol.GetMe.ERROR_CODE.fromValue(__e.number))))
+              .getOrElse(protocol.GetMe.Response.Payload.Empty)
         )
       case _ => throw new RuntimeException("Expected PMessage")
     }
-    def javaDescriptor: _root_.com.google.protobuf.Descriptors.Descriptor = protocol.Login.javaDescriptor.getNestedTypes().get(1)
-    def scalaDescriptor: _root_.scalapb.descriptors.Descriptor = protocol.Login.scalaDescriptor.nestedMessages(1)
-    def messageCompanionForFieldNumber(__number: _root_.scala.Int): _root_.scalapb.GeneratedMessageCompanion[_] = throw new MatchError(__number)
+    def javaDescriptor: _root_.com.google.protobuf.Descriptors.Descriptor = protocol.GetMe.javaDescriptor.getNestedTypes().get(1)
+    def scalaDescriptor: _root_.scalapb.descriptors.Descriptor = protocol.GetMe.scalaDescriptor.nestedMessages(1)
+    def messageCompanionForFieldNumber(__number: _root_.scala.Int): _root_.scalapb.GeneratedMessageCompanion[_] = {
+      var __out: _root_.scalapb.GeneratedMessageCompanion[_] = null
+      (__number: @_root_.scala.unchecked) match {
+        case 1 => __out = protocol.Me
+      }
+      __out
+    }
     lazy val nestedMessagesCompanions: Seq[_root_.scalapb.GeneratedMessageCompanion[_ <: _root_.scalapb.GeneratedMessage]] = Seq.empty
     def enumCompanionForFieldNumber(__fieldNumber: _root_.scala.Int): _root_.scalapb.GeneratedEnumCompanion[_] = {
       (__fieldNumber: @_root_.scala.unchecked) match {
-        case 2 => protocol.Login.ERROR_CODE
+        case 2 => protocol.GetMe.ERROR_CODE
       }
     }
-    lazy val defaultInstance = protocol.Login.Response(
-      payload = protocol.Login.Response.Payload.Empty
+    lazy val defaultInstance = protocol.GetMe.Response(
+      payload = protocol.GetMe.Response.Payload.Empty
     )
     sealed trait Payload extends _root_.scalapb.GeneratedOneof {
       def isEmpty: _root_.scala.Boolean = false
       def isDefined: _root_.scala.Boolean = true
-      def isToken: _root_.scala.Boolean = false
+      def isMe: _root_.scala.Boolean = false
       def isErr: _root_.scala.Boolean = false
-      def token: _root_.scala.Option[_root_.scala.Predef.String] = _root_.scala.None
-      def err: _root_.scala.Option[protocol.Login.ERROR_CODE] = _root_.scala.None
+      def me: _root_.scala.Option[protocol.Me] = _root_.scala.None
+      def err: _root_.scala.Option[protocol.GetMe.ERROR_CODE] = _root_.scala.None
     }
     object Payload {
       @SerialVersionUID(0L)
-      case object Empty extends protocol.Login.Response.Payload {
+      case object Empty extends protocol.GetMe.Response.Payload {
         type ValueType = _root_.scala.Nothing
         override def isEmpty: _root_.scala.Boolean = true
         override def isDefined: _root_.scala.Boolean = false
@@ -378,39 +356,39 @@ object Login extends scalapb.GeneratedMessageCompanion[protocol.Login] {
       }
     
       @SerialVersionUID(0L)
-      final case class Token(value: _root_.scala.Predef.String) extends protocol.Login.Response.Payload {
-        type ValueType = _root_.scala.Predef.String
-        override def isToken: _root_.scala.Boolean = true
-        override def token: _root_.scala.Option[_root_.scala.Predef.String] = Some(value)
+      final case class Me(value: protocol.Me) extends protocol.GetMe.Response.Payload {
+        type ValueType = protocol.Me
+        override def isMe: _root_.scala.Boolean = true
+        override def me: _root_.scala.Option[protocol.Me] = Some(value)
         override def number: _root_.scala.Int = 1
       }
       @SerialVersionUID(0L)
-      final case class Err(value: protocol.Login.ERROR_CODE) extends protocol.Login.Response.Payload {
-        type ValueType = protocol.Login.ERROR_CODE
+      final case class Err(value: protocol.GetMe.ERROR_CODE) extends protocol.GetMe.Response.Payload {
+        type ValueType = protocol.GetMe.ERROR_CODE
         override def isErr: _root_.scala.Boolean = true
-        override def err: _root_.scala.Option[protocol.Login.ERROR_CODE] = Some(value)
+        override def err: _root_.scala.Option[protocol.GetMe.ERROR_CODE] = Some(value)
         override def number: _root_.scala.Int = 2
       }
     }
-    implicit class ResponseLens[UpperPB](_l: _root_.scalapb.lenses.Lens[UpperPB, protocol.Login.Response]) extends _root_.scalapb.lenses.ObjectLens[UpperPB, protocol.Login.Response](_l) {
-      def token: _root_.scalapb.lenses.Lens[UpperPB, _root_.scala.Predef.String] = field(_.getToken)((c_, f_) => c_.copy(payload = protocol.Login.Response.Payload.Token(f_)))
-      def err: _root_.scalapb.lenses.Lens[UpperPB, protocol.Login.ERROR_CODE] = field(_.getErr)((c_, f_) => c_.copy(payload = protocol.Login.Response.Payload.Err(f_)))
-      def payload: _root_.scalapb.lenses.Lens[UpperPB, protocol.Login.Response.Payload] = field(_.payload)((c_, f_) => c_.copy(payload = f_))
+    implicit class ResponseLens[UpperPB](_l: _root_.scalapb.lenses.Lens[UpperPB, protocol.GetMe.Response]) extends _root_.scalapb.lenses.ObjectLens[UpperPB, protocol.GetMe.Response](_l) {
+      def me: _root_.scalapb.lenses.Lens[UpperPB, protocol.Me] = field(_.getMe)((c_, f_) => c_.copy(payload = protocol.GetMe.Response.Payload.Me(f_)))
+      def err: _root_.scalapb.lenses.Lens[UpperPB, protocol.GetMe.ERROR_CODE] = field(_.getErr)((c_, f_) => c_.copy(payload = protocol.GetMe.Response.Payload.Err(f_)))
+      def payload: _root_.scalapb.lenses.Lens[UpperPB, protocol.GetMe.Response.Payload] = field(_.payload)((c_, f_) => c_.copy(payload = f_))
     }
-    final val TOKEN_FIELD_NUMBER = 1
+    final val ME_FIELD_NUMBER = 1
     final val ERR_FIELD_NUMBER = 2
     def of(
-      payload: protocol.Login.Response.Payload
-    ): _root_.protocol.Login.Response = _root_.protocol.Login.Response(
+      payload: protocol.GetMe.Response.Payload
+    ): _root_.protocol.GetMe.Response = _root_.protocol.GetMe.Response(
       payload
     )
-    // @@protoc_insertion_point(GeneratedMessageCompanion[Login.Response])
+    // @@protoc_insertion_point(GeneratedMessageCompanion[GetMe.Response])
   }
   
-  implicit class LoginLens[UpperPB](_l: _root_.scalapb.lenses.Lens[UpperPB, protocol.Login]) extends _root_.scalapb.lenses.ObjectLens[UpperPB, protocol.Login](_l) {
+  implicit class GetMeLens[UpperPB](_l: _root_.scalapb.lenses.Lens[UpperPB, protocol.GetMe]) extends _root_.scalapb.lenses.ObjectLens[UpperPB, protocol.GetMe](_l) {
   }
   def of(
-  ): _root_.protocol.Login = _root_.protocol.Login(
+  ): _root_.protocol.GetMe = _root_.protocol.GetMe(
   )
-  // @@protoc_insertion_point(GeneratedMessageCompanion[Login])
+  // @@protoc_insertion_point(GeneratedMessageCompanion[GetMe])
 }

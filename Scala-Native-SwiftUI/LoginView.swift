@@ -11,29 +11,21 @@ import ScalaKit
 struct LoginView: View {
     @SwiftUI.State private var username: String = ""
     @SwiftUI.State private var password: String = ""
-    @SwiftUI.State private var error: String? = nil
+    @SwiftUI.State private var errorMessage: String = ""
     
-    private var switchView: (ViewModel.State) -> ();
+    private let vm: ViewModel;
     
-    init(switchView: @escaping (ViewModel.State) -> ()) {
-        self.switchView = switchView
+    init(vm: ViewModel) {
+        self.vm = vm
     }
     
     var body: some View {
         VStack {
+            LogoView()
             Spacer()
-            if let errMsg = error {
-                Label(errMsg, systemImage: "cloud.rain").bold().foregroundColor(.white).frame(height: 20)
-                    .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
-                    .cornerRadius(20)
-                    .background(Color(hex:"#8f011b"))
-            } else {
-                Spacer(minLength: 40)
-            }
             
+            ErrorView(errMsg: $errorMessage)            
             
-            Text("Twotm8").font(.system(size: 50))
-                .fontWeight(.bold).shadow(color: .black, radius: 10).foregroundColor(.white)
             
             TextField("Login", text: $username).padding().fontWeight(.bold).font(.system(size: 35))
             
@@ -57,12 +49,45 @@ struct LoginView: View {
             $0.password = password
         }))
         
-        switch resp {
-        case .Ok(let oneOf_Payload):
-            print(oneOf_Payload)
-        case .Err(let protocolError):
-            error = protocolError.msg()
+        
+        if case .Ok(.login(let response)) = resp {
+            switch response.payload {
+            case .token(let string):
+                vm.tokenAcquired(token: string, source: .login)
+            case .err(let auth_error):
+                errorMessage = "auth error \(auth_error)"
+            case .none:
+                errorMessage = "wut"
+            }
         }
+        
+        if case .Err(let msg) = resp {
+            errorMessage = msg.msg()
+        }
+    }
+}
+
+struct LogoView: View {
+    var body: some View {
+        Text("Twotm8").font(.system(size: 50))
+            .fontWeight(.bold).shadow(color: .black, radius: 10).foregroundColor(.white)
+    }
+}
+
+struct ErrorView: View {
+    private var errMsg: Binding<String>;
+    
+    init(errMsg: Binding<String>) {
+        self.errMsg = errMsg
+    }
+    
+    var body: some View {
+        Label(errMsg.wrappedValue, systemImage: "cloud.rain").bold().foregroundColor(.white).frame(height: 20)
+            .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
+            .cornerRadius(20)
+            .background(Color(hex:"#8f011b"))
+            .opacity(errMsg.wrappedValue.isEmpty ? 0: 1)
+
     }
 }
 
@@ -79,7 +104,7 @@ extension Color {
 
 
 #Preview {
-    LoginView(switchView: {(v: ViewModel.State) in ()})
+    LoginView(vm: ViewModel())
     
 }
 

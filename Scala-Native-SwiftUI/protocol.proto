@@ -3,14 +3,48 @@ syntax = "proto3";
 message Request {
   oneof payload {
     Login.Request login = 1;
-    GetState.Request get_state = 2;
+    GetWall.Request get_wall = 2;
+    GetState.Request get_state = 3;
+    GetMe.Request get_me = 4;
   }
 }
 
 message Response {
   oneof payload {
     Login.Response login = 1;
-    GetState.Response get_state = 2;
+    GetWall.Response get_wall = 2;
+    GetState.Response get_state = 3;
+    GetMe.Response get_me = 4;
+  }
+}
+
+message GetMe {
+  message Request { string token = 1; }
+
+  enum ERROR_CODE {
+    UNAUTHORIZED = 0;
+  }
+
+  message Response {
+    oneof payload {
+      Me me = 1;
+      ERROR_CODE err = 2;
+    }
+  }
+}
+
+message GetWall {
+  message Request { string token = 1; }
+
+  enum ERROR_CODE {
+    UNAUTHORIZED = 0;
+  }
+
+  message Response {
+    oneof payload {
+      Wall wall = 1;
+      ERROR_CODE err = 2;
+    }
   }
 }
 
@@ -20,13 +54,13 @@ message Login {
     string password = 2;
   }
 
-  enum AUTH_ERROR {
+  enum ERROR_CODE {
     INVALID_CREDENTIALS = 0;
   }
   message Response {
     oneof payload {
       string token = 1;
-      AUTH_ERROR err = 2;
+      ERROR_CODE err = 2;
     }
   }
 }
@@ -41,3 +75,16 @@ message Error { string message = 1; }
 message State {}
 
 message Options { bool debug_logging = 1; }
+
+message Wall { repeated Twot twots = 1; }
+
+message Twot {
+  string id = 1;
+  string author = 2;
+  string text = 3;
+}
+
+message Me {
+  string id = 1;
+  string nickname = 2;
+}
