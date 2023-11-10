@@ -24,7 +24,7 @@ struct LoginView: View {
             LogoView()
             Spacer()
             
-            ErrorView(errMsg: $errorMessage)            
+            ErrorView(errMsg: $errorMessage)
             
             
             TextField("Login", text: $username).padding().fontWeight(.bold).font(.system(size: 35))
@@ -39,7 +39,7 @@ struct LoginView: View {
             Spacer()
             
         }
-        .background(Color(hex:"#9ba0dc"))
+        .purpleVomit()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     
@@ -88,17 +88,6 @@ struct ErrorView: View {
             .background(Color(hex:"#8f011b"))
             .opacity(errMsg.wrappedValue.isEmpty ? 0: 1)
 
-    }
-}
-
-extension Color {
-    init(hex: String) {
-        let hex = hex.trimmingCharacters(in: CharacterSet(charactersIn: "#"))
-        let rgbValue = UInt32(hex, radix: 16)
-        let r = Double((rgbValue! & 0xFF0000) >> 16) / 255
-        let g = Double((rgbValue! & 0x00FF00) >> 8) / 255
-        let b = Double(rgbValue! & 0x0000FF) / 255
-        self.init(red: r, green: g, blue: b)
     }
 }
 

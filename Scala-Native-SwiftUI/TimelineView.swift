@@ -27,18 +27,18 @@ struct TimelineView: View {
                     Text("RAGE").bold()
                 }.disabled(text.isEmpty)
                 
-            }.padding().background(Color.purpleVomit())
+            }.padding().purpleVomit()
             
             HStack {
                 ErrorView(errMsg: $errorMessage).background(Color.purpleVomit())
-            }.frame(maxWidth: .infinity).background(Color.purpleVomit())
+            }.frame(maxWidth: .infinity).purpleVomit()
             
             List {
                 Section {
                     ForEach(twots) {
                         TwotView(twot: $0)
                     }.listRowBackground(Color.purpleVomit())
-                }.background(Color.purpleVomit())
+                }.purpleVomit()
                 
             }.frame(maxWidth: .infinity, maxHeight: .infinity)
                 .task {
@@ -78,12 +78,3 @@ struct TimelineView: View {
     TimelineView(vm: ViewModel())
 }
 
-extension Twot: Identifiable {
-    
-}
-
-extension Color {
-    static func purpleVomit() -> Color {
-        return Color(hex: "#9ba0dc")
-    }
-}

@@ -24,6 +24,7 @@
 		82B4A62D2AFA921D001689E2 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82B4A62C2AFA921D001689E2 /* SystemConfiguration.framework */; };
 		82B4A62F2AFBEC07001689E2 /* TwotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82B4A62E2AFBEC07001689E2 /* TwotView.swift */; };
 		82B4A6312AFBFE5A001689E2 /* UserHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82B4A6302AFBFE5A001689E2 /* UserHeaderView.swift */; };
+		82B4A6332AFCD552001689E2 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82B4A6322AFCD552001689E2 /* Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +44,7 @@
 		82B4A62C2AFA921D001689E2 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		82B4A62E2AFBEC07001689E2 /* TwotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwotView.swift; sourceTree = "<group>"; };
 		82B4A6302AFBFE5A001689E2 /* UserHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHeaderView.swift; sourceTree = "<group>"; };
+		82B4A6322AFCD552001689E2 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +97,7 @@
 				82B4A62E2AFBEC07001689E2 /* TwotView.swift */,
 				82B4A6262AFA48E2001689E2 /* ViewModel.swift */,
 				82B4A6302AFBFE5A001689E2 /* UserHeaderView.swift */,
+				82B4A6322AFCD552001689E2 /* Extensions.swift */,
 			);
 			path = "Scala-Native-SwiftUI";
 			sourceTree = "<group>";
@@ -199,6 +202,7 @@
 				82B4A62F2AFBEC07001689E2 /* TwotView.swift in Sources */,
 				82A5F9B92AEE93FD007EC213 /* LoginView.swift in Sources */,
 				82A5F9DA2AF57950007EC213 /* Interop.swift in Sources */,
+				82B4A6332AFCD552001689E2 /* Extensions.swift in Sources */,
 				82A5F9D82AEEB0AB007EC213 /* protocol.pb.swift in Sources */,
 				82A5F9B72AEE93FD007EC213 /* Scala_Native_SwiftUIApp.swift in Sources */,
 				82B4A6312AFBFE5A001689E2 /* UserHeaderView.swift in Sources */,

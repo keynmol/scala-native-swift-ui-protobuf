@@ -27,7 +27,7 @@ struct TwotView: View {
                 Text(twot.text).foregroundColor(.black).frame(maxWidth: .infinity, alignment: .leading).padding().font(.system(size: 20))
             }.background(.white)
                 
-        }.frame(minHeight:0).border(Color.gray, width: 2).cornerRadius(10).background(Color(hex:"#9ba0dc"))
+        }.frame(minHeight:0).border(Color.gray, width: 2).cornerRadius(10).purpleVomit()
     }
 }
 

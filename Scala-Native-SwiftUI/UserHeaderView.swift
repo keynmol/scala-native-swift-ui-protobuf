@@ -25,7 +25,7 @@ struct UserHeaderView: View {
                     Text("Log out").foregroundColor(.red).bold()
                 }
             }
-        }.padding().background(Color(hex:"#9ba0dc"))
+        }.padding().purpleVomit()
 
     }
     
