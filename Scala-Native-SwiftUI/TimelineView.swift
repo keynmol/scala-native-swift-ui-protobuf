@@ -44,7 +44,6 @@ struct TimelineView: View {
                 .task {
                     getTwots()
                 }
-                .border(.red)
                 .listStyle(.plain)
         }.frame(maxWidth: .infinity, maxHeight: .infinity)
     }
