@@ -7,6 +7,7 @@ package protocol
 
 @SerialVersionUID(0L)
 final case class Error(
+    code: protocol.ERROR_CODE = protocol.ERROR_CODE.OTHER,
     message: _root_.scala.Predef.String = "",
     unknownFields: _root_.scalapb.UnknownFieldSet = _root_.scalapb.UnknownFieldSet.empty
     ) extends scalapb.GeneratedMessage with scalapb.lenses.Updatable[Error] {
@@ -16,9 +17,16 @@ final case class Error(
       var __size = 0
       
       {
+        val __value = code.value
+        if (__value != 0) {
+          __size += _root_.com.google.protobuf.CodedOutputStream.computeEnumSize(1, __value)
+        }
+      };
+      
+      {
         val __value = message
         if (!__value.isEmpty) {
-          __size += _root_.com.google.protobuf.CodedOutputStream.computeStringSize(1, __value)
+          __size += _root_.com.google.protobuf.CodedOutputStream.computeStringSize(2, __value)
         }
       };
       __size += unknownFields.serializedSize
@@ -35,19 +43,30 @@ final case class Error(
     }
     def writeTo(`_output__`: _root_.com.google.protobuf.CodedOutputStream): _root_.scala.Unit = {
       {
+        val __v = code.value
+        if (__v != 0) {
+          _output__.writeEnum(1, __v)
+        }
+      };
+      {
         val __v = message
         if (!__v.isEmpty) {
-          _output__.writeString(1, __v)
+          _output__.writeString(2, __v)
         }
       };
       unknownFields.writeTo(_output__)
     }
+    def withCode(__v: protocol.ERROR_CODE): Error = copy(code = __v)
     def withMessage(__v: _root_.scala.Predef.String): Error = copy(message = __v)
     def withUnknownFields(__v: _root_.scalapb.UnknownFieldSet) = copy(unknownFields = __v)
     def discardUnknownFields = copy(unknownFields = _root_.scalapb.UnknownFieldSet.empty)
     def getFieldByNumber(__fieldNumber: _root_.scala.Int): _root_.scala.Any = {
       (__fieldNumber: @_root_.scala.unchecked) match {
         case 1 => {
+          val __t = code.javaValueDescriptor
+          if (__t.getNumber() != 0) __t else null
+        }
+        case 2 => {
           val __t = message
           if (__t != "") __t else null
         }
@@ -56,7 +75,8 @@ final case class Error(
     def getField(__field: _root_.scalapb.descriptors.FieldDescriptor): _root_.scalapb.descriptors.PValue = {
       _root_.scala.Predef.require(__field.containingMessage eq companion.scalaDescriptor)
       (__field.number: @_root_.scala.unchecked) match {
-        case 1 => _root_.scalapb.descriptors.PString(message)
+        case 1 => _root_.scalapb.descriptors.PEnum(code.scalaValueDescriptor)
+        case 2 => _root_.scalapb.descriptors.PString(message)
       }
     }
     def toProtoString: _root_.scala.Predef.String = _root_.scalapb.TextFormat.printToUnicodeString(this)
@@ -67,6 +87,7 @@ final case class Error(
 object Error extends scalapb.GeneratedMessageCompanion[protocol.Error] {
   implicit def messageCompanion: scalapb.GeneratedMessageCompanion[protocol.Error] = this
   def parseFrom(`_input__`: _root_.com.google.protobuf.CodedInputStream): protocol.Error = {
+    var __code: protocol.ERROR_CODE = protocol.ERROR_CODE.OTHER
     var __message: _root_.scala.Predef.String = ""
     var `_unknownFields__`: _root_.scalapb.UnknownFieldSet.Builder = null
     var _done__ = false
@@ -74,7 +95,9 @@ object Error extends scalapb.GeneratedMessageCompanion[protocol.Error] {
       val _tag__ = _input__.readTag()
       _tag__ match {
         case 0 => _done__ = true
-        case 10 =>
+        case 8 =>
+          __code = protocol.ERROR_CODE.fromValue(_input__.readEnum())
+        case 18 =>
           __message = _input__.readStringRequireUtf8()
         case tag =>
           if (_unknownFields__ == null) {
@@ -84,6 +107,7 @@ object Error extends scalapb.GeneratedMessageCompanion[protocol.Error] {
       }
     }
     protocol.Error(
+        code = __code,
         message = __message,
         unknownFields = if (_unknownFields__ == null) _root_.scalapb.UnknownFieldSet.empty else _unknownFields__.result()
     )
@@ -92,7 +116,8 @@ object Error extends scalapb.GeneratedMessageCompanion[protocol.Error] {
     case _root_.scalapb.descriptors.PMessage(__fieldsMap) =>
       _root_.scala.Predef.require(__fieldsMap.keys.forall(_.containingMessage eq scalaDescriptor), "FieldDescriptor does not match message type.")
       protocol.Error(
-        message = __fieldsMap.get(scalaDescriptor.findFieldByNumber(1).get).map(_.as[_root_.scala.Predef.String]).getOrElse("")
+        code = protocol.ERROR_CODE.fromValue(__fieldsMap.get(scalaDescriptor.findFieldByNumber(1).get).map(_.as[_root_.scalapb.descriptors.EnumValueDescriptor]).getOrElse(protocol.ERROR_CODE.OTHER.scalaValueDescriptor).number),
+        message = __fieldsMap.get(scalaDescriptor.findFieldByNumber(2).get).map(_.as[_root_.scala.Predef.String]).getOrElse("")
       )
     case _ => throw new RuntimeException("Expected PMessage")
   }
@@ -100,17 +125,26 @@ object Error extends scalapb.GeneratedMessageCompanion[protocol.Error] {
   def scalaDescriptor: _root_.scalapb.descriptors.Descriptor = ProtocolProto.scalaDescriptor.messages(6)
   def messageCompanionForFieldNumber(__number: _root_.scala.Int): _root_.scalapb.GeneratedMessageCompanion[_] = throw new MatchError(__number)
   lazy val nestedMessagesCompanions: Seq[_root_.scalapb.GeneratedMessageCompanion[_ <: _root_.scalapb.GeneratedMessage]] = Seq.empty
-  def enumCompanionForFieldNumber(__fieldNumber: _root_.scala.Int): _root_.scalapb.GeneratedEnumCompanion[_] = throw new MatchError(__fieldNumber)
+  def enumCompanionForFieldNumber(__fieldNumber: _root_.scala.Int): _root_.scalapb.GeneratedEnumCompanion[_] = {
+    (__fieldNumber: @_root_.scala.unchecked) match {
+      case 1 => protocol.ERROR_CODE
+    }
+  }
   lazy val defaultInstance = protocol.Error(
+    code = protocol.ERROR_CODE.OTHER,
     message = ""
   )
   implicit class ErrorLens[UpperPB](_l: _root_.scalapb.lenses.Lens[UpperPB, protocol.Error]) extends _root_.scalapb.lenses.ObjectLens[UpperPB, protocol.Error](_l) {
+    def code: _root_.scalapb.lenses.Lens[UpperPB, protocol.ERROR_CODE] = field(_.code)((c_, f_) => c_.copy(code = f_))
     def message: _root_.scalapb.lenses.Lens[UpperPB, _root_.scala.Predef.String] = field(_.message)((c_, f_) => c_.copy(message = f_))
   }
-  final val MESSAGE_FIELD_NUMBER = 1
+  final val CODE_FIELD_NUMBER = 1
+  final val MESSAGE_FIELD_NUMBER = 2
   def of(
+    code: protocol.ERROR_CODE,
     message: _root_.scala.Predef.String
   ): _root_.protocol.Error = _root_.protocol.Error(
+    code,
     message
   )
   // @@protoc_insertion_point(GeneratedMessageCompanion[Error])

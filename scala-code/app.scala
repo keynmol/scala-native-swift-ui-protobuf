@@ -7,9 +7,10 @@ import Response.Payload as Res
 import scalapb.GeneratedMessage
 import twotm8.*
 import twotm8.api.ErrorInfo
+import scribe.Level
 
 enum Answer:
-  case Error(msg: String)
+  case Error(msg: String, code: protocol.ERROR_CODE)
   case Ok[T <: GeneratedMessage](value: T)
 
 class StateManager(private var st: State):
@@ -31,27 +32,32 @@ end StateManager
 def handleRequest(state: StateManager, req: Request): Answer =
   if req.payload.isDefined then scribe.info(s"Handling request: ${req.payload}")
   req.payload match
-    case Req.Empty => Answer.Error("payload was empty")
+    case Req.Empty => Answer.Error("payload was empty", ERROR_CODE.OTHER)
+    case Req.SetOptions(value) =>
+      val minLevel = value.options
+        .map(o => if o.debugLogging then Level.Debug else Level.Info)
+        .getOrElse(Level.Info)
+
+      scribe.Logger.root
+        .clearHandlers()
+        .withHandler(writer = scribe.writer.SystemErrWriter)
+        .withMinimumLevel(minLevel)
+        .replace()
+
+      state.respond(Res.SetOptions(SetOptions.Response()))
+
     case Req.GetMe(req) =>
       val token = JWT(req.token)
 
       state.client.me(token) match
-        case Left(ErrorInfo.Unauthorized(_)) =>
-          state.respond(
-            Res.GetMe(
-              GetMe.Response(
-                GetMe.Response.Payload.Err(
-                  GetMe.ERROR_CODE.UNAUTHORIZED
-                )
-              )
-            )
-          )
-        case Left(other) => Answer.Error(other.message)
+        case Left(ErrorInfo.Unauthorized(msg)) =>
+          Answer.Error(msg, ERROR_CODE.UNAUTHORIZED)
+        case Left(other) => Answer.Error(other.message, ERROR_CODE.OTHER)
         case Right(leader) =>
           state.respond(
             Res.GetMe(
               GetMe.Response(
-                GetMe.Response.Payload.Me(
+                Some(
                   Me(
                     id = leader.id.raw.toString,
                     nickname = leader.nickname.raw
@@ -65,7 +71,7 @@ def handleRequest(state: StateManager, req: Request): Answer =
 
     case Req.GetWall(req) =>
       state.client.wall(JWT(req.token)) match
-        case Left(value) => Answer.Error(value.message)
+        case Left(value) => Answer.Error(value.message, ERROR_CODE.OTHER)
         case Right(value) =>
           val protoTwots =
             value.map: twot =>
@@ -78,38 +84,28 @@ def handleRequest(state: StateManager, req: Request): Answer =
           val wall = Wall(twots = protoTwots)
 
           state.respond(
-            Res.GetWall(GetWall.Response(GetWall.Response.Payload.Wall(wall)))
+            Res.GetWall(GetWall.Response(Some(wall)))
           )
 
     case Req.Login(value) =>
       val login = value.login.trim
-      if login.isEmpty then Answer.Error("empty login!")
-      else if value.password.isEmpty then Answer.Error("empty password!")
+      if login.isEmpty then Answer.Error("empty login!", ERROR_CODE.OTHER)
+      else if value.password.isEmpty then
+        Answer.Error("empty password!", ERROR_CODE.OTHER)
       else
         state.client.login(Nickname(login), Password(value.password)) match
           case Left(ErrorInfo.InvalidCredentials()) =>
-            state.respond(
-              Res.Login(
-                Login.Response(
-                  Login.Response.Payload.Err(
-                    Login.ERROR_CODE.INVALID_CREDENTIALS
-                  )
-                )
-              )
-            )
-
-          case Left(other) => Answer.Error(other.message)
+            Answer.Error("invalid credentials", ERROR_CODE.INVALID_CREDENTIALS)
+          case Left(other) => Answer.Error(other.message, ERROR_CODE.OTHER)
 
           case Right(value) =>
             state.respond(
               Res.Login(
-                Login.Response(Login.Response.Payload.Token(value.jwt.raw))
+                Login.Response(value.jwt.raw)
               )
             )
 
       end if
 
-    case Req.GetState(value) =>
-      state.respond(Res.GetState(GetState.Response(state = Some(state.get))))
   end match
 end handleRequest

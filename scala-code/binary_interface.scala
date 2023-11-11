@@ -5,92 +5,99 @@ import _root_.scala.scalanative.unsigned.*
 import _root_.scala.scalanative.libc.*
 import _root_.scala.scalanative.*
 
-object structs:
-  import _root_.scala_app.binarybridge.structs.*
+object aliases:
+  import _root_.scala_app.binarybridge.aliases.*
 
   /**
   */
-  opaque type ByteArray = CStruct2[CInt, CString]
-  object ByteArray:
-    given _tag: Tag[ByteArray] = Tag.materializeCStruct2Tag[CInt, CString]
-    def apply()(using Zone): Ptr[ByteArray] = scala.scalanative.unsafe.alloc[ByteArray](1)
-    def apply(size : CInt, bytes : CString)(using Zone): Ptr[ByteArray] = 
-      val ____ptr = apply()
-      (!____ptr).size = size
-      (!____ptr).bytes = bytes
-      ____ptr
-    extension (struct: ByteArray)
-      def size : CInt = struct._1
-      def size_=(value: CInt): Unit = !struct.at1 = value
-      def bytes : CString = struct._2
-      def bytes_=(value: CString): Unit = !struct.at2 = value
-
-  /**
-  */
-  opaque type Result = CStruct3[Ptr[ByteArray], CInt, Boolean]
-  object Result:
-    given _tag: Tag[Result] = Tag.materializeCStruct3Tag[Ptr[ByteArray], CInt, Boolean]
-    def apply()(using Zone): Ptr[Result] = scala.scalanative.unsafe.alloc[Result](1)
-    def apply(message : Ptr[ByteArray], id : CInt, isError : Boolean)(using Zone): Ptr[Result] = 
-      val ____ptr = apply()
-      (!____ptr).message = message
-      (!____ptr).id = id
-      (!____ptr).isError = isError
-      ____ptr
-    extension (struct: Result)
-      def message : Ptr[ByteArray] = struct._1
-      def message_=(value: Ptr[ByteArray]): Unit = !struct.at1 = value
-      def id : CInt = struct._2
-      def id_=(value: CInt): Unit = !struct.at2 = value
-      def isError : Boolean = struct._3
-      def isError_=(value: Boolean): Unit = !struct.at3 = value
+  opaque type ScalaResult = Ptr[Byte]
+  object ScalaResult: 
+    given _tag: Tag[ScalaResult] = Tag.Ptr(Tag.Byte)
+    inline def apply(inline o: Ptr[Byte]): ScalaResult = o
+    extension (v: ScalaResult)
+      inline def value: Ptr[Byte] = v
 
 trait ExportedFunctions:
-  import _root_.scala_app.binarybridge.structs.*
+  import _root_.scala_app.binarybridge.aliases.*
 
   /**
   */
-  def scala_app_free_result(result : Ptr[Result]): Boolean
+  def scala_app_free_result(result : ScalaResult): Boolean
 
   /**
   */
-  def scala_app_init(start_state : Ptr[ByteArray], options : Ptr[ByteArray]): Ptr[Result]
+  def scala_app_get_error(result : ScalaResult): CString
 
   /**
   */
-  def scala_app_request(message : Ptr[ByteArray]): Ptr[Result]
+  def scala_app_get_error_length(result : ScalaResult): CInt
 
   /**
   */
-  def scala_app_result_ok(result : Ptr[Result]): Boolean
+  def scala_app_get_response(result : ScalaResult): CString
+
+  /**
+  */
+  def scala_app_get_response_length(result : ScalaResult): CInt
+
+  /**
+  */
+  def scala_app_is_error(result : ScalaResult): Boolean
+
+  /**
+  */
+  def scala_app_is_response(result : ScalaResult): Boolean
+
+  /**
+  */
+  def scala_app_request(data : CString, data_len : CInt): ScalaResult
 
 
 object functions extends ExportedFunctions:
-  import _root_.scala_app.binarybridge.structs.*
+  import _root_.scala_app.binarybridge.aliases.*
 
   /**
   */
   @exported
-  override def scala_app_free_result(result : Ptr[Result]): Boolean = scala_app.binarybridge.impl.Implementations.scala_app_free_result(result)
+  override def scala_app_free_result(result : ScalaResult): Boolean = scala_app.binarybridge.impl.Implementations.scala_app_free_result(result)
 
   /**
   */
   @exported
-  override def scala_app_init(start_state : Ptr[ByteArray], options : Ptr[ByteArray]): Ptr[Result] = scala_app.binarybridge.impl.Implementations.scala_app_init(start_state, options)
+  override def scala_app_get_error(result : ScalaResult): CString = scala_app.binarybridge.impl.Implementations.scala_app_get_error(result)
 
   /**
   */
   @exported
-  override def scala_app_request(message : Ptr[ByteArray]): Ptr[Result] = scala_app.binarybridge.impl.Implementations.scala_app_request(message)
+  override def scala_app_get_error_length(result : ScalaResult): CInt = scala_app.binarybridge.impl.Implementations.scala_app_get_error_length(result)
 
   /**
   */
   @exported
-  override def scala_app_result_ok(result : Ptr[Result]): Boolean = scala_app.binarybridge.impl.Implementations.scala_app_result_ok(result)
+  override def scala_app_get_response(result : ScalaResult): CString = scala_app.binarybridge.impl.Implementations.scala_app_get_response(result)
+
+  /**
+  */
+  @exported
+  override def scala_app_get_response_length(result : ScalaResult): CInt = scala_app.binarybridge.impl.Implementations.scala_app_get_response_length(result)
+
+  /**
+  */
+  @exported
+  override def scala_app_is_error(result : ScalaResult): Boolean = scala_app.binarybridge.impl.Implementations.scala_app_is_error(result)
+
+  /**
+  */
+  @exported
+  override def scala_app_is_response(result : ScalaResult): Boolean = scala_app.binarybridge.impl.Implementations.scala_app_is_response(result)
+
+  /**
+  */
+  @exported
+  override def scala_app_request(data : CString, data_len : CInt): ScalaResult = scala_app.binarybridge.impl.Implementations.scala_app_request(data, data_len)
 
 object types:
-  export _root_.scala_app.binarybridge.structs.*
+  export _root_.scala_app.binarybridge.aliases.*
 
 object all:
-  export _root_.scala_app.binarybridge.structs.ByteArray
-  export _root_.scala_app.binarybridge.structs.Result
+  export _root_.scala_app.binarybridge.aliases.ScalaResult

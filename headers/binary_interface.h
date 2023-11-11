@@ -4,22 +4,20 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-typedef struct ByteArray {
-  const int size;
-  const char *bytes;
-} ByteArray;
+typedef void *ScalaResult;
 
-typedef struct Result {
-  const ByteArray *message;
-  const int id;
-  const bool isError;
-} Result;
+ScalaResult scala_app_request(const char *data, const int data_len);
 
-Result *scala_app_request(const ByteArray *message);
-Result *scala_app_init(const ByteArray *start_state, const ByteArray* options);
-bool scala_app_free_result(const Result* result);
+bool scala_app_is_response(const ScalaResult result);
+bool scala_app_is_error(const ScalaResult result);
 
-bool scala_app_result_ok(const Result *result);
+const char *scala_app_get_response(const ScalaResult result);
+const char *scala_app_get_error(const ScalaResult result);
+
+int scala_app_get_response_length(const ScalaResult result);
+int scala_app_get_error_length(const ScalaResult result);
+
+bool scala_app_free_result(ScalaResult result);
 
 #ifndef SN_SKIP_INIT
 int ScalaNativeInit(void);
