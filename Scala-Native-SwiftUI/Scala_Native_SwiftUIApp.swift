@@ -20,6 +20,7 @@ struct Scala_Native_SwiftUIApp: App {
     }
     
     var body: some Scene {
+        
         WindowGroup {
             switch vm.state {
             case .logIn:

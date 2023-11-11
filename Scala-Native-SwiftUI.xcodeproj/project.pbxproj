@@ -15,7 +15,6 @@
 		82A5F9CC2AEEAB14007EC213 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = 82A5F9CB2AEEAB14007EC213 /* SwiftProtobuf */; };
 		82A5F9CE2AEEAB14007EC213 /* SwiftProtobufPluginLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 82A5F9CD2AEEAB14007EC213 /* SwiftProtobufPluginLibrary */; };
 		82A5F9D02AEEAB14007EC213 /* protoc-gen-swift in Frameworks */ = {isa = PBXBuildFile; productRef = 82A5F9CF2AEEAB14007EC213 /* protoc-gen-swift */; };
-		82A5F9D42AEEABF8007EC213 /* protocol.proto in Sources */ = {isa = PBXBuildFile; fileRef = 82A5F9D32AEEABF8007EC213 /* protocol.proto */; };
 		82A5F9D82AEEB0AB007EC213 /* protocol.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A5F9D72AEEB0AB007EC213 /* protocol.pb.swift */; };
 		82A5F9DA2AF57950007EC213 /* Interop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A5F9D92AF57950007EC213 /* Interop.swift */; };
 		82B4A6252AFA4632001689E2 /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82B4A6242AFA4632001689E2 /* TimelineView.swift */; };
@@ -35,7 +34,6 @@
 		82A5F9BA2AEE93FE007EC213 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		82A5F9BD2AEE93FE007EC213 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		82A5F9BF2AEE93FE007EC213 /* Scala_Native_SwiftUI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Scala_Native_SwiftUI.entitlements; sourceTree = "<group>"; };
-		82A5F9D32AEEABF8007EC213 /* protocol.proto */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.protobuf; path = protocol.proto; sourceTree = "<group>"; };
 		82A5F9D72AEEB0AB007EC213 /* protocol.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = protocol.pb.swift; sourceTree = "<group>"; };
 		82A5F9D92AF57950007EC213 /* Interop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interop.swift; sourceTree = "<group>"; };
 		82B4A6242AFA4632001689E2 /* TimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
@@ -92,7 +90,6 @@
 				82A5F9BA2AEE93FE007EC213 /* Assets.xcassets */,
 				82A5F9BF2AEE93FE007EC213 /* Scala_Native_SwiftUI.entitlements */,
 				82A5F9BC2AEE93FE007EC213 /* Preview Content */,
-				82A5F9D32AEEABF8007EC213 /* protocol.proto */,
 				82B4A6242AFA4632001689E2 /* TimelineView.swift */,
 				82B4A62E2AFBEC07001689E2 /* TwotView.swift */,
 				82B4A6262AFA48E2001689E2 /* ViewModel.swift */,
@@ -133,6 +130,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				82E579872AFFF20F00A52EC9 /* PBXTargetDependency */,
 			);
 			name = "Scala-Native-SwiftUI";
 			packageProductDependencies = (
@@ -197,7 +195,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				82A5F9D42AEEABF8007EC213 /* protocol.proto in Sources */,
 				82B4A6252AFA4632001689E2 /* TimelineView.swift in Sources */,
 				82B4A62F2AFBEC07001689E2 /* TwotView.swift in Sources */,
 				82A5F9B92AEE93FD007EC213 /* LoginView.swift in Sources */,
@@ -211,6 +208,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		82E579872AFFF20F00A52EC9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 82E579862AFFF20F00A52EC9 /* SwiftProtobuf */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		82A5F9C02AEE93FE007EC213 /* Debug */ = {
@@ -361,6 +365,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.indoorvivants.Scala-Native-SwiftUI";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				"SWIFT_INCLUDE_PATHS[arch=*]" = "";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -445,6 +450,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 82A5F9CA2AEEAB14007EC213 /* XCRemoteSwiftPackageReference "swift-protobuf" */;
 			productName = "protoc-gen-swift";
+		};
+		82E579862AFFF20F00A52EC9 /* SwiftProtobuf */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 82A5F9CA2AEEAB14007EC213 /* XCRemoteSwiftPackageReference "swift-protobuf" */;
+			productName = SwiftProtobuf;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
