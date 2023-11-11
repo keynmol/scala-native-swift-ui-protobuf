@@ -50,14 +50,7 @@ struct LoginView: View {
         
         
         if case .Ok(.login(let response)) = resp {
-            switch response.payload {
-            case .token(let string):
-                vm.tokenAcquired(token: string, source: .login)
-            case .err(let auth_error):
-                errorMessage = "auth error \(auth_error)"
-            case .none:
-                errorMessage = "wut"
-            }
+            vm.tokenAcquired(token: response.token, source: .login)
         }
         
         if case .Err(let msg) = resp {

@@ -58,16 +58,7 @@ struct TimelineView: View {
                 $0.token = token
             }))
             if case .Ok(.getWall(let wall)) = twots {
-                
-                switch wall.payload {
-                case .wall(let wall):
-                    self.twots = wall.twots
-                case .err(let eRROR_CODE):
-                    self.errorMessage = "error fetching twots \(eRROR_CODE)"
-                case .none:
-                    self.errorMessage = "error fetching twots: no response"
-                }
-                
+                self.twots = wall.wall.twots
             }
         }
     }

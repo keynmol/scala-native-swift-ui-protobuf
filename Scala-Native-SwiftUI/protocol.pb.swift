@@ -20,6 +20,50 @@ fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAP
   typealias Version = _2
 }
 
+enum ERROR_CODE: SwiftProtobuf.Enum {
+  typealias RawValue = Int
+  case other // = 0
+  case unauthorized // = 1
+  case invalidCredentials // = 2
+  case UNRECOGNIZED(Int)
+
+  init() {
+    self = .other
+  }
+
+  init?(rawValue: Int) {
+    switch rawValue {
+    case 0: self = .other
+    case 1: self = .unauthorized
+    case 2: self = .invalidCredentials
+    default: self = .UNRECOGNIZED(rawValue)
+    }
+  }
+
+  var rawValue: Int {
+    switch self {
+    case .other: return 0
+    case .unauthorized: return 1
+    case .invalidCredentials: return 2
+    case .UNRECOGNIZED(let i): return i
+    }
+  }
+
+}
+
+#if swift(>=4.2)
+
+extension ERROR_CODE: CaseIterable {
+  // The compiler won't synthesize support with the UNRECOGNIZED case.
+  static let allCases: [ERROR_CODE] = [
+    .other,
+    .unauthorized,
+    .invalidCredentials,
+  ]
+}
+
+#endif  // swift(>=4.2)
+
 struct Request {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
@@ -43,12 +87,12 @@ struct Request {
     set {payload = .getWall(newValue)}
   }
 
-  var getState: GetState.Request {
+  var setOptions: SetOptions.Request {
     get {
-      if case .getState(let v)? = payload {return v}
-      return GetState.Request()
+      if case .setOptions(let v)? = payload {return v}
+      return SetOptions.Request()
     }
-    set {payload = .getState(newValue)}
+    set {payload = .setOptions(newValue)}
   }
 
   var getMe: GetMe.Request {
@@ -64,7 +108,7 @@ struct Request {
   enum OneOf_Payload: Equatable {
     case login(Login.Request)
     case getWall(GetWall.Request)
-    case getState(GetState.Request)
+    case setOptions(SetOptions.Request)
     case getMe(GetMe.Request)
 
   #if !swift(>=4.1)
@@ -81,8 +125,8 @@ struct Request {
         guard case .getWall(let l) = lhs, case .getWall(let r) = rhs else { preconditionFailure() }
         return l == r
       }()
-      case (.getState, .getState): return {
-        guard case .getState(let l) = lhs, case .getState(let r) = rhs else { preconditionFailure() }
+      case (.setOptions, .setOptions): return {
+        guard case .setOptions(let l) = lhs, case .setOptions(let r) = rhs else { preconditionFailure() }
         return l == r
       }()
       case (.getMe, .getMe): return {
@@ -121,12 +165,12 @@ struct Response {
     set {payload = .getWall(newValue)}
   }
 
-  var getState: GetState.Response {
+  var setOptions: SetOptions.Response {
     get {
-      if case .getState(let v)? = payload {return v}
-      return GetState.Response()
+      if case .setOptions(let v)? = payload {return v}
+      return SetOptions.Response()
     }
-    set {payload = .getState(newValue)}
+    set {payload = .setOptions(newValue)}
   }
 
   var getMe: GetMe.Response {
@@ -142,7 +186,7 @@ struct Response {
   enum OneOf_Payload: Equatable {
     case login(Login.Response)
     case getWall(GetWall.Response)
-    case getState(GetState.Response)
+    case setOptions(SetOptions.Response)
     case getMe(GetMe.Response)
 
   #if !swift(>=4.1)
@@ -159,8 +203,8 @@ struct Response {
         guard case .getWall(let l) = lhs, case .getWall(let r) = rhs else { preconditionFailure() }
         return l == r
       }()
-      case (.getState, .getState): return {
-        guard case .getState(let l) = lhs, case .getState(let r) = rhs else { preconditionFailure() }
+      case (.setOptions, .setOptions): return {
+        guard case .setOptions(let l) = lhs, case .setOptions(let r) = rhs else { preconditionFailure() }
         return l == r
       }()
       case (.getMe, .getMe): return {
@@ -183,31 +227,6 @@ struct GetMe {
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  enum ERROR_CODE: SwiftProtobuf.Enum {
-    typealias RawValue = Int
-    case unauthorized // = 0
-    case UNRECOGNIZED(Int)
-
-    init() {
-      self = .unauthorized
-    }
-
-    init?(rawValue: Int) {
-      switch rawValue {
-      case 0: self = .unauthorized
-      default: self = .UNRECOGNIZED(rawValue)
-      }
-    }
-
-    var rawValue: Int {
-      switch self {
-      case .unauthorized: return 0
-      case .UNRECOGNIZED(let i): return i
-      }
-    }
-
-  }
-
   struct Request {
     // SwiftProtobuf.Message conformance is added in an extension below. See the
     // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
@@ -225,66 +244,24 @@ struct GetMe {
     // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
     // methods supported on all messages.
 
-    var payload: GetMe.Response.OneOf_Payload? = nil
-
     var me: Me {
-      get {
-        if case .me(let v)? = payload {return v}
-        return Me()
-      }
-      set {payload = .me(newValue)}
+      get {return _me ?? Me()}
+      set {_me = newValue}
     }
-
-    var err: GetMe.ERROR_CODE {
-      get {
-        if case .err(let v)? = payload {return v}
-        return .unauthorized
-      }
-      set {payload = .err(newValue)}
-    }
+    /// Returns true if `me` has been explicitly set.
+    var hasMe: Bool {return self._me != nil}
+    /// Clears the value of `me`. Subsequent reads from it will return its default value.
+    mutating func clearMe() {self._me = nil}
 
     var unknownFields = SwiftProtobuf.UnknownStorage()
 
-    enum OneOf_Payload: Equatable {
-      case me(Me)
-      case err(GetMe.ERROR_CODE)
-
-    #if !swift(>=4.1)
-      static func ==(lhs: GetMe.Response.OneOf_Payload, rhs: GetMe.Response.OneOf_Payload) -> Bool {
-        // The use of inline closures is to circumvent an issue where the compiler
-        // allocates stack space for every case branch when no optimizations are
-        // enabled. https://github.com/apple/swift-protobuf/issues/1034
-        switch (lhs, rhs) {
-        case (.me, .me): return {
-          guard case .me(let l) = lhs, case .me(let r) = rhs else { preconditionFailure() }
-          return l == r
-        }()
-        case (.err, .err): return {
-          guard case .err(let l) = lhs, case .err(let r) = rhs else { preconditionFailure() }
-          return l == r
-        }()
-        default: return false
-        }
-      }
-    #endif
-    }
-
     init() {}
+
+    fileprivate var _me: Me? = nil
   }
 
   init() {}
 }
-
-#if swift(>=4.2)
-
-extension GetMe.ERROR_CODE: CaseIterable {
-  // The compiler won't synthesize support with the UNRECOGNIZED case.
-  static let allCases: [GetMe.ERROR_CODE] = [
-    .unauthorized,
-  ]
-}
-
-#endif  // swift(>=4.2)
 
 struct GetWall {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
@@ -293,31 +270,6 @@ struct GetWall {
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  enum ERROR_CODE: SwiftProtobuf.Enum {
-    typealias RawValue = Int
-    case unauthorized // = 0
-    case UNRECOGNIZED(Int)
-
-    init() {
-      self = .unauthorized
-    }
-
-    init?(rawValue: Int) {
-      switch rawValue {
-      case 0: self = .unauthorized
-      default: self = .UNRECOGNIZED(rawValue)
-      }
-    }
-
-    var rawValue: Int {
-      switch self {
-      case .unauthorized: return 0
-      case .UNRECOGNIZED(let i): return i
-      }
-    }
-
-  }
-
   struct Request {
     // SwiftProtobuf.Message conformance is added in an extension below. See the
     // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
@@ -335,66 +287,24 @@ struct GetWall {
     // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
     // methods supported on all messages.
 
-    var payload: GetWall.Response.OneOf_Payload? = nil
-
     var wall: Wall {
-      get {
-        if case .wall(let v)? = payload {return v}
-        return Wall()
-      }
-      set {payload = .wall(newValue)}
+      get {return _wall ?? Wall()}
+      set {_wall = newValue}
     }
-
-    var err: GetWall.ERROR_CODE {
-      get {
-        if case .err(let v)? = payload {return v}
-        return .unauthorized
-      }
-      set {payload = .err(newValue)}
-    }
+    /// Returns true if `wall` has been explicitly set.
+    var hasWall: Bool {return self._wall != nil}
+    /// Clears the value of `wall`. Subsequent reads from it will return its default value.
+    mutating func clearWall() {self._wall = nil}
 
     var unknownFields = SwiftProtobuf.UnknownStorage()
 
-    enum OneOf_Payload: Equatable {
-      case wall(Wall)
-      case err(GetWall.ERROR_CODE)
-
-    #if !swift(>=4.1)
-      static func ==(lhs: GetWall.Response.OneOf_Payload, rhs: GetWall.Response.OneOf_Payload) -> Bool {
-        // The use of inline closures is to circumvent an issue where the compiler
-        // allocates stack space for every case branch when no optimizations are
-        // enabled. https://github.com/apple/swift-protobuf/issues/1034
-        switch (lhs, rhs) {
-        case (.wall, .wall): return {
-          guard case .wall(let l) = lhs, case .wall(let r) = rhs else { preconditionFailure() }
-          return l == r
-        }()
-        case (.err, .err): return {
-          guard case .err(let l) = lhs, case .err(let r) = rhs else { preconditionFailure() }
-          return l == r
-        }()
-        default: return false
-        }
-      }
-    #endif
-    }
-
     init() {}
+
+    fileprivate var _wall: Wall? = nil
   }
 
   init() {}
 }
-
-#if swift(>=4.2)
-
-extension GetWall.ERROR_CODE: CaseIterable {
-  // The compiler won't synthesize support with the UNRECOGNIZED case.
-  static let allCases: [GetWall.ERROR_CODE] = [
-    .unauthorized,
-  ]
-}
-
-#endif  // swift(>=4.2)
 
 struct Login {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
@@ -402,31 +312,6 @@ struct Login {
   // methods supported on all messages.
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
-
-  enum ERROR_CODE: SwiftProtobuf.Enum {
-    typealias RawValue = Int
-    case invalidCredentials // = 0
-    case UNRECOGNIZED(Int)
-
-    init() {
-      self = .invalidCredentials
-    }
-
-    init?(rawValue: Int) {
-      switch rawValue {
-      case 0: self = .invalidCredentials
-      default: self = .UNRECOGNIZED(rawValue)
-      }
-    }
-
-    var rawValue: Int {
-      switch self {
-      case .invalidCredentials: return 0
-      case .UNRECOGNIZED(let i): return i
-      }
-    }
-
-  }
 
   struct Request {
     // SwiftProtobuf.Message conformance is added in an extension below. See the
@@ -447,49 +332,9 @@ struct Login {
     // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
     // methods supported on all messages.
 
-    var payload: Login.Response.OneOf_Payload? = nil
-
-    var token: String {
-      get {
-        if case .token(let v)? = payload {return v}
-        return String()
-      }
-      set {payload = .token(newValue)}
-    }
-
-    var err: Login.ERROR_CODE {
-      get {
-        if case .err(let v)? = payload {return v}
-        return .invalidCredentials
-      }
-      set {payload = .err(newValue)}
-    }
+    var token: String = String()
 
     var unknownFields = SwiftProtobuf.UnknownStorage()
-
-    enum OneOf_Payload: Equatable {
-      case token(String)
-      case err(Login.ERROR_CODE)
-
-    #if !swift(>=4.1)
-      static func ==(lhs: Login.Response.OneOf_Payload, rhs: Login.Response.OneOf_Payload) -> Bool {
-        // The use of inline closures is to circumvent an issue where the compiler
-        // allocates stack space for every case branch when no optimizations are
-        // enabled. https://github.com/apple/swift-protobuf/issues/1034
-        switch (lhs, rhs) {
-        case (.token, .token): return {
-          guard case .token(let l) = lhs, case .token(let r) = rhs else { preconditionFailure() }
-          return l == r
-        }()
-        case (.err, .err): return {
-          guard case .err(let l) = lhs, case .err(let r) = rhs else { preconditionFailure() }
-          return l == r
-        }()
-        default: return false
-        }
-      }
-    #endif
-    }
 
     init() {}
   }
@@ -497,18 +342,7 @@ struct Login {
   init() {}
 }
 
-#if swift(>=4.2)
-
-extension Login.ERROR_CODE: CaseIterable {
-  // The compiler won't synthesize support with the UNRECOGNIZED case.
-  static let allCases: [Login.ERROR_CODE] = [
-    .invalidCredentials,
-  ]
-}
-
-#endif  // swift(>=4.2)
-
-struct GetState {
+struct SetOptions {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -520,9 +354,20 @@ struct GetState {
     // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
     // methods supported on all messages.
 
+    var options: Options {
+      get {return _options ?? Options()}
+      set {_options = newValue}
+    }
+    /// Returns true if `options` has been explicitly set.
+    var hasOptions: Bool {return self._options != nil}
+    /// Clears the value of `options`. Subsequent reads from it will return its default value.
+    mutating func clearOptions() {self._options = nil}
+
     var unknownFields = SwiftProtobuf.UnknownStorage()
 
     init() {}
+
+    fileprivate var _options: Options? = nil
   }
 
   struct Response {
@@ -530,20 +375,9 @@ struct GetState {
     // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
     // methods supported on all messages.
 
-    var state: State {
-      get {return _state ?? State()}
-      set {_state = newValue}
-    }
-    /// Returns true if `state` has been explicitly set.
-    var hasState: Bool {return self._state != nil}
-    /// Clears the value of `state`. Subsequent reads from it will return its default value.
-    mutating func clearState() {self._state = nil}
-
     var unknownFields = SwiftProtobuf.UnknownStorage()
 
     init() {}
-
-    fileprivate var _state: State? = nil
   }
 
   init() {}
@@ -554,17 +388,9 @@ struct Error {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
+  var code: ERROR_CODE = .other
+
   var message: String = String()
-
-  var unknownFields = SwiftProtobuf.UnknownStorage()
-
-  init() {}
-}
-
-struct State {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -626,30 +452,24 @@ struct Me {
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)
+extension ERROR_CODE: @unchecked Sendable {}
 extension Request: @unchecked Sendable {}
 extension Request.OneOf_Payload: @unchecked Sendable {}
 extension Response: @unchecked Sendable {}
 extension Response.OneOf_Payload: @unchecked Sendable {}
 extension GetMe: @unchecked Sendable {}
-extension GetMe.ERROR_CODE: @unchecked Sendable {}
 extension GetMe.Request: @unchecked Sendable {}
 extension GetMe.Response: @unchecked Sendable {}
-extension GetMe.Response.OneOf_Payload: @unchecked Sendable {}
 extension GetWall: @unchecked Sendable {}
-extension GetWall.ERROR_CODE: @unchecked Sendable {}
 extension GetWall.Request: @unchecked Sendable {}
 extension GetWall.Response: @unchecked Sendable {}
-extension GetWall.Response.OneOf_Payload: @unchecked Sendable {}
 extension Login: @unchecked Sendable {}
-extension Login.ERROR_CODE: @unchecked Sendable {}
 extension Login.Request: @unchecked Sendable {}
 extension Login.Response: @unchecked Sendable {}
-extension Login.Response.OneOf_Payload: @unchecked Sendable {}
-extension GetState: @unchecked Sendable {}
-extension GetState.Request: @unchecked Sendable {}
-extension GetState.Response: @unchecked Sendable {}
+extension SetOptions: @unchecked Sendable {}
+extension SetOptions.Request: @unchecked Sendable {}
+extension SetOptions.Response: @unchecked Sendable {}
 extension Error: @unchecked Sendable {}
-extension State: @unchecked Sendable {}
 extension Options: @unchecked Sendable {}
 extension Wall: @unchecked Sendable {}
 extension Twot: @unchecked Sendable {}
@@ -658,12 +478,20 @@ extension Me: @unchecked Sendable {}
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
+extension ERROR_CODE: SwiftProtobuf._ProtoNameProviding {
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    0: .same(proto: "OTHER"),
+    1: .same(proto: "UNAUTHORIZED"),
+    2: .same(proto: "INVALID_CREDENTIALS"),
+  ]
+}
+
 extension Request: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = "Request"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "login"),
     2: .standard(proto: "get_wall"),
-    3: .standard(proto: "get_state"),
+    3: .standard(proto: "set_options"),
     4: .standard(proto: "get_me"),
   ]
 
@@ -700,16 +528,16 @@ extension Request: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
         }
       }()
       case 3: try {
-        var v: GetState.Request?
+        var v: SetOptions.Request?
         var hadOneofValue = false
         if let current = self.payload {
           hadOneofValue = true
-          if case .getState(let m) = current {v = m}
+          if case .setOptions(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
         if let v = v {
           if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.payload = .getState(v)
+          self.payload = .setOptions(v)
         }
       }()
       case 4: try {
@@ -744,8 +572,8 @@ extension Request: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
       guard case .getWall(let v)? = self.payload else { preconditionFailure() }
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
     }()
-    case .getState?: try {
-      guard case .getState(let v)? = self.payload else { preconditionFailure() }
+    case .setOptions?: try {
+      guard case .setOptions(let v)? = self.payload else { preconditionFailure() }
       try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
     }()
     case .getMe?: try {
@@ -769,7 +597,7 @@ extension Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "login"),
     2: .standard(proto: "get_wall"),
-    3: .standard(proto: "get_state"),
+    3: .standard(proto: "set_options"),
     4: .standard(proto: "get_me"),
   ]
 
@@ -806,16 +634,16 @@ extension Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         }
       }()
       case 3: try {
-        var v: GetState.Response?
+        var v: SetOptions.Response?
         var hadOneofValue = false
         if let current = self.payload {
           hadOneofValue = true
-          if case .getState(let m) = current {v = m}
+          if case .setOptions(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
         if let v = v {
           if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.payload = .getState(v)
+          self.payload = .setOptions(v)
         }
       }()
       case 4: try {
@@ -850,8 +678,8 @@ extension Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
       guard case .getWall(let v)? = self.payload else { preconditionFailure() }
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
     }()
-    case .getState?: try {
-      guard case .getState(let v)? = self.payload else { preconditionFailure() }
+    case .setOptions?: try {
+      guard case .setOptions(let v)? = self.payload else { preconditionFailure() }
       try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
     }()
     case .getMe?: try {
@@ -887,12 +715,6 @@ extension GetMe: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
-}
-
-extension GetMe.ERROR_CODE: SwiftProtobuf._ProtoNameProviding {
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    0: .same(proto: "UNAUTHORIZED"),
-  ]
 }
 
 extension GetMe.Request: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
@@ -931,7 +753,6 @@ extension GetMe.Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
   static let protoMessageName: String = GetMe.protoMessageName + ".Response"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "me"),
-    2: .same(proto: "err"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -940,27 +761,7 @@ extension GetMe.Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
       // allocates stack space for every case branch when no optimizations are
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try {
-        var v: Me?
-        var hadOneofValue = false
-        if let current = self.payload {
-          hadOneofValue = true
-          if case .me(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.payload = .me(v)
-        }
-      }()
-      case 2: try {
-        var v: GetMe.ERROR_CODE?
-        try decoder.decodeSingularEnumField(value: &v)
-        if let v = v {
-          if self.payload != nil {try decoder.handleConflictingOneOf()}
-          self.payload = .err(v)
-        }
-      }()
+      case 1: try { try decoder.decodeSingularMessageField(value: &self._me) }()
       default: break
       }
     }
@@ -971,22 +772,14 @@ extension GetMe.Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
     // allocates stack space for every if/case branch local when no optimizations
     // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
     // https://github.com/apple/swift-protobuf/issues/1182
-    switch self.payload {
-    case .me?: try {
-      guard case .me(let v)? = self.payload else { preconditionFailure() }
+    try { if let v = self._me {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }()
-    case .err?: try {
-      guard case .err(let v)? = self.payload else { preconditionFailure() }
-      try visitor.visitSingularEnumField(value: v, fieldNumber: 2)
-    }()
-    case nil: break
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
   static func ==(lhs: GetMe.Response, rhs: GetMe.Response) -> Bool {
-    if lhs.payload != rhs.payload {return false}
+    if lhs._me != rhs._me {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -1009,12 +802,6 @@ extension GetWall: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
-}
-
-extension GetWall.ERROR_CODE: SwiftProtobuf._ProtoNameProviding {
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    0: .same(proto: "UNAUTHORIZED"),
-  ]
 }
 
 extension GetWall.Request: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
@@ -1053,7 +840,6 @@ extension GetWall.Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
   static let protoMessageName: String = GetWall.protoMessageName + ".Response"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "wall"),
-    2: .same(proto: "err"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -1062,27 +848,7 @@ extension GetWall.Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
       // allocates stack space for every case branch when no optimizations are
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try {
-        var v: Wall?
-        var hadOneofValue = false
-        if let current = self.payload {
-          hadOneofValue = true
-          if case .wall(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.payload = .wall(v)
-        }
-      }()
-      case 2: try {
-        var v: GetWall.ERROR_CODE?
-        try decoder.decodeSingularEnumField(value: &v)
-        if let v = v {
-          if self.payload != nil {try decoder.handleConflictingOneOf()}
-          self.payload = .err(v)
-        }
-      }()
+      case 1: try { try decoder.decodeSingularMessageField(value: &self._wall) }()
       default: break
       }
     }
@@ -1093,22 +859,14 @@ extension GetWall.Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
     // allocates stack space for every if/case branch local when no optimizations
     // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
     // https://github.com/apple/swift-protobuf/issues/1182
-    switch self.payload {
-    case .wall?: try {
-      guard case .wall(let v)? = self.payload else { preconditionFailure() }
+    try { if let v = self._wall {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }()
-    case .err?: try {
-      guard case .err(let v)? = self.payload else { preconditionFailure() }
-      try visitor.visitSingularEnumField(value: v, fieldNumber: 2)
-    }()
-    case nil: break
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
   static func ==(lhs: GetWall.Response, rhs: GetWall.Response) -> Bool {
-    if lhs.payload != rhs.payload {return false}
+    if lhs._wall != rhs._wall {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -1131,12 +889,6 @@ extension Login: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
-}
-
-extension Login.ERROR_CODE: SwiftProtobuf._ProtoNameProviding {
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    0: .same(proto: "INVALID_CREDENTIALS"),
-  ]
 }
 
 extension Login.Request: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
@@ -1181,7 +933,6 @@ extension Login.Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
   static let protoMessageName: String = Login.protoMessageName + ".Response"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "token"),
-    2: .same(proto: "err"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -1190,55 +941,28 @@ extension Login.Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
       // allocates stack space for every case branch when no optimizations are
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try {
-        var v: String?
-        try decoder.decodeSingularStringField(value: &v)
-        if let v = v {
-          if self.payload != nil {try decoder.handleConflictingOneOf()}
-          self.payload = .token(v)
-        }
-      }()
-      case 2: try {
-        var v: Login.ERROR_CODE?
-        try decoder.decodeSingularEnumField(value: &v)
-        if let v = v {
-          if self.payload != nil {try decoder.handleConflictingOneOf()}
-          self.payload = .err(v)
-        }
-      }()
+      case 1: try { try decoder.decodeSingularStringField(value: &self.token) }()
       default: break
       }
     }
   }
 
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every if/case branch local when no optimizations
-    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
-    // https://github.com/apple/swift-protobuf/issues/1182
-    switch self.payload {
-    case .token?: try {
-      guard case .token(let v)? = self.payload else { preconditionFailure() }
-      try visitor.visitSingularStringField(value: v, fieldNumber: 1)
-    }()
-    case .err?: try {
-      guard case .err(let v)? = self.payload else { preconditionFailure() }
-      try visitor.visitSingularEnumField(value: v, fieldNumber: 2)
-    }()
-    case nil: break
+    if !self.token.isEmpty {
+      try visitor.visitSingularStringField(value: self.token, fieldNumber: 1)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   static func ==(lhs: Login.Response, rhs: Login.Response) -> Bool {
-    if lhs.payload != rhs.payload {return false}
+    if lhs.token != rhs.token {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
-extension GetState: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = "GetState"
+extension SetOptions: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = "SetOptions"
   static let _protobuf_nameMap = SwiftProtobuf._NameMap()
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -1250,35 +974,16 @@ extension GetState: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: GetState, rhs: GetState) -> Bool {
+  static func ==(lhs: SetOptions, rhs: SetOptions) -> Bool {
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
-extension GetState.Request: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = GetState.protoMessageName + ".Request"
-  static let _protobuf_nameMap = SwiftProtobuf._NameMap()
-
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let _ = try decoder.nextFieldNumber() {
-    }
-  }
-
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    try unknownFields.traverse(visitor: &visitor)
-  }
-
-  static func ==(lhs: GetState.Request, rhs: GetState.Request) -> Bool {
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
-}
-
-extension GetState.Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = GetState.protoMessageName + ".Response"
+extension SetOptions.Request: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = SetOptions.protoMessageName + ".Request"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "state"),
+    1: .same(proto: "options"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -1287,7 +992,7 @@ extension GetState.Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
       // allocates stack space for every case branch when no optimizations are
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try { try decoder.decodeSingularMessageField(value: &self._state) }()
+      case 1: try { try decoder.decodeSingularMessageField(value: &self._options) }()
       default: break
       }
     }
@@ -1298,14 +1003,33 @@ extension GetState.Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     // allocates stack space for every if/case branch local when no optimizations
     // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
     // https://github.com/apple/swift-protobuf/issues/1182
-    try { if let v = self._state {
+    try { if let v = self._options {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
     } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: GetState.Response, rhs: GetState.Response) -> Bool {
-    if lhs._state != rhs._state {return false}
+  static func ==(lhs: SetOptions.Request, rhs: SetOptions.Request) -> Bool {
+    if lhs._options != rhs._options {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension SetOptions.Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = SetOptions.protoMessageName + ".Response"
+  static let _protobuf_nameMap = SwiftProtobuf._NameMap()
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let _ = try decoder.nextFieldNumber() {
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: SetOptions.Response, rhs: SetOptions.Response) -> Bool {
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -1314,7 +1038,8 @@ extension GetState.Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
 extension Error: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = "Error"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "message"),
+    1: .same(proto: "code"),
+    2: .same(proto: "message"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -1323,40 +1048,26 @@ extension Error: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
       // allocates stack space for every case branch when no optimizations are
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try { try decoder.decodeSingularStringField(value: &self.message) }()
+      case 1: try { try decoder.decodeSingularEnumField(value: &self.code) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.message) }()
       default: break
       }
     }
   }
 
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if self.code != .other {
+      try visitor.visitSingularEnumField(value: self.code, fieldNumber: 1)
+    }
     if !self.message.isEmpty {
-      try visitor.visitSingularStringField(value: self.message, fieldNumber: 1)
+      try visitor.visitSingularStringField(value: self.message, fieldNumber: 2)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   static func ==(lhs: Error, rhs: Error) -> Bool {
+    if lhs.code != rhs.code {return false}
     if lhs.message != rhs.message {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
-}
-
-extension State: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = "State"
-  static let _protobuf_nameMap = SwiftProtobuf._NameMap()
-
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let _ = try decoder.nextFieldNumber() {
-    }
-  }
-
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    try unknownFields.traverse(visitor: &visitor)
-  }
-
-  static func ==(lhs: State, rhs: State) -> Bool {
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

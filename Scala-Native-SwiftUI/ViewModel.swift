@@ -49,17 +49,9 @@ class ViewModel: ObservableObject {
             }))
             
             if case .Ok(.getMe(let bla)) = resp {
-                switch bla.payload {
-                    
-                case .err(GetMe.ERROR_CODE.unauthorized):
-                    state = .logIn
-                case .some(.me(let leader)):
-                    saveToken(token: token)
-                    nickname = leader.nickname
-                    id = leader.id
-                case _:
-                    state = .logIn
-                }
+                saveToken(token: token)
+                nickname = bla.me.nickname
+                id = bla.me.id
             }
         }
         
@@ -76,6 +68,7 @@ class ViewModel: ObservableObject {
         self.token = nil
         self.nickname = nil
         self.id = nil
+        UserDefaults.standard.set(nil, forKey: "twotm8_token")
         state = .logIn
     }
     
