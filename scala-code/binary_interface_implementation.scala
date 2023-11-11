@@ -57,7 +57,6 @@ object Implementations extends ExportedFunctions:
     val arr = Intrinsics
       .castRawPtrToObject(scalanative.runtime.toRawPtr(res.value))
       .asInstanceOf[Array[Byte]]
-    println(s"$res: ${arr.toList}")
     arr
 
   override def scala_app_free_result(res: ScalaResult) =
@@ -66,9 +65,15 @@ object Implementations extends ExportedFunctions:
         Intrinsics.castRawPtrToObject(scalanative.runtime.toRawPtr(res.value))
 
       if GCRoots.hasRoot(obj) then
+        scribe.debug(s"Freeing result ${res}")
         GCRoots.removeRoot(obj)
         true
-      else false
+      else
+        scribe.debug(
+          s"Attempted to free result ${res}, but it's already been freed or doesn't exist"
+        )
+        false
+      end if
     else true
 
   val state = StateManager(State())
@@ -114,8 +119,6 @@ object Implementations extends ExportedFunctions:
     val arrPtr = scalanative.runtime.fromRawPtr[Byte](
       Intrinsics.castObjectToRawPtr(marshalled)
     )
-
-    println(marshalled.toList)
 
     () =>
       GCRoots.addRoot(marshalled)

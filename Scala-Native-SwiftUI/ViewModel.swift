@@ -68,6 +68,7 @@ class ViewModel: ObservableObject {
         self.token = nil
         self.nickname = nil
         self.id = nil
+        UserDefaults.standard.set(nil, forKey: "twotm8_token")
         state = .logIn
     }
     
