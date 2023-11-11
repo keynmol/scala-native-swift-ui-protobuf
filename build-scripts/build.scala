@@ -30,7 +30,7 @@ val SN_VCPKG_RELEASE = "dev"
 end build
 
 def run(args: String*) =
-  scribe.info("Running", args.mkString(" "))
+  scribe.info(s"Running ${args.mkString(" ")}")
   os.proc(args)
 
 def buildLibrary(
