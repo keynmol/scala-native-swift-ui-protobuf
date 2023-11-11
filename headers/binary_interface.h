@@ -8,14 +8,10 @@ typedef void *ScalaResult;
 
 ScalaResult scala_app_request(const char *data, const int data_len);
 
-bool scala_app_is_response(const ScalaResult result);
-bool scala_app_is_error(const ScalaResult result);
+bool scala_app_result_ok(const ScalaResult result);
 
-const char *scala_app_get_response(const ScalaResult result);
-const char *scala_app_get_error(const ScalaResult result);
-
-int scala_app_get_response_length(const ScalaResult result);
-int scala_app_get_error_length(const ScalaResult result);
+const char *scala_app_get_data(const ScalaResult result);
+int scala_app_get_data_length(const ScalaResult result);
 
 bool scala_app_free_result(ScalaResult result);
 

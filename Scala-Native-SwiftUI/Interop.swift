@@ -61,8 +61,8 @@ struct Interop {
             if let err = getError(result: result) {
                 throw ProtocolError.failure(err)
             } else {
-                let messageBytes = ScalaKit.scala_app_get_response(result)
-                let messageSize = ScalaKit.scala_app_get_response_length(result)
+                let messageBytes = ScalaKit.scala_app_get_data(result)
+                let messageSize = ScalaKit.scala_app_get_data_length(result)
                 let buffer = UnsafeBufferPointer(start: messageBytes, count: Int(messageSize))
                 
                 do {
@@ -79,9 +79,9 @@ struct Interop {
     }
     
     static func getError(result: ScalaResult?) -> String? {
-        if(ScalaKit.scala_app_is_error(result)) {
-            let errorBytes = ScalaKit.scala_app_get_error(result)
-            let errorSize = ScalaKit.scala_app_get_error_length(result)
+        if(!ScalaKit.scala_app_result_ok(result)) {
+            let errorBytes = ScalaKit.scala_app_get_data(result)
+            let errorSize = ScalaKit.scala_app_get_data_length(result)
             let buffer = UnsafeBufferPointer(start: errorBytes, count: Int(errorSize))
             do {
                 let err = try Error(serializedData: Data(buffer: buffer))

@@ -23,41 +23,21 @@ import boundary.break
 import scala_app.binarybridge.impl.Implementations.GCRoots
 
 object Implementations extends ExportedFunctions:
-  def scala_app_get_error(
+
+  def scala_app_get_data(
       result: scala_app.binarybridge.aliases.ScalaResult
   ): scala.scalanative.unsafe.CString =
     toByteArray(result).atUnsafe(1)
 
-  def scala_app_get_error_length(
+  def scala_app_get_data_length(
       result: scala_app.binarybridge.aliases.ScalaResult
   ): scala.scalanative.unsafe.CInt =
     toByteArray(result).length - 1
 
-  def scala_app_get_response(
-      result: scala_app.binarybridge.aliases.ScalaResult
-  ): scala.scalanative.unsafe.CString =
-    toByteArray(result).atUnsafe(1)
-
-  def scala_app_get_response_length(
-      result: scala_app.binarybridge.aliases.ScalaResult
-  ): scala.scalanative.unsafe.CInt =
-    toByteArray(result).length - 1
-
-  def scala_app_is_error(
-      result: scala_app.binarybridge.aliases.ScalaResult
-  ): Boolean =
-    toByteArray(result)(0) == 1
-
-  def scala_app_is_response(
+  def scala_app_result_ok(
       result: scala_app.binarybridge.aliases.ScalaResult
   ): Boolean =
     toByteArray(result)(0) == 0
-
-  private def toByteArray(res: ScalaResult) =
-    val arr = Intrinsics
-      .castRawPtrToObject(scalanative.runtime.toRawPtr(res.value))
-      .asInstanceOf[Array[Byte]]
-    arr
 
   override def scala_app_free_result(res: ScalaResult) =
     if res.value != null then
@@ -92,6 +72,12 @@ object Implementations extends ExportedFunctions:
           makeResult(value)()
       end match
   end scala_app_request
+
+  private def toByteArray(res: ScalaResult) =
+    val arr = Intrinsics
+      .castRawPtrToObject(scalanative.runtime.toRawPtr(res.value))
+      .asInstanceOf[Array[Byte]]
+    arr
 
   inline def safe[A](f: => ScalaResult): ScalaResult =
     try f

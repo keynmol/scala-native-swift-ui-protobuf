@@ -26,31 +26,19 @@ trait ExportedFunctions:
 
   /**
   */
-  def scala_app_get_error(result : ScalaResult): CString
+  def scala_app_get_data(result : ScalaResult): CString
 
   /**
   */
-  def scala_app_get_error_length(result : ScalaResult): CInt
-
-  /**
-  */
-  def scala_app_get_response(result : ScalaResult): CString
-
-  /**
-  */
-  def scala_app_get_response_length(result : ScalaResult): CInt
-
-  /**
-  */
-  def scala_app_is_error(result : ScalaResult): Boolean
-
-  /**
-  */
-  def scala_app_is_response(result : ScalaResult): Boolean
+  def scala_app_get_data_length(result : ScalaResult): CInt
 
   /**
   */
   def scala_app_request(data : CString, data_len : CInt): ScalaResult
+
+  /**
+  */
+  def scala_app_result_ok(result : ScalaResult): Boolean
 
 
 object functions extends ExportedFunctions:
@@ -64,37 +52,22 @@ object functions extends ExportedFunctions:
   /**
   */
   @exported
-  override def scala_app_get_error(result : ScalaResult): CString = scala_app.binarybridge.impl.Implementations.scala_app_get_error(result)
+  override def scala_app_get_data(result : ScalaResult): CString = scala_app.binarybridge.impl.Implementations.scala_app_get_data(result)
 
   /**
   */
   @exported
-  override def scala_app_get_error_length(result : ScalaResult): CInt = scala_app.binarybridge.impl.Implementations.scala_app_get_error_length(result)
-
-  /**
-  */
-  @exported
-  override def scala_app_get_response(result : ScalaResult): CString = scala_app.binarybridge.impl.Implementations.scala_app_get_response(result)
-
-  /**
-  */
-  @exported
-  override def scala_app_get_response_length(result : ScalaResult): CInt = scala_app.binarybridge.impl.Implementations.scala_app_get_response_length(result)
-
-  /**
-  */
-  @exported
-  override def scala_app_is_error(result : ScalaResult): Boolean = scala_app.binarybridge.impl.Implementations.scala_app_is_error(result)
-
-  /**
-  */
-  @exported
-  override def scala_app_is_response(result : ScalaResult): Boolean = scala_app.binarybridge.impl.Implementations.scala_app_is_response(result)
+  override def scala_app_get_data_length(result : ScalaResult): CInt = scala_app.binarybridge.impl.Implementations.scala_app_get_data_length(result)
 
   /**
   */
   @exported
   override def scala_app_request(data : CString, data_len : CInt): ScalaResult = scala_app.binarybridge.impl.Implementations.scala_app_request(data, data_len)
+
+  /**
+  */
+  @exported
+  override def scala_app_result_ok(result : ScalaResult): Boolean = scala_app.binarybridge.impl.Implementations.scala_app_result_ok(result)
 
 object types:
   export _root_.scala_app.binarybridge.aliases.*
