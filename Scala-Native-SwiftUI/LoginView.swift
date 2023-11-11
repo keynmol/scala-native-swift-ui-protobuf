@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import ScalaKit
 
 struct LoginView: View {
     @SwiftUI.State private var username: String = ""

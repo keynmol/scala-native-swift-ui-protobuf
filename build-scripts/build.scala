@@ -40,7 +40,7 @@ def buildLibrary(
   run(
     "cs",
     "launch",
-    "com.indoorvivants.vcpkg:sn-vcpkg_3:dev",
+    s"com.indoorvivants.vcpkg:sn-vcpkg_3:$SN_VCPKG_RELEASE",
     "--",
     "scala-cli",
     "--rename",
@@ -66,6 +66,7 @@ def bundleLibraries(scalaCodeLibrary: os.Path, outLibrary: os.Path) =
     "--",
     "install",
     "curl",
+    "libidn2",
     "--rename",
     "curl=libcurl",
     "-l"
@@ -110,6 +111,7 @@ def generateBindings(header: os.Path, out: os.Path) =
     "--scala",
     "--clang",
     "-DSN_SKIP_INIT",
+    "--render.no-location",
     "--export",
     "--out",
     out.toString

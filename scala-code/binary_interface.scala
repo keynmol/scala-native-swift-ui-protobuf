@@ -9,7 +9,6 @@ object structs:
   import _root_.scala_app.binarybridge.structs.*
 
   /**
-   * [bindgen] header: /Users/velvetbaldmime/projects/Scala-Native-SwiftUI/Scala-Native-SwiftUI/headers/binary_interface.h
   */
   opaque type ByteArray = CStruct2[CInt, CString]
   object ByteArray:
@@ -27,7 +26,6 @@ object structs:
       def bytes_=(value: CString): Unit = !struct.at2 = value
 
   /**
-   * [bindgen] header: /Users/velvetbaldmime/projects/Scala-Native-SwiftUI/Scala-Native-SwiftUI/headers/binary_interface.h
   */
   opaque type Result = CStruct3[Ptr[ByteArray], CInt, Boolean]
   object Result:
@@ -51,22 +49,18 @@ trait ExportedFunctions:
   import _root_.scala_app.binarybridge.structs.*
 
   /**
-   * [bindgen] header: /Users/velvetbaldmime/projects/Scala-Native-SwiftUI/Scala-Native-SwiftUI/headers/binary_interface.h
   */
   def scala_app_free_result(result : Ptr[Result]): Boolean
 
   /**
-   * [bindgen] header: /Users/velvetbaldmime/projects/Scala-Native-SwiftUI/Scala-Native-SwiftUI/headers/binary_interface.h
   */
   def scala_app_init(start_state : Ptr[ByteArray], options : Ptr[ByteArray]): Ptr[Result]
 
   /**
-   * [bindgen] header: /Users/velvetbaldmime/projects/Scala-Native-SwiftUI/Scala-Native-SwiftUI/headers/binary_interface.h
   */
   def scala_app_request(message : Ptr[ByteArray]): Ptr[Result]
 
   /**
-   * [bindgen] header: /Users/velvetbaldmime/projects/Scala-Native-SwiftUI/Scala-Native-SwiftUI/headers/binary_interface.h
   */
   def scala_app_result_ok(result : Ptr[Result]): Boolean
 
@@ -75,25 +69,21 @@ object functions extends ExportedFunctions:
   import _root_.scala_app.binarybridge.structs.*
 
   /**
-   * [bindgen] header: /Users/velvetbaldmime/projects/Scala-Native-SwiftUI/Scala-Native-SwiftUI/headers/binary_interface.h
   */
   @exported
   override def scala_app_free_result(result : Ptr[Result]): Boolean = scala_app.binarybridge.impl.Implementations.scala_app_free_result(result)
 
   /**
-   * [bindgen] header: /Users/velvetbaldmime/projects/Scala-Native-SwiftUI/Scala-Native-SwiftUI/headers/binary_interface.h
   */
   @exported
   override def scala_app_init(start_state : Ptr[ByteArray], options : Ptr[ByteArray]): Ptr[Result] = scala_app.binarybridge.impl.Implementations.scala_app_init(start_state, options)
 
   /**
-   * [bindgen] header: /Users/velvetbaldmime/projects/Scala-Native-SwiftUI/Scala-Native-SwiftUI/headers/binary_interface.h
   */
   @exported
   override def scala_app_request(message : Ptr[ByteArray]): Ptr[Result] = scala_app.binarybridge.impl.Implementations.scala_app_request(message)
 
   /**
-   * [bindgen] header: /Users/velvetbaldmime/projects/Scala-Native-SwiftUI/Scala-Native-SwiftUI/headers/binary_interface.h
   */
   @exported
   override def scala_app_result_ok(result : Ptr[Result]): Boolean = scala_app.binarybridge.impl.Implementations.scala_app_result_ok(result)
