@@ -51,35 +51,35 @@ struct Interop {
         let contents = try msg.serializedData()
         
         return   try contents.withUnsafeBytes { (bytes: UnsafePointer<CChar>) in
+            
+            let result = ScalaKit.scala_app_request(bytes, Int32(contents.count))
+            
+            defer {
+                ScalaKit.scala_app_free_result(result)
+            }
+            
+            if let err = getError(result: result) {
+                throw ProtocolError.failure(err)
+            } else {
+                let messageBytes = ScalaKit.scala_app_get_response(result)
+                let messageSize = ScalaKit.scala_app_get_response_length(result)
+                let buffer = UnsafeBufferPointer(start: messageBytes, count: Int(messageSize))
                 
-                let result = ScalaKit.scala_app_request(bytes, Int32(contents.count))
-                
-                defer {
-                    ScalaKit.scala_app_free_result(result)
-                }
-                
-                if let err = getError(result: result) {
-                    throw ProtocolError.failure(err)
-                } else {
-                    let messageBytes = ScalaKit.scala_app_get_response(result)
-                    let messageSize = ScalaKit.scala_app_get_response_length(result)
-                    let buffer = UnsafeBufferPointer(start: messageBytes, count: Int(messageSize))
+                do {
+                    let resp = try R(serializedData: Data(buffer: buffer))
                     
-                    do {
-                        let resp = try R(serializedData: Data(buffer: buffer))
-                        
-                        return resp
-                    } catch {
-                        throw ProtocolError.parsing(error.localizedDescription)
-                    }
+                    return resp
+                } catch {
+                    throw ProtocolError.parsing(error.localizedDescription)
                 }
-                
+            }
+            
         }
         
     }
     
     static func getError(result: ScalaResult?) -> String? {
-        if(!ScalaKit.scala_app_is_error(result)) {
+        if(ScalaKit.scala_app_is_error(result)) {
             let errorBytes = ScalaKit.scala_app_get_error(result)
             let errorSize = ScalaKit.scala_app_get_error_length(result)
             let buffer = UnsafeBufferPointer(start: errorBytes, count: Int(errorSize))
@@ -96,28 +96,12 @@ struct Interop {
     static func initApp(options: Options) throws {
         ScalaKit.ScalaNativeInit()
         
-//        let contents = try options.serializedData()
+        //        let contents = try options.serializedData()
         
         let result = sendRequest(request: Request.OneOf_Payload.setOptions(SetOptions.Request.with{$0.options = options}))
+        print(result)
         
-        
-//        try contents.withUnsafeBytes { (bytes: UnsafePointer<CChar>) in
-//            let ba = ByteArray(size: Int32(contents.count), bytes: bytes);
-//            
-//            try withUnsafePointer(to: ba, { bap in
-//                
-//                
-//                let result = ScalaKit.scala_app_init(nil, bap)
-//                
-//                defer {
-//                    ScalaKit.scala_app_free_result(result)
-//                }
-//                
-//                if let err = getError(result: result) {
-//                    throw ProtocolError.failure(err)
-//                }
-//            })
-//        }
+    
     }
     
 }
