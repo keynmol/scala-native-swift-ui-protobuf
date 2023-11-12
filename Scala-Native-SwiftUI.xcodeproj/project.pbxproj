@@ -24,6 +24,8 @@
 		82B4A62F2AFBEC07001689E2 /* TwotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82B4A62E2AFBEC07001689E2 /* TwotView.swift */; };
 		82B4A6312AFBFE5A001689E2 /* UserHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82B4A6302AFBFE5A001689E2 /* UserHeaderView.swift */; };
 		82B4A6332AFCD552001689E2 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82B4A6322AFCD552001689E2 /* Extensions.swift */; };
+		82E579892B00CA7B00A52EC9 /* SpinnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E579882B00CA7B00A52EC9 /* SpinnerView.swift */; };
+		82E5798B2B00CAA400A52EC9 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E5798A2B00CAA400A52EC9 /* ErrorView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +45,8 @@
 		82B4A62E2AFBEC07001689E2 /* TwotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwotView.swift; sourceTree = "<group>"; };
 		82B4A6302AFBFE5A001689E2 /* UserHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHeaderView.swift; sourceTree = "<group>"; };
 		82B4A6322AFCD552001689E2 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		82E579882B00CA7B00A52EC9 /* SpinnerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerView.swift; sourceTree = "<group>"; };
+		82E5798A2B00CAA400A52EC9 /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,12 +90,14 @@
 				82A5F9D72AEEB0AB007EC213 /* protocol.pb.swift */,
 				82A5F9B62AEE93FD007EC213 /* Scala_Native_SwiftUIApp.swift */,
 				82A5F9B82AEE93FD007EC213 /* LoginView.swift */,
+				82E5798A2B00CAA400A52EC9 /* ErrorView.swift */,
 				82A5F9D92AF57950007EC213 /* Interop.swift */,
 				82A5F9BA2AEE93FE007EC213 /* Assets.xcassets */,
 				82A5F9BF2AEE93FE007EC213 /* Scala_Native_SwiftUI.entitlements */,
 				82A5F9BC2AEE93FE007EC213 /* Preview Content */,
 				82B4A6242AFA4632001689E2 /* TimelineView.swift */,
 				82B4A62E2AFBEC07001689E2 /* TwotView.swift */,
+				82E579882B00CA7B00A52EC9 /* SpinnerView.swift */,
 				82B4A6262AFA48E2001689E2 /* ViewModel.swift */,
 				82B4A6302AFBFE5A001689E2 /* UserHeaderView.swift */,
 				82B4A6322AFCD552001689E2 /* Extensions.swift */,
@@ -201,9 +207,11 @@
 				82A5F9DA2AF57950007EC213 /* Interop.swift in Sources */,
 				82B4A6332AFCD552001689E2 /* Extensions.swift in Sources */,
 				82A5F9D82AEEB0AB007EC213 /* protocol.pb.swift in Sources */,
+				82E579892B00CA7B00A52EC9 /* SpinnerView.swift in Sources */,
 				82A5F9B72AEE93FD007EC213 /* Scala_Native_SwiftUIApp.swift in Sources */,
 				82B4A6312AFBFE5A001689E2 /* UserHeaderView.swift in Sources */,
 				82B4A6272AFA48E2001689E2 /* ViewModel.swift in Sources */,
+				82E5798B2B00CAA400A52EC9 /* ErrorView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

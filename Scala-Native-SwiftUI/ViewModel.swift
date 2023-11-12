@@ -57,7 +57,7 @@ class ViewModel: ObservableObject {
         
         switch source {
         case .login:
-            saveToken(token: token)
+            checkAndSaveToken(token: token)
         case .defaults:
             checkAndSaveToken(token: token)
         }

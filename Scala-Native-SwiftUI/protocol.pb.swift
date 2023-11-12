@@ -103,6 +103,14 @@ struct Request {
     set {payload = .getMe(newValue)}
   }
 
+  var sendTwot: SendTwot.Request {
+    get {
+      if case .sendTwot(let v)? = payload {return v}
+      return SendTwot.Request()
+    }
+    set {payload = .sendTwot(newValue)}
+  }
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   enum OneOf_Payload: Equatable {
@@ -110,6 +118,7 @@ struct Request {
     case getWall(GetWall.Request)
     case setOptions(SetOptions.Request)
     case getMe(GetMe.Request)
+    case sendTwot(SendTwot.Request)
 
   #if !swift(>=4.1)
     static func ==(lhs: Request.OneOf_Payload, rhs: Request.OneOf_Payload) -> Bool {
@@ -131,6 +140,10 @@ struct Request {
       }()
       case (.getMe, .getMe): return {
         guard case .getMe(let l) = lhs, case .getMe(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.sendTwot, .sendTwot): return {
+        guard case .sendTwot(let l) = lhs, case .sendTwot(let r) = rhs else { preconditionFailure() }
         return l == r
       }()
       default: return false
@@ -181,6 +194,14 @@ struct Response {
     set {payload = .getMe(newValue)}
   }
 
+  var sendTwot: SendTwot.Response {
+    get {
+      if case .sendTwot(let v)? = payload {return v}
+      return SendTwot.Response()
+    }
+    set {payload = .sendTwot(newValue)}
+  }
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   enum OneOf_Payload: Equatable {
@@ -188,6 +209,7 @@ struct Response {
     case getWall(GetWall.Response)
     case setOptions(SetOptions.Response)
     case getMe(GetMe.Response)
+    case sendTwot(SendTwot.Response)
 
   #if !swift(>=4.1)
     static func ==(lhs: Response.OneOf_Payload, rhs: Response.OneOf_Payload) -> Bool {
@@ -211,10 +233,48 @@ struct Response {
         guard case .getMe(let l) = lhs, case .getMe(let r) = rhs else { preconditionFailure() }
         return l == r
       }()
+      case (.sendTwot, .sendTwot): return {
+        guard case .sendTwot(let l) = lhs, case .sendTwot(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
       default: return false
       }
     }
   #endif
+  }
+
+  init() {}
+}
+
+struct SendTwot {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  struct Request {
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
+
+    var text: String = String()
+
+    var token: String = String()
+
+    var unknownFields = SwiftProtobuf.UnknownStorage()
+
+    init() {}
+  }
+
+  struct Response {
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
+
+    var unknownFields = SwiftProtobuf.UnknownStorage()
+
+    init() {}
   }
 
   init() {}
@@ -457,6 +517,9 @@ extension Request: @unchecked Sendable {}
 extension Request.OneOf_Payload: @unchecked Sendable {}
 extension Response: @unchecked Sendable {}
 extension Response.OneOf_Payload: @unchecked Sendable {}
+extension SendTwot: @unchecked Sendable {}
+extension SendTwot.Request: @unchecked Sendable {}
+extension SendTwot.Response: @unchecked Sendable {}
 extension GetMe: @unchecked Sendable {}
 extension GetMe.Request: @unchecked Sendable {}
 extension GetMe.Response: @unchecked Sendable {}
@@ -493,6 +556,7 @@ extension Request: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
     2: .standard(proto: "get_wall"),
     3: .standard(proto: "set_options"),
     4: .standard(proto: "get_me"),
+    5: .standard(proto: "send_twot"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -553,6 +617,19 @@ extension Request: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
           self.payload = .getMe(v)
         }
       }()
+      case 5: try {
+        var v: SendTwot.Request?
+        var hadOneofValue = false
+        if let current = self.payload {
+          hadOneofValue = true
+          if case .sendTwot(let m) = current {v = m}
+        }
+        try decoder.decodeSingularMessageField(value: &v)
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.payload = .sendTwot(v)
+        }
+      }()
       default: break
       }
     }
@@ -580,6 +657,10 @@ extension Request: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
       guard case .getMe(let v)? = self.payload else { preconditionFailure() }
       try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
     }()
+    case .sendTwot?: try {
+      guard case .sendTwot(let v)? = self.payload else { preconditionFailure() }
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
+    }()
     case nil: break
     }
     try unknownFields.traverse(visitor: &visitor)
@@ -599,6 +680,7 @@ extension Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
     2: .standard(proto: "get_wall"),
     3: .standard(proto: "set_options"),
     4: .standard(proto: "get_me"),
+    5: .standard(proto: "send_twot"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -659,6 +741,19 @@ extension Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
           self.payload = .getMe(v)
         }
       }()
+      case 5: try {
+        var v: SendTwot.Response?
+        var hadOneofValue = false
+        if let current = self.payload {
+          hadOneofValue = true
+          if case .sendTwot(let m) = current {v = m}
+        }
+        try decoder.decodeSingularMessageField(value: &v)
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.payload = .sendTwot(v)
+        }
+      }()
       default: break
       }
     }
@@ -686,6 +781,10 @@ extension Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
       guard case .getMe(let v)? = self.payload else { preconditionFailure() }
       try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
     }()
+    case .sendTwot?: try {
+      guard case .sendTwot(let v)? = self.payload else { preconditionFailure() }
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
+    }()
     case nil: break
     }
     try unknownFields.traverse(visitor: &visitor)
@@ -693,6 +792,82 @@ extension Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
 
   static func ==(lhs: Response, rhs: Response) -> Bool {
     if lhs.payload != rhs.payload {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension SendTwot: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = "SendTwot"
+  static let _protobuf_nameMap = SwiftProtobuf._NameMap()
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let _ = try decoder.nextFieldNumber() {
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: SendTwot, rhs: SendTwot) -> Bool {
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension SendTwot.Request: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = SendTwot.protoMessageName + ".Request"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "text"),
+    2: .same(proto: "token"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.text) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.token) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.text.isEmpty {
+      try visitor.visitSingularStringField(value: self.text, fieldNumber: 1)
+    }
+    if !self.token.isEmpty {
+      try visitor.visitSingularStringField(value: self.token, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: SendTwot.Request, rhs: SendTwot.Request) -> Bool {
+    if lhs.text != rhs.text {return false}
+    if lhs.token != rhs.token {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension SendTwot.Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = SendTwot.protoMessageName + ".Response"
+  static let _protobuf_nameMap = SwiftProtobuf._NameMap()
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let _ = try decoder.nextFieldNumber() {
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: SendTwot.Response, rhs: SendTwot.Response) -> Bool {
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

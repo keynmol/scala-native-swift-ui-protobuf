@@ -6,6 +6,7 @@ message Request {
     GetWall.Request get_wall = 2;
     SetOptions.Request set_options = 3;
     GetMe.Request get_me = 4;
+    SendTwot.Request send_twot = 5;
   }
 }
 
@@ -15,6 +16,7 @@ message Response {
     GetWall.Response get_wall = 2;
     SetOptions.Response set_options = 3;
     GetMe.Response get_me = 4;
+    SendTwot.Response send_twot = 5;
   }
 }
 
@@ -22,6 +24,14 @@ enum ERROR_CODE {
   OTHER = 0;
   UNAUTHORIZED = 1;
   INVALID_CREDENTIALS = 2;
+}
+
+message SendTwot {
+  message Request {
+    string text = 1;
+    string token = 2;
+  }
+  message Response {}
 }
 
 message GetMe {

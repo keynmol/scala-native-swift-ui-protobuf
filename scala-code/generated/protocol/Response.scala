@@ -30,6 +30,10 @@ final case class Response(
         val __value = payload.getMe.get
         __size += 1 + _root_.com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(__value.serializedSize) + __value.serializedSize
       };
+      if (payload.sendTwot.isDefined) {
+        val __value = payload.sendTwot.get
+        __size += 1 + _root_.com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(__value.serializedSize) + __value.serializedSize
+      };
       __size += unknownFields.serializedSize
       __size
     }
@@ -67,6 +71,12 @@ final case class Response(
         _output__.writeUInt32NoTag(__m.serializedSize)
         __m.writeTo(_output__)
       };
+      payload.sendTwot.foreach { __v =>
+        val __m = __v
+        _output__.writeTag(5, 2)
+        _output__.writeUInt32NoTag(__m.serializedSize)
+        __m.writeTo(_output__)
+      };
       unknownFields.writeTo(_output__)
     }
     def getLogin: protocol.Login.Response = payload.login.getOrElse(protocol.Login.Response.defaultInstance)
@@ -77,6 +87,8 @@ final case class Response(
     def withSetOptions(__v: protocol.SetOptions.Response): Response = copy(payload = protocol.Response.Payload.SetOptions(__v))
     def getGetMe: protocol.GetMe.Response = payload.getMe.getOrElse(protocol.GetMe.Response.defaultInstance)
     def withGetMe(__v: protocol.GetMe.Response): Response = copy(payload = protocol.Response.Payload.GetMe(__v))
+    def getSendTwot: protocol.SendTwot.Response = payload.sendTwot.getOrElse(protocol.SendTwot.Response.defaultInstance)
+    def withSendTwot(__v: protocol.SendTwot.Response): Response = copy(payload = protocol.Response.Payload.SendTwot(__v))
     def clearPayload: Response = copy(payload = protocol.Response.Payload.Empty)
     def withPayload(__v: protocol.Response.Payload): Response = copy(payload = __v)
     def withUnknownFields(__v: _root_.scalapb.UnknownFieldSet) = copy(unknownFields = __v)
@@ -87,6 +99,7 @@ final case class Response(
         case 2 => payload.getWall.orNull
         case 3 => payload.setOptions.orNull
         case 4 => payload.getMe.orNull
+        case 5 => payload.sendTwot.orNull
       }
     }
     def getField(__field: _root_.scalapb.descriptors.FieldDescriptor): _root_.scalapb.descriptors.PValue = {
@@ -96,6 +109,7 @@ final case class Response(
         case 2 => payload.getWall.map(_.toPMessage).getOrElse(_root_.scalapb.descriptors.PEmpty)
         case 3 => payload.setOptions.map(_.toPMessage).getOrElse(_root_.scalapb.descriptors.PEmpty)
         case 4 => payload.getMe.map(_.toPMessage).getOrElse(_root_.scalapb.descriptors.PEmpty)
+        case 5 => payload.sendTwot.map(_.toPMessage).getOrElse(_root_.scalapb.descriptors.PEmpty)
       }
     }
     def toProtoString: _root_.scala.Predef.String = _root_.scalapb.TextFormat.printToUnicodeString(this)
@@ -121,6 +135,8 @@ object Response extends scalapb.GeneratedMessageCompanion[protocol.Response] {
           __payload = protocol.Response.Payload.SetOptions(__payload.setOptions.fold(_root_.scalapb.LiteParser.readMessage[protocol.SetOptions.Response](_input__))(_root_.scalapb.LiteParser.readMessage(_input__, _)))
         case 34 =>
           __payload = protocol.Response.Payload.GetMe(__payload.getMe.fold(_root_.scalapb.LiteParser.readMessage[protocol.GetMe.Response](_input__))(_root_.scalapb.LiteParser.readMessage(_input__, _)))
+        case 42 =>
+          __payload = protocol.Response.Payload.SendTwot(__payload.sendTwot.fold(_root_.scalapb.LiteParser.readMessage[protocol.SendTwot.Response](_input__))(_root_.scalapb.LiteParser.readMessage(_input__, _)))
         case tag =>
           if (_unknownFields__ == null) {
             _unknownFields__ = new _root_.scalapb.UnknownFieldSet.Builder()
@@ -141,6 +157,7 @@ object Response extends scalapb.GeneratedMessageCompanion[protocol.Response] {
             .orElse[protocol.Response.Payload](__fieldsMap.get(scalaDescriptor.findFieldByNumber(2).get).flatMap(_.as[_root_.scala.Option[protocol.GetWall.Response]]).map(protocol.Response.Payload.GetWall(_)))
             .orElse[protocol.Response.Payload](__fieldsMap.get(scalaDescriptor.findFieldByNumber(3).get).flatMap(_.as[_root_.scala.Option[protocol.SetOptions.Response]]).map(protocol.Response.Payload.SetOptions(_)))
             .orElse[protocol.Response.Payload](__fieldsMap.get(scalaDescriptor.findFieldByNumber(4).get).flatMap(_.as[_root_.scala.Option[protocol.GetMe.Response]]).map(protocol.Response.Payload.GetMe(_)))
+            .orElse[protocol.Response.Payload](__fieldsMap.get(scalaDescriptor.findFieldByNumber(5).get).flatMap(_.as[_root_.scala.Option[protocol.SendTwot.Response]]).map(protocol.Response.Payload.SendTwot(_)))
             .getOrElse(protocol.Response.Payload.Empty)
       )
     case _ => throw new RuntimeException("Expected PMessage")
@@ -154,6 +171,7 @@ object Response extends scalapb.GeneratedMessageCompanion[protocol.Response] {
       case 2 => __out = protocol.GetWall.Response
       case 3 => __out = protocol.SetOptions.Response
       case 4 => __out = protocol.GetMe.Response
+      case 5 => __out = protocol.SendTwot.Response
     }
     __out
   }
@@ -169,10 +187,12 @@ object Response extends scalapb.GeneratedMessageCompanion[protocol.Response] {
     def isGetWall: _root_.scala.Boolean = false
     def isSetOptions: _root_.scala.Boolean = false
     def isGetMe: _root_.scala.Boolean = false
+    def isSendTwot: _root_.scala.Boolean = false
     def login: _root_.scala.Option[protocol.Login.Response] = _root_.scala.None
     def getWall: _root_.scala.Option[protocol.GetWall.Response] = _root_.scala.None
     def setOptions: _root_.scala.Option[protocol.SetOptions.Response] = _root_.scala.None
     def getMe: _root_.scala.Option[protocol.GetMe.Response] = _root_.scala.None
+    def sendTwot: _root_.scala.Option[protocol.SendTwot.Response] = _root_.scala.None
   }
   object Payload {
     @SerialVersionUID(0L)
@@ -212,18 +232,27 @@ object Response extends scalapb.GeneratedMessageCompanion[protocol.Response] {
       override def getMe: _root_.scala.Option[protocol.GetMe.Response] = Some(value)
       override def number: _root_.scala.Int = 4
     }
+    @SerialVersionUID(0L)
+    final case class SendTwot(value: protocol.SendTwot.Response) extends protocol.Response.Payload {
+      type ValueType = protocol.SendTwot.Response
+      override def isSendTwot: _root_.scala.Boolean = true
+      override def sendTwot: _root_.scala.Option[protocol.SendTwot.Response] = Some(value)
+      override def number: _root_.scala.Int = 5
+    }
   }
   implicit class ResponseLens[UpperPB](_l: _root_.scalapb.lenses.Lens[UpperPB, protocol.Response]) extends _root_.scalapb.lenses.ObjectLens[UpperPB, protocol.Response](_l) {
     def login: _root_.scalapb.lenses.Lens[UpperPB, protocol.Login.Response] = field(_.getLogin)((c_, f_) => c_.copy(payload = protocol.Response.Payload.Login(f_)))
     def getWall: _root_.scalapb.lenses.Lens[UpperPB, protocol.GetWall.Response] = field(_.getGetWall)((c_, f_) => c_.copy(payload = protocol.Response.Payload.GetWall(f_)))
     def setOptions: _root_.scalapb.lenses.Lens[UpperPB, protocol.SetOptions.Response] = field(_.getSetOptions)((c_, f_) => c_.copy(payload = protocol.Response.Payload.SetOptions(f_)))
     def getMe: _root_.scalapb.lenses.Lens[UpperPB, protocol.GetMe.Response] = field(_.getGetMe)((c_, f_) => c_.copy(payload = protocol.Response.Payload.GetMe(f_)))
+    def sendTwot: _root_.scalapb.lenses.Lens[UpperPB, protocol.SendTwot.Response] = field(_.getSendTwot)((c_, f_) => c_.copy(payload = protocol.Response.Payload.SendTwot(f_)))
     def payload: _root_.scalapb.lenses.Lens[UpperPB, protocol.Response.Payload] = field(_.payload)((c_, f_) => c_.copy(payload = f_))
   }
   final val LOGIN_FIELD_NUMBER = 1
   final val GET_WALL_FIELD_NUMBER = 2
   final val SET_OPTIONS_FIELD_NUMBER = 3
   final val GET_ME_FIELD_NUMBER = 4
+  final val SEND_TWOT_FIELD_NUMBER = 5
   def of(
     payload: protocol.Response.Payload
   ): _root_.protocol.Response = _root_.protocol.Response(
