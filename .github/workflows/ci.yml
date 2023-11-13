@@ -28,6 +28,8 @@ jobs:
           java-version: '17'
 
       - uses: coursier/setup-action@v1
+      - uses: coursier/cache-action@v6
+      - uses: VirtusLab/scala-cli-setup@main
 
       - run: |
           brew install protobuf && \
