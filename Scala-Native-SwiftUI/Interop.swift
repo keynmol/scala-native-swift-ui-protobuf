@@ -96,12 +96,8 @@ struct Interop {
     static func initApp(options: Options) throws {
         ScalaKit.ScalaNativeInit()
         
-        //        let contents = try options.serializedData()
+        sendRequest(request: Request.OneOf_Payload.setOptions(SetOptions.Request.with{$0.options = options}))
         
-        let result = sendRequest(request: Request.OneOf_Payload.setOptions(SetOptions.Request.with{$0.options = options}))
-        print(result)
-        
-    
     }
     
 }
