@@ -6,7 +6,7 @@ def mainClass: T[Option[String]] = Some("foo.Foo")
 def swiftProjectLocation = millSourcePath / "Scala-Native-SwiftUI"
 def xcFrameworkLocation = swiftProjectLocation / "Scala.xcframework"
 
-def scalaCode = millSourcePath / "scala-code"
+def scalaCode = T.source(millSourcePath / "scala-code")
 def generatedScalaCode = millSourcePath / "scala-code" / "generated"
 
 def headers = T.source(millSourcePath / "headers")
@@ -30,10 +30,10 @@ def staticLib = T { buildLibrary() }
 def bundledLib = T { bundleLibraries() }
 
 def scalaSources = T {
-  os.walk(scalaCode).filter(_.ext == "scala").filterNot { path =>
+  os.walk(scalaCode().path).filter(_.ext == "scala").filterNot { path =>
     path.toString.contains(".metals/") || path.toString
       .contains(".scala-build/")
-  }
+  }.map(PathRef(_))
 }
 
 def allDeps = T { List("curl", "libidn2") }
@@ -48,7 +48,7 @@ def createXCFramework = T {
     "xcodebuild",
     "-create-xcframework",
     "-library",
-    bundledLib().toString,
+    bundledLib().path.toString,
     "-headers",
     headers().path.toString,
     "-output",
@@ -89,12 +89,12 @@ def bundleLibraries = T.task {
       "-static",
       "-o",
       outLibrary.toString,
-      staticLib().toString
+      staticLib().path.toString
     ) ++ libs.map(_.toString)
 
   run(argsLibtool: _*).call(stderr = os.Pipe)
 
-  outLibrary
+  PathRef(outLibrary)
 
 }
 
@@ -118,7 +118,7 @@ def buildLibrary = T {
     "curl",
     "--",
     "package"
-  ) ++ allSources.map(_.toString) ++ List(
+  ) ++ allSources.map(_.path.toString) ++ List(
     ".",
     "-f",
     "-o",
@@ -129,9 +129,9 @@ def buildLibrary = T {
   )
   run(
     args: _*
-  ).call(cwd = scalaCode)
+  ).call(cwd = scalaCode().path)
 
-  library
+  PathRef(library)
 }
 
 def generateScalaProto = T {
@@ -147,7 +147,7 @@ def generateScalaProto = T {
     protoFile.toString
   ).call(stderr = os.Pipe)
 
-  os.walk(scalaOut / "protocol").toList
+  os.walk(scalaOut / "protocol").toList.map(PathRef(_))
 }
 
 def generateSwiftProto = T {
@@ -201,7 +201,7 @@ def generateBindings = T {
   )
     .call(stderr = os.Pipe)
 
-  List(dest)
+  List(dest).map(PathRef(_))
 
 }
 
