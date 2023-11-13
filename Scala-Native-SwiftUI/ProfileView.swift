@@ -27,12 +27,8 @@ struct ProfileView: View {
             SpinnerView(loading: $loading).padding(EdgeInsets())
             
             Button("← Back to timeline", action: goBack)
-                .padding()
-                .buttonStyle(.borderless)
-                .foregroundColor(.white)
-                .font(.system(size: 20))
+                .styledButton()
                 .handHover()
-            
             
             List {
                 Section {
@@ -41,7 +37,6 @@ struct ProfileView: View {
                     }.listRowBackground(Color.purpleVomit())
                 }.purpleVomit()
             }
-            
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .task {
                 getTwots()
@@ -51,8 +46,7 @@ struct ProfileView: View {
                     getTwots()
                 }
             }.listStyle(.plain)
-            
-            Spacer()
+                .purpleVomit()
         }.purpleVomit()
     }
     

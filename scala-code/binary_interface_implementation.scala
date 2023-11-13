@@ -3,11 +3,11 @@ package binarybridge
 package impl
 
 import _root_.protocol.*
+import protocol.Request.Payload.SetOptions
 import scala_app.logic.StateManager
 import scala_app.logic.*
 import scalapb.GeneratedMessage
 import scalapb.GeneratedMessageCompanion
-import scribe.Level
 
 import java.io.ByteArrayOutputStream
 import scala.scalanative.runtime.Intrinsics
@@ -20,7 +20,6 @@ import scala.util.control.NonFatal
 
 import binarybridge.all.*
 import boundary.break
-import scala_app.binarybridge.impl.Implementations.GCRoots
 
 object Implementations extends ExportedFunctions:
 
@@ -56,7 +55,13 @@ object Implementations extends ExportedFunctions:
       end if
     else true
 
-  val state = StateManager(State())
+  private var _stateManager = Option.empty[StateManager]
+
+  private inline def stateManager(using Label[ScalaResult]) =
+    _stateManager match
+      case None => break(makeError("App has not been initialised yet!")())
+      case Some(value) =>
+        value
 
   override def scala_app_request(
       data: Ptr[Byte],
@@ -65,12 +70,23 @@ object Implementations extends ExportedFunctions:
     safe:
       val msg = read(protocol.Request, data, data_len)
 
-      handleRequest(state, msg) match
-        case Answer.Error(msg, code) =>
-          makeError(msg, code)()
-        case Answer.Ok(value) =>
-          makeResult(value)()
-      end match
+      boundary:
+        given StateManager =
+          msg.payload match
+            case SetOptions(req) =>
+              val st = StateManager(Options())
+              _stateManager.synchronized:
+                _stateManager = Some(st)
+
+              st
+            case _ => stateManager
+
+        handleRequest(msg) match
+          case Answer.Error(msg, code) =>
+            makeError(msg, code)()
+          case Answer.Ok(value) =>
+            makeResult(value)()
+        end match
   end scala_app_request
 
   private def toByteArray(res: ScalaResult) =
@@ -99,7 +115,7 @@ object Implementations extends ExportedFunctions:
 
   private inline def makeError(
       msg: String,
-      code: ERROR_CODE
+      code: ERROR_CODE = ERROR_CODE.OTHER
   ): () => ScalaResult =
     val marshalled = write(Error(code, msg), true)
     val arrPtr = scalanative.runtime.fromRawPtr[Byte](

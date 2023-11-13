@@ -535,6 +535,8 @@ struct Options {
 
   var debugLogging: Bool = false
 
+  var printFullRequest: Bool = false
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   init() {}
@@ -1472,6 +1474,7 @@ extension Options: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
   static let protoMessageName: String = "Options"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "debug_logging"),
+    2: .standard(proto: "print_full_request"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -1481,6 +1484,7 @@ extension Options: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
       case 1: try { try decoder.decodeSingularBoolField(value: &self.debugLogging) }()
+      case 2: try { try decoder.decodeSingularBoolField(value: &self.printFullRequest) }()
       default: break
       }
     }
@@ -1490,11 +1494,15 @@ extension Options: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
     if self.debugLogging != false {
       try visitor.visitSingularBoolField(value: self.debugLogging, fieldNumber: 1)
     }
+    if self.printFullRequest != false {
+      try visitor.visitSingularBoolField(value: self.printFullRequest, fieldNumber: 2)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   static func ==(lhs: Options, rhs: Options) -> Bool {
     if lhs.debugLogging != rhs.debugLogging {return false}
+    if lhs.printFullRequest != rhs.printFullRequest {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

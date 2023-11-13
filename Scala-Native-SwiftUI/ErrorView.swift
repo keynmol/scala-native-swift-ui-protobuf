@@ -21,6 +21,7 @@ struct ErrorView: View {
             .cornerRadius(20)
             .background(Color(hex:"#8f011b"))
             .opacity(errMsg.wrappedValue.isEmpty ? 0: 1)
+            .frame(height: errMsg.wrappedValue.isEmpty ? 0 : 40)
 
     }
 }

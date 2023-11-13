@@ -23,6 +23,7 @@ class ViewModel: ObservableObject {
         do {
             try Interop.initApp(options: Options.with {
                 $0.debugLogging = true
+                $0.printFullRequest = false
             })
         } catch {
             

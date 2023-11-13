@@ -14,24 +14,27 @@ enum Answer:
   case Error(msg: String, code: protocol.ERROR_CODE = protocol.ERROR_CODE.OTHER)
   case Ok[T <: GeneratedMessage](value: T)
 
-class StateManager(private var st: State):
+class StateManager(private var st: Options):
 
   val client = twotm8.client.Client.create("https://twotm8.com")
+
+  def options = st
 
   def respond[T <: Response.Payload](msg: T) =
     Answer.Ok(Response(payload = msg))
 
-  def stateChange[T <: Response.Payload](msg: T, change: State => State) =
-    st.synchronized:
-      st = change(st)
-      st
-    Answer.Ok(Response(payload = msg))
+  def setOptions(opt: Options) =
+    st = opt
 
-  def get: State = st
 end StateManager
 
-def handleRequest(state: StateManager, req: Request): Answer =
-  if req.payload.isDefined then scribe.info(s"Handling request: ${req.payload}")
+def printableRequest(req: Request)(using state: StateManager) =
+  if state.options.printFullRequest then req.payload.toString
+  else req.payload.getClass().getSimpleName()
+
+def handleRequest(req: Request)(using state: StateManager): Answer =
+  if req.payload.isDefined then
+    scribe.info(s"Handling request: ${printableRequest(req)}")
   req.payload match
     case Req.Empty => Answer.Error("payload was empty")
     case Req.GetThoughtLeader(req) =>
@@ -81,6 +84,7 @@ def handleRequest(state: StateManager, req: Request): Answer =
         .withMinimumLevel(minLevel)
         .replace()
 
+      value.options.foreach(state.setOptions)
       state.respond(Res.SetOptions(SetOptions.Response()))
 
     case Req.GetMe(req) =>

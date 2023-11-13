@@ -34,6 +34,15 @@ extension View {
     }
 }
 
+extension Button {
+    func styledButton() -> some View {
+        self.padding()
+        .buttonStyle(.borderless)
+        .foregroundColor(.white)
+        .font(.system(size: 20))
+    }
+}
+
 
 extension Color {
     init(hex: String) {

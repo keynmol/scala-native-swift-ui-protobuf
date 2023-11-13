@@ -28,7 +28,7 @@ struct TimelineView: View {
             
             HStack{
                 //                TextField("text", text: $text).font(.system(size: 20))
-                TextEditor(text: $text).font(.system(size: 20)).lineSpacing(/*@START_MENU_TOKEN@*/10.0/*@END_MENU_TOKEN@*/).frame(height:100)
+                TextEditor(text: $text).font(.system(size: 15)).lineSpacing(/*@START_MENU_TOKEN@*/10.0/*@END_MENU_TOKEN@*/).frame(height:100)
                 
                 Button(action: sendTwot) {
                     Text("RAGE").bold()

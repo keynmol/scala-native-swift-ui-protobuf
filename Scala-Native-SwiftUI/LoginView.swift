@@ -25,7 +25,6 @@ struct LoginView: View {
             
             ErrorView(errMsg: $errorMessage)
             
-            
             TextField("Login", text: $username).padding().fontWeight(.bold).font(.system(size: 35))
             
             SecureField("Password", text: $password).padding().fontWeight(.bold).font(.system(size: 35))
@@ -33,7 +32,7 @@ struct LoginView: View {
             
             Button(action: logIn) {
                 Text("Sign in").frame(minWidth: 0, maxWidth: .infinity)
-            }.font(.system(size: 15)).padding()
+            }.styledButton().handHover()
             
             Spacer()
             

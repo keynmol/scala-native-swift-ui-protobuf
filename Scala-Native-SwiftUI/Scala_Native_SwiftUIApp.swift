@@ -27,10 +27,10 @@ struct Scala_Native_SwiftUIApp: App {
                 LoginView(vm: self.vm)
             case .timeline:
                 TimelineView(vm: self.vm)
-            case .showProfile(let string):
+            case .showProfile(let _):
                 ProfileView(vm: self.vm)
             }
             
-        }
+        }.defaultSize(width: 1024, height: 2048).windowResizability(.contentMinSize)
     }
 }

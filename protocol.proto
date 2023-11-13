@@ -74,7 +74,7 @@ message Error {
   string message = 2;
 }
 
-message Options { bool debug_logging = 1; }
+message Options { bool debug_logging = 1; bool print_full_request = 2; }
 
 message Wall { repeated Twot twots = 1; }
 
