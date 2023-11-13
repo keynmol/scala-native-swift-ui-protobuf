@@ -27,7 +27,9 @@ struct TimelineView: View {
             UserHeaderView(vm: vm)
             
             HStack{
-                TextField("text", text: $text).font(.system(size: 20))
+                //                TextField("text", text: $text).font(.system(size: 20))
+                TextEditor(text: $text).font(.system(size: 20)).lineSpacing(/*@START_MENU_TOKEN@*/10.0/*@END_MENU_TOKEN@*/).frame(height:100)
+                
                 Button(action: sendTwot) {
                     Text("RAGE").bold()
                 }.disabled(text.isEmpty)
@@ -70,14 +72,14 @@ struct TimelineView: View {
             defer {
                 self.loading = false
             }
-
+            
             let resp = Interop.sendRequest(request: .sendTwot(SendTwot.Request.with {
                 $0.text = self.text
                 $0.token = token
             }))
             
             switch resp {
-            case .Ok(let _):
+            case .Ok( _):
                 self.text = ""
                 getTwots()
             case .Err(let protocolError):

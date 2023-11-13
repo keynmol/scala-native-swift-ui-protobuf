@@ -30,6 +30,7 @@ struct ProfileView: View {
                 .padding()
                 .buttonStyle(.borderless)
                 .foregroundColor(.white)
+                .font(.system(size: 20))
                 .handHover()
             
             
@@ -39,12 +40,15 @@ struct ProfileView: View {
                         TwotView(twot: $0, vm: self.vm)
                     }.listRowBackground(Color.purpleVomit())
                 }.purpleVomit()
-            }.task {
-                switch vm.state {
-                case .showProfile(let string):
-                    getTwots(profile: string)
-                case _:
-                    vm.state = .timeline
+            }
+            
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .task {
+                getTwots()
+            }
+            .onReceive(timer) { input in
+                if lastRefreshed.distance(to: input) >= 5 {
+                    getTwots()
                 }
             }.listStyle(.plain)
             
@@ -56,19 +60,27 @@ struct ProfileView: View {
         self.vm.state = .timeline
     }
     
-    func getTwots(profile: String) {
+    func getTwots() {
         self.loading = true
         defer {
             self.loading = false
         }
         
-        let twots = Interop.sendRequest(request: .getThoughtLeader(GetThoughtLeader.Request.with {
-            $0.nickname = profile
-        }))
-        if case .Ok(.getThoughtLeader(let tl)) = twots {
-            self.twots = tl.thoughtLeader.twots
-            lastRefreshed = Date.now
+        switch vm.state {
+        case .showProfile(let profile):
+            let twots = Interop.sendRequest(request: .getThoughtLeader(GetThoughtLeader.Request.with {
+                $0.nickname = profile
+            }))
+            if case .Ok(.getThoughtLeader(let tl)) = twots {
+                self.twots = tl.thoughtLeader.twots
+                lastRefreshed = Date.now
+            }
+        case _:
+            vm.state = .timeline
         }
+        
+        
+        
         
     }
 }
