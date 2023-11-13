@@ -28,7 +28,7 @@ struct Scala_Native_SwiftUIApp: App {
             case .timeline:
                 TimelineView(vm: self.vm)
             case .showProfile(let string):
-                LoginView(vm: self.vm)
+                ProfileView(vm: self.vm)
             }
             
         }

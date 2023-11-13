@@ -43,7 +43,7 @@ struct TimelineView: View {
             List {
                 Section {
                     ForEach(twots) {
-                        TwotView(twot: $0)
+                        TwotView(twot: $0, vm: self.vm)
                     }.listRowBackground(Color.purpleVomit())
                 }.purpleVomit()
                 
@@ -57,7 +57,7 @@ struct TimelineView: View {
                     }
                 }
                 .listStyle(.plain)
-            Divider()
+            Spacer()
         }.frame(maxWidth: .infinity, maxHeight: .infinity).purpleVomit()
         
         

@@ -72,6 +72,10 @@ class ViewModel: ObservableObject {
         state = .logIn
     }
     
+    func showProfile(name: String) {
+        state = .showProfile(name)
+    }
+    
     func getToken() -> String? {
         token
     }

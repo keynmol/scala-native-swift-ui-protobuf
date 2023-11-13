@@ -34,6 +34,31 @@ def handleRequest(state: StateManager, req: Request): Answer =
   if req.payload.isDefined then scribe.info(s"Handling request: ${req.payload}")
   req.payload match
     case Req.Empty => Answer.Error("payload was empty")
+    case Req.GetThoughtLeader(req) =>
+      val token = Option(req.token).filter(_.nonEmpty).map(JWT.apply(_))
+      state.client.get_thought_leader(req.nickname, token) match
+        case Left(value) => Answer.Error(value.message)
+        case Right(value) =>
+          val protoTwots =
+            value.twots.map: twot =>
+              protocol.Twot(
+                author = twot.authorNickname.raw,
+                text = twot.content.raw,
+                id = twot.id.raw.toString()
+              )
+
+          val thoughtLeader = protocol.ThoughtLeader(
+            id = value.id.raw.toString,
+            nickname = value.nickname.raw,
+            twots = protoTwots
+          )
+          state.respond(
+            Res.GetThoughtLeader(
+              GetThoughtLeader.Response(thoughtLeader = Some(thoughtLeader))
+            )
+          )
+      end match
+
     case Req.SendTwot(req) =>
       val token = JWT(req.token)
       state.client.create_twot(req.text, token) match

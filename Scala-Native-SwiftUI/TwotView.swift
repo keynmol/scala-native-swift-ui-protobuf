@@ -9,13 +9,30 @@ import SwiftUI
 
 struct TwotView: View {
     private let twot: Twot;
-    init(twot: Twot) {
+    private let vm: ViewModel;
+    init(twot: Twot, vm: ViewModel) {
         self.twot = twot
+        self.vm = vm
     }
+    
+    @SwiftUI.State private var hoveringOverUsername = false;
+    
     var body: some View {
         VStack(spacing: 0) {
             HStack {
                 Text("@ \(twot.author)")
+                    .underline(hoveringOverUsername)
+                    .onHover(perform: { hovering in
+                        hoveringOverUsername = hovering
+                        if hovering {
+                            NSCursor.pointingHand.push()
+                        } else {
+                            NSCursor.pop()
+                        }
+                    })
+                    .onTapGesture {
+                        vm.showProfile(name: twot.author)
+                    }
                     .fontWeight(.bold)
                     .font(.system(size: 20))
                     .multilineTextAlignment(.leading)
@@ -26,7 +43,7 @@ struct TwotView: View {
             HStack {
                 Text(twot.text).foregroundColor(.black).frame(maxWidth: .infinity, alignment: .leading).padding().font(.system(size: 20))
             }.background(.white)
-                
+            
         }.frame(minHeight:0).cornerRadius(10).purpleVomit()
     }
 }
@@ -35,5 +52,5 @@ struct TwotView: View {
     TwotView(twot: Twot.with {
         $0.author = "anton"
         $0.text = "Deallocating id 0, contains 3 pointers (total size: 2496 bytes)"
-    })
+    }, vm: ViewModel())
 }

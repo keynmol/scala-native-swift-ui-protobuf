@@ -34,6 +34,10 @@ final case class Request(
         val __value = payload.sendTwot.get
         __size += 1 + _root_.com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(__value.serializedSize) + __value.serializedSize
       };
+      if (payload.getThoughtLeader.isDefined) {
+        val __value = payload.getThoughtLeader.get
+        __size += 1 + _root_.com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(__value.serializedSize) + __value.serializedSize
+      };
       __size += unknownFields.serializedSize
       __size
     }
@@ -77,6 +81,12 @@ final case class Request(
         _output__.writeUInt32NoTag(__m.serializedSize)
         __m.writeTo(_output__)
       };
+      payload.getThoughtLeader.foreach { __v =>
+        val __m = __v
+        _output__.writeTag(6, 2)
+        _output__.writeUInt32NoTag(__m.serializedSize)
+        __m.writeTo(_output__)
+      };
       unknownFields.writeTo(_output__)
     }
     def getLogin: protocol.Login.Request = payload.login.getOrElse(protocol.Login.Request.defaultInstance)
@@ -89,6 +99,8 @@ final case class Request(
     def withGetMe(__v: protocol.GetMe.Request): Request = copy(payload = protocol.Request.Payload.GetMe(__v))
     def getSendTwot: protocol.SendTwot.Request = payload.sendTwot.getOrElse(protocol.SendTwot.Request.defaultInstance)
     def withSendTwot(__v: protocol.SendTwot.Request): Request = copy(payload = protocol.Request.Payload.SendTwot(__v))
+    def getGetThoughtLeader: protocol.GetThoughtLeader.Request = payload.getThoughtLeader.getOrElse(protocol.GetThoughtLeader.Request.defaultInstance)
+    def withGetThoughtLeader(__v: protocol.GetThoughtLeader.Request): Request = copy(payload = protocol.Request.Payload.GetThoughtLeader(__v))
     def clearPayload: Request = copy(payload = protocol.Request.Payload.Empty)
     def withPayload(__v: protocol.Request.Payload): Request = copy(payload = __v)
     def withUnknownFields(__v: _root_.scalapb.UnknownFieldSet) = copy(unknownFields = __v)
@@ -100,6 +112,7 @@ final case class Request(
         case 3 => payload.setOptions.orNull
         case 4 => payload.getMe.orNull
         case 5 => payload.sendTwot.orNull
+        case 6 => payload.getThoughtLeader.orNull
       }
     }
     def getField(__field: _root_.scalapb.descriptors.FieldDescriptor): _root_.scalapb.descriptors.PValue = {
@@ -110,6 +123,7 @@ final case class Request(
         case 3 => payload.setOptions.map(_.toPMessage).getOrElse(_root_.scalapb.descriptors.PEmpty)
         case 4 => payload.getMe.map(_.toPMessage).getOrElse(_root_.scalapb.descriptors.PEmpty)
         case 5 => payload.sendTwot.map(_.toPMessage).getOrElse(_root_.scalapb.descriptors.PEmpty)
+        case 6 => payload.getThoughtLeader.map(_.toPMessage).getOrElse(_root_.scalapb.descriptors.PEmpty)
       }
     }
     def toProtoString: _root_.scala.Predef.String = _root_.scalapb.TextFormat.printToUnicodeString(this)
@@ -137,6 +151,8 @@ object Request extends scalapb.GeneratedMessageCompanion[protocol.Request] {
           __payload = protocol.Request.Payload.GetMe(__payload.getMe.fold(_root_.scalapb.LiteParser.readMessage[protocol.GetMe.Request](_input__))(_root_.scalapb.LiteParser.readMessage(_input__, _)))
         case 42 =>
           __payload = protocol.Request.Payload.SendTwot(__payload.sendTwot.fold(_root_.scalapb.LiteParser.readMessage[protocol.SendTwot.Request](_input__))(_root_.scalapb.LiteParser.readMessage(_input__, _)))
+        case 50 =>
+          __payload = protocol.Request.Payload.GetThoughtLeader(__payload.getThoughtLeader.fold(_root_.scalapb.LiteParser.readMessage[protocol.GetThoughtLeader.Request](_input__))(_root_.scalapb.LiteParser.readMessage(_input__, _)))
         case tag =>
           if (_unknownFields__ == null) {
             _unknownFields__ = new _root_.scalapb.UnknownFieldSet.Builder()
@@ -158,6 +174,7 @@ object Request extends scalapb.GeneratedMessageCompanion[protocol.Request] {
             .orElse[protocol.Request.Payload](__fieldsMap.get(scalaDescriptor.findFieldByNumber(3).get).flatMap(_.as[_root_.scala.Option[protocol.SetOptions.Request]]).map(protocol.Request.Payload.SetOptions(_)))
             .orElse[protocol.Request.Payload](__fieldsMap.get(scalaDescriptor.findFieldByNumber(4).get).flatMap(_.as[_root_.scala.Option[protocol.GetMe.Request]]).map(protocol.Request.Payload.GetMe(_)))
             .orElse[protocol.Request.Payload](__fieldsMap.get(scalaDescriptor.findFieldByNumber(5).get).flatMap(_.as[_root_.scala.Option[protocol.SendTwot.Request]]).map(protocol.Request.Payload.SendTwot(_)))
+            .orElse[protocol.Request.Payload](__fieldsMap.get(scalaDescriptor.findFieldByNumber(6).get).flatMap(_.as[_root_.scala.Option[protocol.GetThoughtLeader.Request]]).map(protocol.Request.Payload.GetThoughtLeader(_)))
             .getOrElse(protocol.Request.Payload.Empty)
       )
     case _ => throw new RuntimeException("Expected PMessage")
@@ -172,6 +189,7 @@ object Request extends scalapb.GeneratedMessageCompanion[protocol.Request] {
       case 3 => __out = protocol.SetOptions.Request
       case 4 => __out = protocol.GetMe.Request
       case 5 => __out = protocol.SendTwot.Request
+      case 6 => __out = protocol.GetThoughtLeader.Request
     }
     __out
   }
@@ -188,11 +206,13 @@ object Request extends scalapb.GeneratedMessageCompanion[protocol.Request] {
     def isSetOptions: _root_.scala.Boolean = false
     def isGetMe: _root_.scala.Boolean = false
     def isSendTwot: _root_.scala.Boolean = false
+    def isGetThoughtLeader: _root_.scala.Boolean = false
     def login: _root_.scala.Option[protocol.Login.Request] = _root_.scala.None
     def getWall: _root_.scala.Option[protocol.GetWall.Request] = _root_.scala.None
     def setOptions: _root_.scala.Option[protocol.SetOptions.Request] = _root_.scala.None
     def getMe: _root_.scala.Option[protocol.GetMe.Request] = _root_.scala.None
     def sendTwot: _root_.scala.Option[protocol.SendTwot.Request] = _root_.scala.None
+    def getThoughtLeader: _root_.scala.Option[protocol.GetThoughtLeader.Request] = _root_.scala.None
   }
   object Payload {
     @SerialVersionUID(0L)
@@ -239,6 +259,13 @@ object Request extends scalapb.GeneratedMessageCompanion[protocol.Request] {
       override def sendTwot: _root_.scala.Option[protocol.SendTwot.Request] = Some(value)
       override def number: _root_.scala.Int = 5
     }
+    @SerialVersionUID(0L)
+    final case class GetThoughtLeader(value: protocol.GetThoughtLeader.Request) extends protocol.Request.Payload {
+      type ValueType = protocol.GetThoughtLeader.Request
+      override def isGetThoughtLeader: _root_.scala.Boolean = true
+      override def getThoughtLeader: _root_.scala.Option[protocol.GetThoughtLeader.Request] = Some(value)
+      override def number: _root_.scala.Int = 6
+    }
   }
   implicit class RequestLens[UpperPB](_l: _root_.scalapb.lenses.Lens[UpperPB, protocol.Request]) extends _root_.scalapb.lenses.ObjectLens[UpperPB, protocol.Request](_l) {
     def login: _root_.scalapb.lenses.Lens[UpperPB, protocol.Login.Request] = field(_.getLogin)((c_, f_) => c_.copy(payload = protocol.Request.Payload.Login(f_)))
@@ -246,6 +273,7 @@ object Request extends scalapb.GeneratedMessageCompanion[protocol.Request] {
     def setOptions: _root_.scalapb.lenses.Lens[UpperPB, protocol.SetOptions.Request] = field(_.getSetOptions)((c_, f_) => c_.copy(payload = protocol.Request.Payload.SetOptions(f_)))
     def getMe: _root_.scalapb.lenses.Lens[UpperPB, protocol.GetMe.Request] = field(_.getGetMe)((c_, f_) => c_.copy(payload = protocol.Request.Payload.GetMe(f_)))
     def sendTwot: _root_.scalapb.lenses.Lens[UpperPB, protocol.SendTwot.Request] = field(_.getSendTwot)((c_, f_) => c_.copy(payload = protocol.Request.Payload.SendTwot(f_)))
+    def getThoughtLeader: _root_.scalapb.lenses.Lens[UpperPB, protocol.GetThoughtLeader.Request] = field(_.getGetThoughtLeader)((c_, f_) => c_.copy(payload = protocol.Request.Payload.GetThoughtLeader(f_)))
     def payload: _root_.scalapb.lenses.Lens[UpperPB, protocol.Request.Payload] = field(_.payload)((c_, f_) => c_.copy(payload = f_))
   }
   final val LOGIN_FIELD_NUMBER = 1
@@ -253,6 +281,7 @@ object Request extends scalapb.GeneratedMessageCompanion[protocol.Request] {
   final val SET_OPTIONS_FIELD_NUMBER = 3
   final val GET_ME_FIELD_NUMBER = 4
   final val SEND_TWOT_FIELD_NUMBER = 5
+  final val GET_THOUGHT_LEADER_FIELD_NUMBER = 6
   def of(
     payload: protocol.Request.Payload
   ): _root_.protocol.Request = _root_.protocol.Request(

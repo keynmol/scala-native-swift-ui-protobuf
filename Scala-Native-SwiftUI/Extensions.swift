@@ -22,6 +22,16 @@ extension View {
     func purpleVomit() -> some View {
         self.background(Color(hex: "#9ba0dc"))
     }
+    
+    func handHover() -> some View {
+        self.onHover(perform: { hovering in
+            if hovering {
+                NSCursor.pointingHand.push()
+            } else {
+                NSCursor.pop()
+            }
+        })
+    }
 }
 
 

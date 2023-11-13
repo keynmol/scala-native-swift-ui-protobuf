@@ -1,7 +1,7 @@
 //> using platform scala-native
 //> using dep com.thesamet.scalapb::scalapb-runtime::0.11.14
 //> using dep com.outr::scribe::3.12.2
-//> using dep com.indoorvivants.twom8::twotm8-client::dev
+//> using dep com.indoorvivants.twotm8::twotm8-client::0.0.4+2-a55c857e+20231113-0841-SNAPSHOT
 //> using scala 3.3.1
 //> using option -Wunused:all
 

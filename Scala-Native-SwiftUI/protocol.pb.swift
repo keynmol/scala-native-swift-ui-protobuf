@@ -111,6 +111,14 @@ struct Request {
     set {payload = .sendTwot(newValue)}
   }
 
+  var getThoughtLeader: GetThoughtLeader.Request {
+    get {
+      if case .getThoughtLeader(let v)? = payload {return v}
+      return GetThoughtLeader.Request()
+    }
+    set {payload = .getThoughtLeader(newValue)}
+  }
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   enum OneOf_Payload: Equatable {
@@ -119,6 +127,7 @@ struct Request {
     case setOptions(SetOptions.Request)
     case getMe(GetMe.Request)
     case sendTwot(SendTwot.Request)
+    case getThoughtLeader(GetThoughtLeader.Request)
 
   #if !swift(>=4.1)
     static func ==(lhs: Request.OneOf_Payload, rhs: Request.OneOf_Payload) -> Bool {
@@ -144,6 +153,10 @@ struct Request {
       }()
       case (.sendTwot, .sendTwot): return {
         guard case .sendTwot(let l) = lhs, case .sendTwot(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.getThoughtLeader, .getThoughtLeader): return {
+        guard case .getThoughtLeader(let l) = lhs, case .getThoughtLeader(let r) = rhs else { preconditionFailure() }
         return l == r
       }()
       default: return false
@@ -202,6 +215,14 @@ struct Response {
     set {payload = .sendTwot(newValue)}
   }
 
+  var getThoughtLeader: GetThoughtLeader.Response {
+    get {
+      if case .getThoughtLeader(let v)? = payload {return v}
+      return GetThoughtLeader.Response()
+    }
+    set {payload = .getThoughtLeader(newValue)}
+  }
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   enum OneOf_Payload: Equatable {
@@ -210,6 +231,7 @@ struct Response {
     case setOptions(SetOptions.Response)
     case getMe(GetMe.Response)
     case sendTwot(SendTwot.Response)
+    case getThoughtLeader(GetThoughtLeader.Response)
 
   #if !swift(>=4.1)
     static func ==(lhs: Response.OneOf_Payload, rhs: Response.OneOf_Payload) -> Bool {
@@ -237,10 +259,59 @@ struct Response {
         guard case .sendTwot(let l) = lhs, case .sendTwot(let r) = rhs else { preconditionFailure() }
         return l == r
       }()
+      case (.getThoughtLeader, .getThoughtLeader): return {
+        guard case .getThoughtLeader(let l) = lhs, case .getThoughtLeader(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
       default: return false
       }
     }
   #endif
+  }
+
+  init() {}
+}
+
+struct GetThoughtLeader {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  struct Request {
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
+
+    var nickname: String = String()
+
+    var token: String = String()
+
+    var unknownFields = SwiftProtobuf.UnknownStorage()
+
+    init() {}
+  }
+
+  struct Response {
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
+
+    var thoughtLeader: ThoughtLeader {
+      get {return _thoughtLeader ?? ThoughtLeader()}
+      set {_thoughtLeader = newValue}
+    }
+    /// Returns true if `thoughtLeader` has been explicitly set.
+    var hasThoughtLeader: Bool {return self._thoughtLeader != nil}
+    /// Clears the value of `thoughtLeader`. Subsequent reads from it will return its default value.
+    mutating func clearThoughtLeader() {self._thoughtLeader = nil}
+
+    var unknownFields = SwiftProtobuf.UnknownStorage()
+
+    init() {}
+
+    fileprivate var _thoughtLeader: ThoughtLeader? = nil
   }
 
   init() {}
@@ -511,12 +582,31 @@ struct Me {
   init() {}
 }
 
+struct ThoughtLeader {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var id: String = String()
+
+  var nickname: String = String()
+
+  var twots: [Twot] = []
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+}
+
 #if swift(>=5.5) && canImport(_Concurrency)
 extension ERROR_CODE: @unchecked Sendable {}
 extension Request: @unchecked Sendable {}
 extension Request.OneOf_Payload: @unchecked Sendable {}
 extension Response: @unchecked Sendable {}
 extension Response.OneOf_Payload: @unchecked Sendable {}
+extension GetThoughtLeader: @unchecked Sendable {}
+extension GetThoughtLeader.Request: @unchecked Sendable {}
+extension GetThoughtLeader.Response: @unchecked Sendable {}
 extension SendTwot: @unchecked Sendable {}
 extension SendTwot.Request: @unchecked Sendable {}
 extension SendTwot.Response: @unchecked Sendable {}
@@ -537,6 +627,7 @@ extension Options: @unchecked Sendable {}
 extension Wall: @unchecked Sendable {}
 extension Twot: @unchecked Sendable {}
 extension Me: @unchecked Sendable {}
+extension ThoughtLeader: @unchecked Sendable {}
 #endif  // swift(>=5.5) && canImport(_Concurrency)
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
@@ -557,6 +648,7 @@ extension Request: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
     3: .standard(proto: "set_options"),
     4: .standard(proto: "get_me"),
     5: .standard(proto: "send_twot"),
+    6: .standard(proto: "get_thought_leader"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -630,6 +722,19 @@ extension Request: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
           self.payload = .sendTwot(v)
         }
       }()
+      case 6: try {
+        var v: GetThoughtLeader.Request?
+        var hadOneofValue = false
+        if let current = self.payload {
+          hadOneofValue = true
+          if case .getThoughtLeader(let m) = current {v = m}
+        }
+        try decoder.decodeSingularMessageField(value: &v)
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.payload = .getThoughtLeader(v)
+        }
+      }()
       default: break
       }
     }
@@ -661,6 +766,10 @@ extension Request: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
       guard case .sendTwot(let v)? = self.payload else { preconditionFailure() }
       try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
     }()
+    case .getThoughtLeader?: try {
+      guard case .getThoughtLeader(let v)? = self.payload else { preconditionFailure() }
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
+    }()
     case nil: break
     }
     try unknownFields.traverse(visitor: &visitor)
@@ -681,6 +790,7 @@ extension Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
     3: .standard(proto: "set_options"),
     4: .standard(proto: "get_me"),
     5: .standard(proto: "send_twot"),
+    6: .standard(proto: "get_thought_leader"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -754,6 +864,19 @@ extension Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
           self.payload = .sendTwot(v)
         }
       }()
+      case 6: try {
+        var v: GetThoughtLeader.Response?
+        var hadOneofValue = false
+        if let current = self.payload {
+          hadOneofValue = true
+          if case .getThoughtLeader(let m) = current {v = m}
+        }
+        try decoder.decodeSingularMessageField(value: &v)
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.payload = .getThoughtLeader(v)
+        }
+      }()
       default: break
       }
     }
@@ -785,6 +908,10 @@ extension Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
       guard case .sendTwot(let v)? = self.payload else { preconditionFailure() }
       try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
     }()
+    case .getThoughtLeader?: try {
+      guard case .getThoughtLeader(let v)? = self.payload else { preconditionFailure() }
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
+    }()
     case nil: break
     }
     try unknownFields.traverse(visitor: &visitor)
@@ -792,6 +919,99 @@ extension Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
 
   static func ==(lhs: Response, rhs: Response) -> Bool {
     if lhs.payload != rhs.payload {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension GetThoughtLeader: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = "GetThoughtLeader"
+  static let _protobuf_nameMap = SwiftProtobuf._NameMap()
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let _ = try decoder.nextFieldNumber() {
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: GetThoughtLeader, rhs: GetThoughtLeader) -> Bool {
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension GetThoughtLeader.Request: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = GetThoughtLeader.protoMessageName + ".Request"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "nickname"),
+    2: .same(proto: "token"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.nickname) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.token) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.nickname.isEmpty {
+      try visitor.visitSingularStringField(value: self.nickname, fieldNumber: 1)
+    }
+    if !self.token.isEmpty {
+      try visitor.visitSingularStringField(value: self.token, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: GetThoughtLeader.Request, rhs: GetThoughtLeader.Request) -> Bool {
+    if lhs.nickname != rhs.nickname {return false}
+    if lhs.token != rhs.token {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension GetThoughtLeader.Response: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = GetThoughtLeader.protoMessageName + ".Response"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "thought_leader"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularMessageField(value: &self._thoughtLeader) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._thoughtLeader {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: GetThoughtLeader.Response, rhs: GetThoughtLeader.Response) -> Bool {
+    if lhs._thoughtLeader != rhs._thoughtLeader {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -1389,6 +1609,50 @@ extension Me: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, S
   static func ==(lhs: Me, rhs: Me) -> Bool {
     if lhs.id != rhs.id {return false}
     if lhs.nickname != rhs.nickname {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension ThoughtLeader: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = "ThoughtLeader"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "id"),
+    2: .same(proto: "nickname"),
+    3: .same(proto: "twots"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.id) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.nickname) }()
+      case 3: try { try decoder.decodeRepeatedMessageField(value: &self.twots) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.id.isEmpty {
+      try visitor.visitSingularStringField(value: self.id, fieldNumber: 1)
+    }
+    if !self.nickname.isEmpty {
+      try visitor.visitSingularStringField(value: self.nickname, fieldNumber: 2)
+    }
+    if !self.twots.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.twots, fieldNumber: 3)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: ThoughtLeader, rhs: ThoughtLeader) -> Bool {
+    if lhs.id != rhs.id {return false}
+    if lhs.nickname != rhs.nickname {return false}
+    if lhs.twots != rhs.twots {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

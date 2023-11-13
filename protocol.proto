@@ -7,6 +7,7 @@ message Request {
     SetOptions.Request set_options = 3;
     GetMe.Request get_me = 4;
     SendTwot.Request send_twot = 5;
+    GetThoughtLeader.Request get_thought_leader = 6;
   }
 }
 
@@ -17,6 +18,7 @@ message Response {
     SetOptions.Response set_options = 3;
     GetMe.Response get_me = 4;
     SendTwot.Response send_twot = 5;
+    GetThoughtLeader.Response get_thought_leader = 6;
   }
 }
 
@@ -24,6 +26,14 @@ enum ERROR_CODE {
   OTHER = 0;
   UNAUTHORIZED = 1;
   INVALID_CREDENTIALS = 2;
+}
+
+message GetThoughtLeader {
+  message Request {
+    string nickname = 1;
+    string token = 2;
+  }
+  message Response { ThoughtLeader thought_leader = 1; }
 }
 
 message SendTwot {
@@ -77,4 +87,10 @@ message Twot {
 message Me {
   string id = 1;
   string nickname = 2;
+}
+
+message ThoughtLeader {
+  string id = 1;
+  string nickname = 2;
+  repeated Twot twots = 3;
 }

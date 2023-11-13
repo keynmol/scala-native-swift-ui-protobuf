@@ -6,11 +6,12 @@
 package protocol
 
 @SerialVersionUID(0L)
-final case class Me(
+final case class ThoughtLeader(
     id: _root_.scala.Predef.String = "",
     nickname: _root_.scala.Predef.String = "",
+    twots: _root_.scala.Seq[protocol.Twot] = _root_.scala.Seq.empty,
     unknownFields: _root_.scalapb.UnknownFieldSet = _root_.scalapb.UnknownFieldSet.empty
-    ) extends scalapb.GeneratedMessage with scalapb.lenses.Updatable[Me] {
+    ) extends scalapb.GeneratedMessage with scalapb.lenses.Updatable[ThoughtLeader] {
     @transient
     private[this] var __serializedSizeMemoized: _root_.scala.Int = 0
     private[this] def __computeSerializedSize(): _root_.scala.Int = {
@@ -29,6 +30,10 @@ final case class Me(
           __size += _root_.com.google.protobuf.CodedOutputStream.computeStringSize(2, __value)
         }
       };
+      twots.foreach { __item =>
+        val __value = __item
+        __size += 1 + _root_.com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(__value.serializedSize) + __value.serializedSize
+      }
       __size += unknownFields.serializedSize
       __size
     }
@@ -54,10 +59,20 @@ final case class Me(
           _output__.writeString(2, __v)
         }
       };
+      twots.foreach { __v =>
+        val __m = __v
+        _output__.writeTag(3, 2)
+        _output__.writeUInt32NoTag(__m.serializedSize)
+        __m.writeTo(_output__)
+      };
       unknownFields.writeTo(_output__)
     }
-    def withId(__v: _root_.scala.Predef.String): Me = copy(id = __v)
-    def withNickname(__v: _root_.scala.Predef.String): Me = copy(nickname = __v)
+    def withId(__v: _root_.scala.Predef.String): ThoughtLeader = copy(id = __v)
+    def withNickname(__v: _root_.scala.Predef.String): ThoughtLeader = copy(nickname = __v)
+    def clearTwots = copy(twots = _root_.scala.Seq.empty)
+    def addTwots(__vs: protocol.Twot *): ThoughtLeader = addAllTwots(__vs)
+    def addAllTwots(__vs: Iterable[protocol.Twot]): ThoughtLeader = copy(twots = twots ++ __vs)
+    def withTwots(__v: _root_.scala.Seq[protocol.Twot]): ThoughtLeader = copy(twots = __v)
     def withUnknownFields(__v: _root_.scalapb.UnknownFieldSet) = copy(unknownFields = __v)
     def discardUnknownFields = copy(unknownFields = _root_.scalapb.UnknownFieldSet.empty)
     def getFieldByNumber(__fieldNumber: _root_.scala.Int): _root_.scala.Any = {
@@ -70,6 +85,7 @@ final case class Me(
           val __t = nickname
           if (__t != "") __t else null
         }
+        case 3 => twots
       }
     }
     def getField(__field: _root_.scalapb.descriptors.FieldDescriptor): _root_.scalapb.descriptors.PValue = {
@@ -77,18 +93,20 @@ final case class Me(
       (__field.number: @_root_.scala.unchecked) match {
         case 1 => _root_.scalapb.descriptors.PString(id)
         case 2 => _root_.scalapb.descriptors.PString(nickname)
+        case 3 => _root_.scalapb.descriptors.PRepeated(twots.iterator.map(_.toPMessage).toVector)
       }
     }
     def toProtoString: _root_.scala.Predef.String = _root_.scalapb.TextFormat.printToUnicodeString(this)
-    def companion: protocol.Me.type = protocol.Me
-    // @@protoc_insertion_point(GeneratedMessage[Me])
+    def companion: protocol.ThoughtLeader.type = protocol.ThoughtLeader
+    // @@protoc_insertion_point(GeneratedMessage[ThoughtLeader])
 }
 
-object Me extends scalapb.GeneratedMessageCompanion[protocol.Me] {
-  implicit def messageCompanion: scalapb.GeneratedMessageCompanion[protocol.Me] = this
-  def parseFrom(`_input__`: _root_.com.google.protobuf.CodedInputStream): protocol.Me = {
+object ThoughtLeader extends scalapb.GeneratedMessageCompanion[protocol.ThoughtLeader] {
+  implicit def messageCompanion: scalapb.GeneratedMessageCompanion[protocol.ThoughtLeader] = this
+  def parseFrom(`_input__`: _root_.com.google.protobuf.CodedInputStream): protocol.ThoughtLeader = {
     var __id: _root_.scala.Predef.String = ""
     var __nickname: _root_.scala.Predef.String = ""
+    val __twots: _root_.scala.collection.immutable.VectorBuilder[protocol.Twot] = new _root_.scala.collection.immutable.VectorBuilder[protocol.Twot]
     var `_unknownFields__`: _root_.scalapb.UnknownFieldSet.Builder = null
     var _done__ = false
     while (!_done__) {
@@ -99,6 +117,8 @@ object Me extends scalapb.GeneratedMessageCompanion[protocol.Me] {
           __id = _input__.readStringRequireUtf8()
         case 18 =>
           __nickname = _input__.readStringRequireUtf8()
+        case 26 =>
+          __twots += _root_.scalapb.LiteParser.readMessage[protocol.Twot](_input__)
         case tag =>
           if (_unknownFields__ == null) {
             _unknownFields__ = new _root_.scalapb.UnknownFieldSet.Builder()
@@ -106,42 +126,55 @@ object Me extends scalapb.GeneratedMessageCompanion[protocol.Me] {
           _unknownFields__.parseField(tag, _input__)
       }
     }
-    protocol.Me(
+    protocol.ThoughtLeader(
         id = __id,
         nickname = __nickname,
+        twots = __twots.result(),
         unknownFields = if (_unknownFields__ == null) _root_.scalapb.UnknownFieldSet.empty else _unknownFields__.result()
     )
   }
-  implicit def messageReads: _root_.scalapb.descriptors.Reads[protocol.Me] = _root_.scalapb.descriptors.Reads{
+  implicit def messageReads: _root_.scalapb.descriptors.Reads[protocol.ThoughtLeader] = _root_.scalapb.descriptors.Reads{
     case _root_.scalapb.descriptors.PMessage(__fieldsMap) =>
       _root_.scala.Predef.require(__fieldsMap.keys.forall(_.containingMessage eq scalaDescriptor), "FieldDescriptor does not match message type.")
-      protocol.Me(
+      protocol.ThoughtLeader(
         id = __fieldsMap.get(scalaDescriptor.findFieldByNumber(1).get).map(_.as[_root_.scala.Predef.String]).getOrElse(""),
-        nickname = __fieldsMap.get(scalaDescriptor.findFieldByNumber(2).get).map(_.as[_root_.scala.Predef.String]).getOrElse("")
+        nickname = __fieldsMap.get(scalaDescriptor.findFieldByNumber(2).get).map(_.as[_root_.scala.Predef.String]).getOrElse(""),
+        twots = __fieldsMap.get(scalaDescriptor.findFieldByNumber(3).get).map(_.as[_root_.scala.Seq[protocol.Twot]]).getOrElse(_root_.scala.Seq.empty)
       )
     case _ => throw new RuntimeException("Expected PMessage")
   }
-  def javaDescriptor: _root_.com.google.protobuf.Descriptors.Descriptor = ProtocolProto.javaDescriptor.getMessageTypes().get(12)
-  def scalaDescriptor: _root_.scalapb.descriptors.Descriptor = ProtocolProto.scalaDescriptor.messages(12)
-  def messageCompanionForFieldNumber(__number: _root_.scala.Int): _root_.scalapb.GeneratedMessageCompanion[_] = throw new MatchError(__number)
+  def javaDescriptor: _root_.com.google.protobuf.Descriptors.Descriptor = ProtocolProto.javaDescriptor.getMessageTypes().get(13)
+  def scalaDescriptor: _root_.scalapb.descriptors.Descriptor = ProtocolProto.scalaDescriptor.messages(13)
+  def messageCompanionForFieldNumber(__number: _root_.scala.Int): _root_.scalapb.GeneratedMessageCompanion[_] = {
+    var __out: _root_.scalapb.GeneratedMessageCompanion[_] = null
+    (__number: @_root_.scala.unchecked) match {
+      case 3 => __out = protocol.Twot
+    }
+    __out
+  }
   lazy val nestedMessagesCompanions: Seq[_root_.scalapb.GeneratedMessageCompanion[_ <: _root_.scalapb.GeneratedMessage]] = Seq.empty
   def enumCompanionForFieldNumber(__fieldNumber: _root_.scala.Int): _root_.scalapb.GeneratedEnumCompanion[_] = throw new MatchError(__fieldNumber)
-  lazy val defaultInstance = protocol.Me(
+  lazy val defaultInstance = protocol.ThoughtLeader(
     id = "",
-    nickname = ""
+    nickname = "",
+    twots = _root_.scala.Seq.empty
   )
-  implicit class MeLens[UpperPB](_l: _root_.scalapb.lenses.Lens[UpperPB, protocol.Me]) extends _root_.scalapb.lenses.ObjectLens[UpperPB, protocol.Me](_l) {
+  implicit class ThoughtLeaderLens[UpperPB](_l: _root_.scalapb.lenses.Lens[UpperPB, protocol.ThoughtLeader]) extends _root_.scalapb.lenses.ObjectLens[UpperPB, protocol.ThoughtLeader](_l) {
     def id: _root_.scalapb.lenses.Lens[UpperPB, _root_.scala.Predef.String] = field(_.id)((c_, f_) => c_.copy(id = f_))
     def nickname: _root_.scalapb.lenses.Lens[UpperPB, _root_.scala.Predef.String] = field(_.nickname)((c_, f_) => c_.copy(nickname = f_))
+    def twots: _root_.scalapb.lenses.Lens[UpperPB, _root_.scala.Seq[protocol.Twot]] = field(_.twots)((c_, f_) => c_.copy(twots = f_))
   }
   final val ID_FIELD_NUMBER = 1
   final val NICKNAME_FIELD_NUMBER = 2
+  final val TWOTS_FIELD_NUMBER = 3
   def of(
     id: _root_.scala.Predef.String,
-    nickname: _root_.scala.Predef.String
-  ): _root_.protocol.Me = _root_.protocol.Me(
+    nickname: _root_.scala.Predef.String,
+    twots: _root_.scala.Seq[protocol.Twot]
+  ): _root_.protocol.ThoughtLeader = _root_.protocol.ThoughtLeader(
     id,
-    nickname
+    nickname,
+    twots
   )
-  // @@protoc_insertion_point(GeneratedMessageCompanion[Me])
+  // @@protoc_insertion_point(GeneratedMessageCompanion[ThoughtLeader])
 }
