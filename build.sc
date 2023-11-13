@@ -81,7 +81,7 @@ def bundleLibraries = T.task {
   val args = List(
     "cs",
     "launch",
-    "com.indoorvivants.vcpkg:sn-vcpkg_3:dev",
+    "com.indoorvivants.vcpkg:sn-vcpkg_3:latest.release",
     "--",
     "install"
   ) ++ allDeps() ++ List("--rename", "curl=libcurl", "-l")
@@ -126,7 +126,7 @@ def buildLibrary = T {
   val args = List(
     "cs",
     "launch",
-    s"com.indoorvivants.vcpkg:sn-vcpkg_3:dev",
+    s"com.indoorvivants.vcpkg:sn-vcpkg_3:latest.release",
     "--",
     "scala-cli",
     "--rename",
