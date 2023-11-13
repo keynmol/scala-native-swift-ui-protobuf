@@ -39,6 +39,19 @@ def scalaSources = T {
     .map(PathRef(_))
 }
 
+def coursierInstallDir = T {
+  PathRef(T.dest)
+}
+
+def installBindgen = T {
+  val dir = coursierInstallDir().path
+
+  run("cs", "install", "sn-bindgen", "--contrib", "--dir", dir.toString)
+    .call(stderr = os.Pipe)
+
+  PathRef(dir / "sn-bindgen")
+}
+
 def allDeps = T { List("curl", "libidn2") }
 def libraryList = T {
   List("curl", "z", "idn2", "unistring")
@@ -172,9 +185,10 @@ def generateSwiftProto = T {
 def generateBindings = T {
   val headerFile = binaryInterfaceHeader()
   val dest = generatedScalaCode / "binary_interface.scala"
+  val bindgen = installBindgen().path
 
   val args = List(
-    "bindgen",
+    bindgen.toString,
     "--header",
     headerFile.path.toString,
     "--package",
@@ -189,40 +203,10 @@ def generateBindings = T {
   )
 
   run(
-    "bindgen",
-    "--header",
-    headerFile.path.toString,
-    "--package",
-    "scala_app.binarybridge",
-    "--scala",
-    "--clang",
-    "-DSN_SKIP_INIT",
-    "--render.no-location",
-    "--export",
-    "--out",
-    dest.toString
+    args: _*
   )
     .call(stderr = os.Pipe)
 
   List(dest).map(PathRef(_))
 
 }
-
-// def resources = T.source(millSourcePath / "resources")
-
-def compile = T {
-  // val allSources = os.walk(sources().path)
-  println(millSourcePath)
-  // os.proc("javac", allSources, "-d", T.dest).call()
-  // PathRef(T.dest)
-}
-
-// def assembly = T {
-//   for(p <- Seq(compile(), resources())) os.copy(p.path, T.dest, mergeFolders = true)
-
-//   val mainFlags = mainClass().toSeq.flatMap(Seq("-e", _))
-//   os.proc("jar", "-c", mainFlags, "-f", T.dest / s"assembly.jar", ".")
-//     .call(cwd = T.dest)
-
-//   PathRef(T.dest / s"assembly.jar")
-// }
