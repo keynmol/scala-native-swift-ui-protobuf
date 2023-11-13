@@ -2,11 +2,11 @@ import mill._
 
 def mainClass: T[Option[String]] = Some("foo.Foo")
 
-// def sources = T.source(millSourcePath / "src")
 def swiftProjectLocation = millSourcePath / "Scala-Native-SwiftUI"
 def xcFrameworkLocation = swiftProjectLocation / "Scala.xcframework"
 
-def scalaCode = T.source(millSourcePath / "scala-code")
+def scalaCodePath = millSourcePath / "scala-code"
+def scalaCode = T.source(scalaCodePath)
 def generatedScalaCode = millSourcePath / "scala-code" / "generated"
 
 def headers = T.source(millSourcePath / "headers")
@@ -19,8 +19,8 @@ def run(args: String*) = {
   os.proc(args)
 }
 
-
 def buildMacos = T {
+  generateSwiftProto()
   val fw = createXCFramework()
   os.makeDir.all(xcFrameworkLocation)
   os.copy.over(fw, xcFrameworkLocation)
@@ -30,10 +30,13 @@ def staticLib = T { buildLibrary() }
 def bundledLib = T { bundleLibraries() }
 
 def scalaSources = T {
-  os.walk(scalaCode().path).filter(_.ext == "scala").filterNot { path =>
-    path.toString.contains(".metals/") || path.toString
-      .contains(".scala-build/")
-  }.map(PathRef(_))
+  os.walk(scalaCode().path)
+    .filter(_.ext == "scala")
+    .filterNot { path =>
+      path.toString.contains(".metals/") || path.toString
+        .contains(".scala-build/")
+    }
+    .map(PathRef(_))
 }
 
 def allDeps = T { List("curl", "libidn2") }
@@ -129,7 +132,7 @@ def buildLibrary = T {
   )
   run(
     args: _*
-  ).call(cwd = scalaCode().path)
+  ).call(cwd = scalaCodePath)
 
   PathRef(library)
 }
