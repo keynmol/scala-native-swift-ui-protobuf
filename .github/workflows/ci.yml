@@ -29,5 +29,9 @@ jobs:
 
       - uses: coursier/setup-action@v1
 
+      - run: |
+          brew install protobuf && \
+          brew install swift-protobuf
+
       - run: ./mill buildMacos
 
