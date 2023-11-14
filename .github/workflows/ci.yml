@@ -42,3 +42,8 @@ jobs:
           brew install llvm@14
       - run: ./mill buildMacos
 
+      - name: Print logs
+        if: failure()
+        shell: bash
+        run: |
+          sudo cat /Users/runner/Library/Caches/sbt-vcpkg/vcpkg/buildtrees/**/*-err.log
