@@ -31,9 +31,12 @@ jobs:
           mv protoc-gen-scala /usr/local/bin/protoc-gen-scala && \
           brew install llvm@14
 
+      - name: Sets env vars for release
+        run: |
+          echo "SCALANATIVE_MODE=release-fast" >> $GITHUB_ENV
+        if: startsWith(github.ref, 'refs/tags/v')
+
       - run: ./mill buildMacos
-        env:
-          SCALANATIVE_MODE: release-fast
 
       - name: Upload artifacts
         uses: actions/upload-artifact@master
