@@ -34,7 +34,7 @@ def buildMacos = T {
   ).call(cwd = pathToApp.path / os.up)
 
   val finalDestination = millSourcePath / "build" / s"$NAME.app.zip"
-  os.move.over(zip, finalDestination)
+  os.move.over(zip, finalDestination, createFolders = true)
 
   PathRef(finalDestination)
 }
