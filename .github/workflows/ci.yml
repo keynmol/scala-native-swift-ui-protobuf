@@ -36,6 +36,15 @@ jobs:
           echo "SCALANATIVE_MODE=release-fast" >> $GITHUB_ENV
         if: startsWith(github.ref, 'refs/tags/v')
 
+      - name: Cache vcpkg
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/Library/Caches/sbt-vcpkg/vcpkg-install
+            ~/.cache/sbt-vcpkg/vcpkg-install
+            ~/.cache/sbt-vcpkg/vcpkg
+          key: ${{ runner.os }}-sbt-vcpkg
+
       - run: ./mill buildMacos
 
       - name: Upload artifacts

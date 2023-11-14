@@ -18,6 +18,8 @@ struct SpinnerView: View {
         Text("loading...").italic().opacity(loading.wrappedValue ? 1: 0)
     }
 }
+
+
 //
 //#Preview {
 //    SpinnerView(loading: Binding.constant(true))
