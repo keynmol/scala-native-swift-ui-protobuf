@@ -1,8 +1,10 @@
 import mill._
 
+def NAME = "Scala-Native-SwiftUI"
+
 def mainClass: T[Option[String]] = Some("foo.Foo")
 
-def swiftProjectLocation = millSourcePath / "Scala-Native-SwiftUI"
+def swiftProjectLocation = millSourcePath / NAME
 def xcFrameworkLocation = swiftProjectLocation / "Scala.xcframework"
 
 def scalaCodePath = millSourcePath / "scala-code"
@@ -20,22 +22,71 @@ def run(args: String*) = {
 }
 
 def buildMacos = T {
-  generateSwiftProto()
+  val pathToApp = xcodeBuild()
+
+  val zip = T.dest / s"$NAME.app.zip"
+
+  run(
+    "zip",
+    "-r",
+    zip.toString(),
+    s"$NAME.app"
+  ).call(cwd = pathToApp.path / os.up)
+
+  val finalDestination = millSourcePath / "build" / s"$NAME.app.zip"
+  os.move.over(zip, finalDestination)
+
+  PathRef(finalDestination)
+}
+
+def xcProject = T.source(millSourcePath / s"$NAME.xcproject")
+
+def moveXCFramework = T {
+
   val fw = createXCFramework()
+
   os.makeDir.all(xcFrameworkLocation)
-  os.copy.over(fw, xcFrameworkLocation)
+  os.copy.over(fw.path, xcFrameworkLocation)
+}
+
+def xcodeBuild = T {
+
+  generateSwiftProto()
+  swiftSources()
+  moveXCFramework()
+  xcProject()
+
+  val destination = T.dest / NAME
+  val args = List(
+    "xcodebuild",
+    "clean",
+    "archive",
+    "-archivePath",
+    destination.toString,
+    "-scheme",
+    NAME
+  )
+
+  run(args: _*).call(stderr = os.Pipe, stdout = os.Pipe)
+
+  PathRef(
+    T.dest / s"$NAME.xcarchive" / "Products" / "Applications" / s"$NAME.app"
+  )
+
 }
 
 def staticLib = T { buildLibrary() }
 def bundledLib = T { bundleLibraries() }
 
+def swiftSources = T.source(swiftProjectLocation)
+
 def scalaSources = T {
-  os.walk(scalaCode().path)
-    .filter(_.ext == "scala")
-    .filterNot { path =>
-      path.toString.contains(".metals/") || path.toString
-        .contains(".scala-build/")
+  os.walk(
+    scalaCode().path,
+    skip = path => {
+      path.lastOpt.exists(m => m == ".metals" || m == ".scala-build")
     }
+  ).filter(_.ext == "scala")
     .map(PathRef(_))
 }
 
@@ -92,7 +143,7 @@ def createXCFramework = T {
     out.toString
   ).call(stderr = os.Pipe)
 
-  out
+  PathRef(out)
 }
 
 def bundleLibraries = T.task {

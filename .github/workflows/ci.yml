@@ -6,9 +6,6 @@ on:
   pull_request:
     branches: ["*"]
 
-env:
-  SN_RELEASE: fast
-
 jobs:
   unix_build:
     name: Unix build on ${{ matrix.os }}
@@ -35,10 +32,13 @@ jobs:
           brew install llvm@14
 
       - run: ./mill buildMacos
+        env:
+          SCALANATIVE_MODE: release-fast
 
-      - uses: sersoft-gmbh/xcodebuild-action@v3
+      - name: Upload artifacts
+        uses: actions/upload-artifact@master
         with:
-          project: Scala-Native-SwiftUI.xcodeproj
-          scheme: Scala-Native-SwiftUI
-          destination: platform=macOS
-          action: build
+          path: ./build/*.app.zip
+          if-no-files-found: error
+
+
