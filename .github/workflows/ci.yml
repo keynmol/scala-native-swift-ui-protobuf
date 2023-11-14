@@ -27,20 +27,13 @@ jobs:
           distribution: 'temurin' 
           java-version: '17'
 
-      - uses: coursier/setup-action@v1
-      - uses: coursier/cache-action@v6
-      - uses: VirtusLab/scala-cli-setup@main
-        with:
-          power: true
-
-      # - run: brew install automake && cs launch sn-vcpkg --contrib -- install libidn2 libunistring -v -l -c
-
       - run: |
           brew install protobuf swift-protobuf automake && \
           curl -Lo protoc-gen-scala.zip https://github.com/scalapb/ScalaPB/releases/download/v0.11.14/protoc-gen-scala-0.11.14-osx-x86_64.zip &&\
           unzip protoc-gen-scala.zip && \
           mv protoc-gen-scala /usr/local/bin/protoc-gen-scala && \
           brew install llvm@14
+
       - run: ./mill buildMacos
 
       - name: Print logs

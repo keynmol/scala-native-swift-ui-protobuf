@@ -39,6 +39,20 @@ def scalaSources = T {
     .map(PathRef(_))
 }
 
+def coursierLauncherPath = T {
+  val path = T.dest / "coursier"
+  os.write.over(
+    path,
+    requests.get.stream(
+      "https://github.com/coursier/launchers/raw/master/coursier"
+    )
+  )
+
+  os.proc("chmod", "+x", path.toString()).call()
+
+  PathRef(path)
+}
+
 def coursierInstallDir = T {
   PathRef(T.dest)
 }
@@ -46,7 +60,14 @@ def coursierInstallDir = T {
 def installBindgen = T {
   val dir = coursierInstallDir().path
 
-  run("cs", "install", "sn-bindgen", "--contrib", "--dir", dir.toString)
+  run(
+    coursierLauncherPath().path.toString,
+    "install",
+    "sn-bindgen",
+    "--contrib",
+    "--dir",
+    dir.toString
+  )
     .call(stderr = os.Pipe)
 
   PathRef(dir / "sn-bindgen")
@@ -79,9 +100,10 @@ def bundleLibraries = T.task {
   val outLibrary = T.dest / "scala.bundled.a"
 
   val args = List(
-    "cs",
+    coursierLauncherPath().path.toString,
     "launch",
-    "com.indoorvivants.vcpkg:sn-vcpkg_3:latest.release",
+    "sn-vcpkg",
+    "--contrib",
     "--",
     "install"
   ) ++ allDeps() ++ List("--rename", "curl=libcurl", "-l")
@@ -124,15 +146,11 @@ def buildLibrary = T {
   val allSources = (baseSources ++ protoSources ++ bindingSources).distinct
 
   val args = List(
-    "cs",
+    coursierLauncherPath().path.toString,
     "launch",
-    s"com.indoorvivants.vcpkg:sn-vcpkg_3:latest.release",
+    "scala-cli:1.0.5",
     "--",
-    "scala-cli",
-    "--rename",
-    "curl=libcurl",
-    "curl",
-    "--",
+    "--power",
     "package"
   ) ++ allSources.map(_.path.toString) ++ List(
     ".",
