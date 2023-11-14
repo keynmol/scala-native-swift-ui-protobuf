@@ -104,15 +104,13 @@ struct Interop {
 
 extension Interop.ProtocolError {
     func msg() -> String {
-        let str = if case .failure(let string) = self {
-            string
+        if case .failure(let string) = self {
+            return string
         } else if case .parsing(let string) = self {
-            string
+            return string
         } else {
-            ""
+            return ""
         }
-        
-        return str
     }
 }
 

@@ -48,9 +48,9 @@ struct TwotView: View {
     }
 }
 
-#Preview {
-    TwotView(twot: Twot.with {
-        $0.author = "anton"
-        $0.text = "Deallocating id 0, contains 3 pointers (total size: 2496 bytes)"
-    }, vm: ViewModel())
-}
+//#Preview {
+//    TwotView(twot: Twot.with {
+//        $0.author = "anton"
+//        $0.text = "Deallocating id 0, contains 3 pointers (total size: 2496 bytes)"
+//    }, vm: ViewModel())
+//}

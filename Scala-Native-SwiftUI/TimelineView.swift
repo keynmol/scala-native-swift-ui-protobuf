@@ -106,8 +106,8 @@ struct TimelineView: View {
         }
     }
 }
-
-#Preview {
-    TimelineView(vm: ViewModel())
-}
+//
+//#Preview {
+//    TimelineView(vm: ViewModel())
+//}
 
