@@ -36,8 +36,9 @@ jobs:
 
       - run: ./mill buildMacos
 
-      - name: Print logs
-        if: failure()
-        shell: bash
-        run: |
-          sudo cat /Users/runner/Library/Caches/sbt-vcpkg/vcpkg/buildtrees/**/*-err.log
+      - uses: sersoft-gmbh/xcodebuild-action@v3
+        with:
+          project: Scala-Native-SwiftUI.xcodeproj
+          scheme: Scala-Native-SwiftUI
+          destination: platform=macOS
+          action: build
