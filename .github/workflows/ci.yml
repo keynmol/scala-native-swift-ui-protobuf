@@ -46,6 +46,9 @@ jobs:
           key: ${{ runner.os }}-sbt-vcpkg
 
       - run: ./mill zipMacos
+        env: 
+          MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
+          MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@master
