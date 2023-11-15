@@ -41,9 +41,12 @@ jobs:
         with:
           path: |
             ~/Library/Caches/sbt-vcpkg/vcpkg-install
+            ~/Library/Caches/sbt-vcpkg/vcpkg
             ~/.cache/sbt-vcpkg/vcpkg-install
             ~/.cache/sbt-vcpkg/vcpkg
           key: ${{ runner.os }}-sbt-vcpkg
+
+      - uses: coursier/cache-action@v6
 
       - run: ./mill zipMacos
         env: 
