@@ -14,6 +14,7 @@ def generatedScalaCode = millSourcePath / "scala-code" / "generated"
 def headers = T.source(millSourcePath / "headers")
 def binaryInterfaceHeader = T.source(headers().path / "binary_interface.h")
 
+def macosAppLocation = T.source(millSourcePath / "build" / s"$NAME.app")
 def proto = T.source(millSourcePath / "protocol.proto")
 
 def run(args: String*) = {
@@ -32,23 +33,29 @@ def runSanitise(values: Seq[String], args: String*) = {
 
 def buildMacos = T {
   val pathToApp = xcodeBuild()
+  val loc = macosAppLocation()
 
-  val finalDestination = millSourcePath / "build" / s"$NAME.app"
-  os.copy(pathToApp.path, finalDestination, createFolders = true)
+  os.copy.over(pathToApp.path, loc.path, createFolders = true)
 
-  PathRef(finalDestination)
+  PathRef(loc.path)
 }
 
 def codeSignMacos = T {
+
+  val app = buildMacos()
 
   val certEnvName = "MACOS_CERTIFICATE"
   val macosCertificate = T.env.get(certEnvName)
   val certPwdEnvName = "MACOS_CERTIFICATE_PWD"
   val macosCertificatePassword = T.env.get(certPwdEnvName)
+  val identityEnvName = "MACOS_CERTIFICATE_IDENTITY"
+  val macosCertificateIdentity = T.env.get(identityEnvName)
 
-  if (macosCertificate.isEmpty || macosCertificatePassword.isEmpty) {
+  if (
+    macosCertificate.isEmpty || macosCertificatePassword.isEmpty || macosCertificateIdentity.isEmpty
+  ) {
     T.log.error(
-      s"$certEnvName or $certPwdEnvName env variables are missing, assuming no need to sign the app"
+      s"$certEnvName or $certPwdEnvName or $identityEnvName env variables are missing, assuming no need to sign the app"
     )
   } else {
 
@@ -74,7 +81,7 @@ def codeSignMacos = T {
       "default-keychain",
       "-s",
       "build.keychain"
-    ).call()
+    ).call(stderr = os.Pipe, stdout = os.Pipe)
 
     runSanitise(
       Seq(randomPassword),
@@ -83,7 +90,7 @@ def codeSignMacos = T {
       "-p",
       randomPassword,
       "build.keychain"
-    ).call()
+    ).call(stderr = os.Pipe, stdout = os.Pipe)
 
     runSanitise(
       Seq(macosCertificatePassword.get),
@@ -96,8 +103,7 @@ def codeSignMacos = T {
       macosCertificatePassword.get,
       "-T",
       "/usr/bin/codesign"
-    ).call()
-
+    ).call(stderr = os.Pipe, stdout = os.Pipe)
     runSanitise(
       Seq(randomPassword),
       "security",
@@ -108,19 +114,20 @@ def codeSignMacos = T {
       "-k",
       randomPassword,
       "build.keychain"
-    ).call()
+    ).call(stderr = os.Pipe, stdout = os.Pipe)
 
-    run("security", "find-identity", "-v").call(stderr = os.Pipe, stdout = os.Pipe)
+    run("security", "find-identity").call(stderr = os.Pipe, stdout = os.Pipe)
+
+    run(
+      "/usr/bin/codesign",
+      "--force",
+      "-s",
+      macosCertificateIdentity.get,
+      app.path.toString,
+      "-v"
+    ).call(stderr = os.Pipe, stdout = os.Pipe)
 
   }
-
-  // echo $MACOS_CERTIFICATE | base64 —decode > certificate.p12
-  // security create-keychain -p <your-password> build.keychain
-  // security default-keychain -s build.keychain
-  // security unlock-keychain -p <your-password> build.keychain
-  // security import certificate.p12 -k build.keychain -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
-  // security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k <your-password> build.keychain
-  // /usr/bin/codesign --force -s <identity-id> ./path/to/you/app -v
   ()
 }
 
@@ -129,8 +136,6 @@ def zipMacos = T {
   codeSignMacos()
 
   val zip = T.dest / s"$NAME.app.zip"
-
-  println(pathToApp)
 
   run(
     "zip",
