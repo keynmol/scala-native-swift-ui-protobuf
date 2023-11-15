@@ -71,7 +71,7 @@ def codeSignMacos = T {
 
     run(
       "security",
-      "default-keychain-keychain",
+      "default-keychain",
       "-s",
       "build.keychain"
     ).call()
