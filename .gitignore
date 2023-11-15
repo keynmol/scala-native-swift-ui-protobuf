@@ -12,6 +12,8 @@ c-playground
 compile_commands.json
 target
 **/sbt-test/**/build.properties
+out 
+build
 
 **/target/**
 project/project

@@ -34,7 +34,7 @@ struct UserHeaderView: View {
     }
 
 }
-
-#Preview {
-    UserHeaderView(vm: ViewModel())
-}
+//
+//#Preview {
+//    UserHeaderView(vm: ViewModel())
+//}

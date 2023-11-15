@@ -27,7 +27,6 @@ struct TimelineView: View {
             UserHeaderView(vm: vm)
             
             HStack{
-                //                TextField("text", text: $text).font(.system(size: 20))
                 TextEditor(text: $text).font(.system(size: 15)).lineSpacing(/*@START_MENU_TOKEN@*/10.0/*@END_MENU_TOKEN@*/).frame(height:100)
                 
                 Button(action: sendTwot) {
@@ -107,8 +106,8 @@ struct TimelineView: View {
         }
     }
 }
-
-#Preview {
-    TimelineView(vm: ViewModel())
-}
+//
+//#Preview {
+//    TimelineView(vm: ViewModel())
+//}
 

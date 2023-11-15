@@ -25,7 +25,7 @@ struct ErrorView: View {
 
     }
 }
-
-#Preview {
-    ErrorView(errMsg: Binding.constant("some error message"))
-}
+//
+//#Preview {
+//    ErrorView(errMsg: Binding.constant("some error message"))
+//}

@@ -19,6 +19,8 @@ struct SpinnerView: View {
     }
 }
 
-#Preview {
-    SpinnerView(loading: Binding.constant(true))
-}
+
+//
+//#Preview {
+//    SpinnerView(loading: Binding.constant(true))
+//}

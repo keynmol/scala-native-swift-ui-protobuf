@@ -1,0 +1,56 @@
+name: CI
+on:
+  push:
+    branches: ["main"]
+    tags: ["v*"]
+  pull_request:
+    branches: ["*"]
+
+jobs:
+  unix_build:
+    name: Unix build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-13]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin' 
+          java-version: '17'
+
+      - run: |
+          brew install protobuf swift-protobuf automake && \
+          curl -Lo protoc-gen-scala.zip https://github.com/scalapb/ScalaPB/releases/download/v0.11.14/protoc-gen-scala-0.11.14-osx-x86_64.zip &&\
+          unzip protoc-gen-scala.zip && \
+          mv protoc-gen-scala /usr/local/bin/protoc-gen-scala && \
+          brew install llvm@14
+
+      - name: Sets env vars for release
+        run: |
+          echo "SCALANATIVE_MODE=release-fast" >> $GITHUB_ENV
+        if: startsWith(github.ref, 'refs/tags/v')
+
+      - name: Cache vcpkg
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/Library/Caches/sbt-vcpkg/vcpkg-install
+            ~/.cache/sbt-vcpkg/vcpkg-install
+            ~/.cache/sbt-vcpkg/vcpkg
+          key: ${{ runner.os }}-sbt-vcpkg
+
+      - run: ./mill buildMacos
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@master
+        with:
+          path: ./build/*.app.zip
+          if-no-files-found: error
+
+

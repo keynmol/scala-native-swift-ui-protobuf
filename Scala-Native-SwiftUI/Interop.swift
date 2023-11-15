@@ -96,27 +96,21 @@ struct Interop {
     static func initApp(options: Options) throws {
         ScalaKit.ScalaNativeInit()
         
-        //        let contents = try options.serializedData()
+        sendRequest(request: Request.OneOf_Payload.setOptions(SetOptions.Request.with{$0.options = options}))
         
-        let result = sendRequest(request: Request.OneOf_Payload.setOptions(SetOptions.Request.with{$0.options = options}))
-        print(result)
-        
-    
     }
     
 }
 
 extension Interop.ProtocolError {
     func msg() -> String {
-        let str = if case .failure(let string) = self {
-            string
+        if case .failure(let string) = self {
+            return string
         } else if case .parsing(let string) = self {
-            string
+            return string
         } else {
-            ""
+            return ""
         }
-        
-        return str
     }
 }
 

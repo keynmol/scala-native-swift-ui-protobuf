@@ -78,7 +78,7 @@ struct ProfileView: View {
         
     }
 }
-
-#Preview {
-    ProfileView(vm: ViewModel())
-}
+//
+//#Preview {
+//    ProfileView(vm: ViewModel())
+//}
