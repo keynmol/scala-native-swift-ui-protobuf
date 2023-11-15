@@ -110,7 +110,7 @@ def codeSignMacos = T {
       "build.keychain"
     ).call()
 
-    run("security", "find-identity", "-v").call(stderr = os.Pipe)
+    run("security", "find-identity", "-v").call(stderr = os.Pipe, stdout = os.Pipe)
 
   }
 
