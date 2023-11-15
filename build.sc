@@ -21,10 +21,116 @@ def run(args: String*) = {
   os.proc(args)
 }
 
+def runSanitise(values: Seq[String], args: String*) = {
+  var raw = args.mkString(" ")
+  values.foreach { v =>
+    raw = raw.replace(v, "***")
+  }
+  System.err.println(s"Running ${raw}")
+  os.proc(args)
+}
+
 def buildMacos = T {
   val pathToApp = xcodeBuild()
 
+  val finalDestination = millSourcePath / "build" / s"$NAME.app"
+  os.copy(pathToApp.path, finalDestination, createFolders = true)
+
+  PathRef(finalDestination)
+}
+
+def codeSignMacos = T {
+
+  val certEnvName = "MACOS_CERTIFICATE"
+  val macosCertificate = T.env.get(certEnvName)
+  val certPwdEnvName = "MACOS_CERTIFICATE_PWD"
+  val macosCertificatePassword = T.env.get(certPwdEnvName)
+
+  if (macosCertificate.isEmpty || macosCertificatePassword.isEmpty) {
+    T.log.error(
+      s"$certEnvName or $certPwdEnvName env variables are missing, assuming no need to sign the app"
+    )
+  } else {
+
+    val certificate = T.dest / "certificate.p12"
+    os.write.over(
+      certificate,
+      java.util.Base64.getDecoder.decode(macosCertificate.get.getBytes())
+    )
+
+    val randomPassword = scala.util.Random.alphanumeric.take(25).toList.mkString
+
+    runSanitise(
+      Seq(randomPassword),
+      "security",
+      "create-keychain",
+      "-p",
+      randomPassword,
+      "build.keychain"
+    ).call()
+
+    run(
+      "security",
+      "default-keychain-keychain",
+      "-s",
+      "build.keychain"
+    ).call()
+
+    runSanitise(
+      Seq(randomPassword),
+      "security",
+      "unlock-keychain",
+      "-p",
+      randomPassword,
+      "build.keychain"
+    ).call()
+
+    runSanitise(
+      Seq(macosCertificatePassword.get),
+      "security",
+      "import",
+      certificate.toString,
+      "-k",
+      "build.keychain",
+      "-P",
+      macosCertificatePassword.get,
+      "-T",
+      "/usr/bin/codesign"
+    ).call()
+
+    runSanitise(
+      Seq(randomPassword),
+      "security",
+      "set-key-partition-list",
+      "-S",
+      "apple-tool:,apple:,codesign:",
+      "-s",
+      "-k",
+      randomPassword,
+      "build.keychain"
+    ).call()
+
+    run("security", "find-identity", "-v").call(stderr = os.Pipe)
+
+  }
+
+  // echo $MACOS_CERTIFICATE | base64 —decode > certificate.p12
+  // security create-keychain -p <your-password> build.keychain
+  // security default-keychain -s build.keychain
+  // security unlock-keychain -p <your-password> build.keychain
+  // security import certificate.p12 -k build.keychain -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
+  // security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k <your-password> build.keychain
+  // /usr/bin/codesign --force -s <identity-id> ./path/to/you/app -v
+  ()
+}
+
+def zipMacos = T {
+  val pathToApp = buildMacos()
+  codeSignMacos()
+
   val zip = T.dest / s"$NAME.app.zip"
+
+  println(pathToApp)
 
   run(
     "zip",
@@ -34,9 +140,10 @@ def buildMacos = T {
   ).call(cwd = pathToApp.path / os.up)
 
   val finalDestination = millSourcePath / "build" / s"$NAME.app.zip"
-  os.move.over(zip, finalDestination, createFolders = true)
+  os.copy.over(zip, finalDestination, createFolders = true)
 
   PathRef(finalDestination)
+
 }
 
 def xcProject = T.source(millSourcePath / s"$NAME.xcproject")
@@ -59,7 +166,6 @@ def xcodeBuild = T {
   val destination = T.dest / NAME
   val args = List(
     "xcodebuild",
-    "clean",
     "archive",
     "-archivePath",
     destination.toString,

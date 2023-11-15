@@ -45,7 +45,7 @@ jobs:
             ~/.cache/sbt-vcpkg/vcpkg
           key: ${{ runner.os }}-sbt-vcpkg
 
-      - run: ./mill buildMacos
+      - run: ./mill zipMacos
 
       - name: Upload artifacts
         uses: actions/upload-artifact@master
