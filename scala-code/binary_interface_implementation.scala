@@ -59,7 +59,7 @@ object Implementations extends ExportedFunctions:
 
   private inline def stateManager(using Label[ScalaResult]) =
     _stateManager match
-      case None => break(makeError("App has not been initialised yet!")())
+      case None => break(makeError("App has not been initialised yet!"))
       case Some(value) =>
         value
 
@@ -83,9 +83,9 @@ object Implementations extends ExportedFunctions:
 
         handleRequest(msg) match
           case Answer.Error(msg, code) =>
-            makeError(msg, code)()
+            makeError(msg, code)
           case Answer.Ok(value) =>
-            makeResult(value)()
+            makeResult(value)
         end match
   end scala_app_request
 
@@ -100,7 +100,7 @@ object Implementations extends ExportedFunctions:
     catch
       case NonFatal(exc) =>
         scribe.error(exc)
-        makeError(exc.getMessage(), ERROR_CODE.OTHER)()
+        makeError(exc.getMessage(), ERROR_CODE.OTHER)
 
   private inline def makeResult[T <: scalapb.GeneratedMessage](msg: T) =
     val marshalled = write(msg, false)
@@ -108,23 +108,21 @@ object Implementations extends ExportedFunctions:
       Intrinsics.castObjectToRawPtr(marshalled)
     )
 
-    () =>
-      GCRoots.addRoot(marshalled)
-      ScalaResult(arrPtr)
+    GCRoots.addRoot(marshalled)
+    ScalaResult(arrPtr)
   end makeResult
 
   private inline def makeError(
       msg: String,
       code: ERROR_CODE = ERROR_CODE.OTHER
-  ): () => ScalaResult =
+  ): ScalaResult =
     val marshalled = write(Error(code, msg), true)
+    val rawPtr = Intrinsics.castObjectToRawPtr(marshalled)
     val arrPtr = scalanative.runtime.fromRawPtr[Byte](
-      Intrinsics.castObjectToRawPtr(marshalled)
+      rawPtr
     )
-
-    () =>
-      GCRoots.addRoot(marshalled)
-      ScalaResult(arrPtr)
+    GCRoots.addRoot(marshalled)
+    ScalaResult(arrPtr)
   end makeError
 
   private inline def write[Msg <: scalapb.GeneratedMessage](
@@ -165,25 +163,3 @@ object Implementations extends ExportedFunctions:
     override def toString(): String = references.toString
 
 end Implementations
-
-// @main def hello =
-//   val msg = SetOptions().toByteArray
-
-//   val result = Implementations.scala_app_request(msg.atUnsafe(0), msg.length)
-
-//   println(Implementations.scala_app_is_error(result))
-
-//   println(result.value(0))
-//   // println(Implementations.scala_app_get_error_length(result))
-//   // println(Implementations.scala_app_get_error(result))
-
-//   println(
-//     Implementations.read(
-//       Error,
-//       Implementations.scala_app_get_error(result),
-//       Implementations.scala_app_get_error_length(result)
-//     )
-//   )
-
-//   println(GCRoots)
-// end hello

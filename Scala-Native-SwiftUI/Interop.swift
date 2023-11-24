@@ -10,10 +10,6 @@ import ScalaKit
 import SwiftProtobuf
 
 struct Interop {
-    enum Res {
-        case Ok(Response.OneOf_Payload)
-        case Err(ProtocolError)
-    }
     
     enum ProtocolError: Swift.Error {
         case failure(String)
@@ -21,6 +17,10 @@ struct Interop {
     }
     
     
+    enum Res {
+        case Ok(Response.OneOf_Payload)
+        case Err(ProtocolError)
+    }
     
     static func sendRequest(request: Request.OneOf_Payload) -> Res {
         let req = Request.with{
@@ -50,7 +50,7 @@ struct Interop {
     static func writeToWire<T: SwiftProtobuf.Message, R: SwiftProtobuf.Message>(msg: T) throws -> R? {
         let contents = try msg.serializedData()
         
-        return   try contents.withUnsafeBytes { (bytes: UnsafePointer<CChar>) in
+        return try contents.withUnsafeBytes { (bytes: UnsafePointer<CChar>) in
             
             let result = ScalaKit.scala_app_request(bytes, Int32(contents.count))
             
