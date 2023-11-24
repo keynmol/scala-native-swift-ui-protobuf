@@ -2,7 +2,7 @@
 
 This repository hosts the code for both the 
 
-1. [Blog post about building a SwiftUI application that interfaces with some Scala Native code](2023-11-24-scala-native-from-swift)
+1. [Blog post about building a SwiftUI application that interfaces with some Scala Native code](https://blog.indoorvivants.com/2023-11-24-scala-native-from-swift)
 2. and the toy implementation of a MacOS desktop app for Twotm8.com
 
 At the moment it's pretty annoying to build it yourself, most steps are automated using Mill, 
